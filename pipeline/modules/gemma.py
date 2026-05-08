@@ -80,4 +80,51 @@ def generate_clinical_report(
         ),
     )
 
-    return response.text
+    return _embed_images(
+        report=response.text,
+        binding_affinity_png=binding_affinity_png,
+        mutation_landscape_png=mutation_landscape_png,
+    )
+
+
+def _embed_images(report: str, binding_affinity_png: str, mutation_landscape_png: str) -> str:
+    ba_name = Path(binding_affinity_png).name
+    ml_name = Path(mutation_landscape_png).name
+
+    ba_block = f"\n![Binding Affinity Chart](./{ba_name})\n"
+    ml_block = f"\n![Mutation Landscape](./{ml_name})\n"
+
+    # Inject after the Visual Findings header if present, otherwise append at end
+    visual_headers = ["**Visual Findings**", "## Visual Findings", "### Visual Findings"]
+    next_section_markers = ["**Recommended", "## Recommended", "### Recommended",
+                            "**Limitations", "## Limitations", "### Limitations"]
+
+    lines = report.splitlines(keepends=True)
+    result = []
+    i = 0
+    inserted_ba = False
+    inserted_ml = False
+
+    while i < len(lines):
+        line = lines[i]
+        result.append(line)
+
+        # After the Visual Findings header, inject binding affinity chart first
+        if not inserted_ba and any(h in line for h in visual_headers):
+            result.append(ba_block)
+            inserted_ba = True
+
+        # Before the next major section after Visual Findings, inject mutation landscape
+        if inserted_ba and not inserted_ml and any(m in line for m in next_section_markers):
+            result.insert(-1, ml_block)  # insert before this line
+            inserted_ml = True
+
+        i += 1
+
+    # Fallback: append both at the end if headers not found
+    if not inserted_ba:
+        result.append(f"\n---\n{ba_block}{ml_block}")
+    elif not inserted_ml:
+        result.append(ml_block)
+
+    return "".join(result)
