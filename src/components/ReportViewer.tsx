@@ -1,6 +1,8 @@
 "use client"
 
 import Image from "next/image"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
 import { StatusBadge } from "@/components/StatusBadge"
@@ -9,54 +11,65 @@ import { MRNAViewer } from "@/components/MRNAViewer"
 import type { Case } from "@/types/case"
 
 function MarkdownReport({ markdown }: { markdown: string }) {
-  const lines = markdown.split("\n")
   return (
-    <div className="space-y-1 text-sm">
-      {lines.map((line, i) => {
-        if (line.startsWith("## "))
-          return (
-            <h2
-              key={i}
-              className="text-base font-bold mt-7 mb-2 text-foreground pt-5 border-t border-border/40 first:border-0 first:pt-0"
-              style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-            >
-              {line.slice(3)}
-            </h2>
-          )
-        if (line.startsWith("### "))
-          return (
-            <h3
-              key={i}
-              className="text-sm font-semibold mt-4 mb-1.5 text-foreground"
-              style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-            >
-              {line.slice(4)}
-            </h3>
-          )
-        if (line.startsWith("# "))
-          return (
-            <h1
-              key={i}
-              className="text-lg font-bold mt-2 mb-3 text-foreground"
-              style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-            >
-              {line.slice(2)}
-            </h1>
-          )
-        if (line.startsWith("- "))
-          return (
-            <li key={i} className="ml-5 text-muted-foreground leading-relaxed list-disc">
-              {line.slice(2)}
-            </li>
-          )
-        if (line.trim() === "") return <div key={i} className="h-2" />
-        return (
-          <p key={i} className="text-muted-foreground leading-relaxed">
-            {line}
-          </p>
-        )
-      })}
-    </div>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: ({ children }) => (
+          <h1 className="text-xl font-bold mt-2 mb-4 text-foreground" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+            {children}
+          </h1>
+        ),
+        h2: ({ children }) => (
+          <h2 className="text-base font-bold mt-8 mb-3 text-foreground pt-6 border-t border-border/40 first:border-0 first:pt-0" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+            {children}
+          </h2>
+        ),
+        h3: ({ children }) => (
+          <h3 className="text-sm font-semibold mt-5 mb-2 text-foreground" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+            {children}
+          </h3>
+        ),
+        p: ({ children }) => (
+          <p className="text-muted-foreground text-sm leading-relaxed mb-3">{children}</p>
+        ),
+        ul: ({ children }) => (
+          <ul className="my-3 space-y-1.5 list-disc list-outside ml-5">{children}</ul>
+        ),
+        ol: ({ children }) => (
+          <ol className="my-3 space-y-2 list-decimal list-outside ml-5">{children}</ol>
+        ),
+        li: ({ children }) => (
+          <li className="text-muted-foreground text-sm leading-relaxed pl-1">{children}</li>
+        ),
+        strong: ({ children }) => (
+          <strong className="font-semibold text-foreground">{children}</strong>
+        ),
+        em: ({ children }) => (
+          <em className="italic text-muted-foreground">{children}</em>
+        ),
+        code: ({ children }) => (
+          <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono text-primary">
+            {children}
+          </code>
+        ),
+        blockquote: ({ children }) => (
+          <blockquote className="border-l-2 border-primary/40 pl-4 my-3 text-muted-foreground italic text-sm">
+            {children}
+          </blockquote>
+        ),
+        // Images in the report are local file paths — skip them, Charts tab has them
+        img: () => null,
+        hr: () => <hr className="border-border/40 my-6" />,
+        a: ({ href, children }) => (
+          <a href={href} className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors" target="_blank" rel="noopener noreferrer">
+            {children}
+          </a>
+        ),
+      }}
+    >
+      {markdown}
+    </ReactMarkdown>
   )
 }
 
