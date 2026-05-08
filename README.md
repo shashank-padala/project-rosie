@@ -199,6 +199,15 @@ Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and ch
 
 ---
 
+## Documentation for Non-Biology Readers
+
+The pipeline makes decisions and uses concepts that are non-obvious without a biology background. These explainers are written for software engineers and ML practitioners:
+
+- [From DNA to Vaccine Candidates — The Full Journey](docs/explainers/01-from-dna-to-vaccine-candidates.md) — What happens before a VCF file exists, every step of the pipeline explained in plain English, and a glossary of biology terms.
+- [Key Architecture Decisions](docs/explainers/02-key-decisions.md) — Why we start at VCF (not FASTQ), why NetMHCpan over MHCflurry, why no AlphaFold in Phase 1, why scoring is deterministic Python not an LLM.
+
+---
+
 ## Project Status
 
 Built by Shashank Padala, Kirak Labs, Toronto.
