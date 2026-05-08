@@ -213,3 +213,19 @@ The pipeline makes decisions and uses concepts that are non-obvious without a bi
 Built by Shashank Padala, Kirak Labs, Toronto.
 Hackathon submission for Gemma4Good — Health & Sciences track.
 Seeking: vet oncologist or computational biology researcher at UofT / OVC Guelph for validation partnership.
+
+---
+
+## Milestone Tracker
+
+| Milestone | Description | Status | Notes |
+|---|---|---|---|
+| M1 — Day 1 | Bioinformatics core: pipeline validated on HCC1395 benchmark | ✅ Done | 191,645 epitopes → 1,648 candidates → top 20 ranked. TESK1 (IC50=3.5nM), FLNA confirmed as oncology genes. |
+| M1 — Day 2 | Canine data validation: VEP annotation + DLA alleles | ⏸️ Parked | Needs Docker Engine + 3GB VEP cache + Figshare VCF download. Resuming after M2. |
+| M2 | Gemma 4 integration: Vertex AI, function calling, clinical report | 🔄 In Progress | — |
+| M3 | mRNA sequence design: Biopython + canine codon table | ⬜ Not started | — |
+| M4 | Next.js frontend: case submission, live status, report viewer, chat | ⬜ Not started | — |
+| M5 | Cloud deployment: Cloud Run, Vercel | ⬜ Not started | — |
+| M6 | End-to-end demo on real canine data | ⬜ Not started | — |
+| M7 | Validation outreach: OVC Guelph / UofT / OICR | ⬜ Not started | — |
+| M8 | Hackathon submission: video, Kaggle writeup | ⬜ Not started | Deadline: May 18, 7:59 PM EDT |
