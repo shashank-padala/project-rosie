@@ -87,7 +87,7 @@ def generate_mutation_landscape(tsv_path: str | None, candidates: list[dict], ou
     print(f"[visualizations] Mutation landscape chart → {output_path}")
 
 
-def generate_all(candidates_json_path: str, tsv_path: str | None = None) -> None:
+def generate_all(candidates_json_path: str, tsv_path: str | None = None) -> dict:
     with open(candidates_json_path) as f:
         data = json.load(f)
 
@@ -95,12 +95,10 @@ def generate_all(candidates_json_path: str, tsv_path: str | None = None) -> None
     candidates = data["top_candidates"]
     out_dir = Path(candidates_json_path).parent
 
-    generate_binding_affinity_chart(
-        candidates,
-        str(out_dir / f"{sample}_binding_affinity.png"),
-    )
-    generate_mutation_landscape(
-        tsv_path,
-        candidates,
-        str(out_dir / f"{sample}_mutation_landscape.png"),
-    )
+    ba_path = str(out_dir / f"{sample}_binding_affinity.png")
+    ml_path = str(out_dir / f"{sample}_mutation_landscape.png")
+
+    generate_binding_affinity_chart(candidates, ba_path)
+    generate_mutation_landscape(tsv_path, candidates, ml_path)
+
+    return {"binding_affinity": ba_path, "mutation_landscape": ml_path}

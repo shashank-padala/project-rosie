@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from modules.prediction import run_pvacseq
 from modules.scoring import score_candidates
 from modules.visualizations import generate_all
+from modules.gemma import generate_clinical_report
 
 
 def parse_args():
@@ -89,12 +90,24 @@ def main():
     )
 
     # Step 3: Generate visualizations
-    print("\n[pipeline] Step 3/3: Generating visualizations...")
-    generate_all(candidates_json_path=json_path, tsv_path=tsv_path)
+    print("\n[pipeline] Step 3/4: Generating visualizations...")
+    png_paths = generate_all(candidates_json_path=json_path, tsv_path=tsv_path)
+
+    # Step 4: Gemma 4 clinical report
+    print("\n[pipeline] Step 4/4: Generating clinical report with Gemma 4...")
+    report = generate_clinical_report(
+        candidates_json_path=json_path,
+        binding_affinity_png=png_paths["binding_affinity"],
+        mutation_landscape_png=png_paths["mutation_landscape"],
+    )
+    report_path = str(Path(out_dir) / f"{args.sample_name}_clinical_report.md")
+    Path(report_path).write_text(report)
+    print(f"[gemma] Clinical report → {report_path}")
 
     print(f"\n{'='*60}")
     print(f"  DONE")
-    print(f"  Candidates JSON : {json_path}")
+    print(f"  Candidates JSON  : {json_path}")
+    print(f"  Clinical Report  : {report_path}")
     print(f"{'='*60}\n")
     return json_path
 

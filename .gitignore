@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Pipeline secrets
+pipeline/.env
+
 # Pipeline data and cache
 pipeline/vep_cache/
 pipeline/data/sample/pvacseq_example_data/

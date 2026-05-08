@@ -3,3 +3,5 @@ matplotlib
 biopython
 requests
 pandas
+google-cloud-aiplatform
+google-genai
