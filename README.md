@@ -222,7 +222,7 @@ Seeking: vet oncologist or computational biology researcher at UofT / OVC Guelph
 |---|---|---|---|
 | M1 — Day 1 | Bioinformatics core: pipeline validated on HCC1395 benchmark | ✅ Done | 191,645 epitopes → 1,648 candidates → top 20 ranked. TESK1 (IC50=3.5nM), FLNA confirmed as oncology genes. |
 | M1 — Day 2 | Canine data validation: VEP annotation + DLA alleles | ⏸️ Parked | Needs Docker Engine + 3GB VEP cache + Figshare VCF download. Resuming after M2. |
-| M2 | Gemma 4 integration: Vertex AI, function calling, clinical report | 🔄 In Progress | — |
+| M2 | Gemma 4 integration: Vertex AI, function calling, clinical report | ✅ Done | Gemma 4 on Vertex AI global endpoint. Multimodal: JSON + 2 PNGs → clinical report. Validated on HCC1395. |
 | M3 | mRNA sequence design: Biopython + canine codon table | ⬜ Not started | — |
 | M4 | Next.js frontend: case submission, live status, report viewer, chat | ⬜ Not started | — |
 | M5 | Cloud deployment: Cloud Run, Vercel | ⬜ Not started | — |
