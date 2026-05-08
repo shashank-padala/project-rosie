@@ -29,6 +29,7 @@ from modules.prediction import run_pvacseq
 from modules.scoring import score_candidates
 from modules.visualizations import generate_all
 from modules.gemma import generate_clinical_report
+from modules.mrna_design import design_mrna
 
 
 def parse_args():
@@ -104,10 +105,19 @@ def main():
     Path(report_path).write_text(report)
     print(f"[gemma] Clinical report → {report_path}")
 
+    # Step 5: mRNA design
+    print("\n[pipeline] Step 5/5: Designing mRNA vaccine construct...")
+    fasta_path = design_mrna(
+        candidates_json_path=json_path,
+        output_dir=out_dir,
+        species=args.species,
+    )
+
     print(f"\n{'='*60}")
     print(f"  DONE")
     print(f"  Candidates JSON  : {json_path}")
     print(f"  Clinical Report  : {report_path}")
+    print(f"  mRNA FASTA       : {fasta_path}")
     print(f"{'='*60}\n")
     return json_path
 
