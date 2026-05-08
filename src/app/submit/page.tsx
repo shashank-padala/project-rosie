@@ -14,6 +14,8 @@ const PRESET_ALLELES: Record<string, string> = {
   "Canine DLA (common)":   "DLA-88*50101,DLA-88*50801,DLA-12*00101",
 }
 
+const STEPS = ["Patient info", "Alleles", "Upload & Submit"]
+
 export default function SubmitPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
@@ -50,146 +52,229 @@ export default function SubmitPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation />
-      <main className="flex-1 max-w-2xl mx-auto w-full px-4 pt-24 pb-12">
+      <main className="flex-1 max-w-xl mx-auto w-full px-5 sm:px-6 pt-24 pb-12">
+        {/* Header */}
         <div className="mb-8">
-          <Link href="/dashboard" className="text-muted-foreground text-sm hover:text-foreground">
+          <Link href="/dashboard" className="text-muted-foreground text-sm hover:text-foreground transition-colors font-medium">
             ← Dashboard
           </Link>
-          <h1 className="text-2xl font-bold mt-3">New Case</h1>
-          <div className="flex gap-2 mt-4">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`h-1 flex-1 rounded-full transition-colors ${
-                  s <= step ? "bg-primary" : "bg-border"
-                }`}
-              />
-            ))}
+          <h1
+            className="text-2xl font-bold mt-3 mb-1"
+            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+          >
+            New Case
+          </h1>
+          <p className="text-muted-foreground text-sm">Submit a tumor VCF to start the pipeline</p>
+
+          {/* Step progress */}
+          <div className="mt-6 flex items-center gap-2">
+            {STEPS.map((label, i) => {
+              const s = i + 1
+              const active = s === step
+              const done = s < step
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                      done ? "bg-primary text-primary-foreground" :
+                      active ? "bg-primary/20 text-primary border border-primary/40" :
+                      "bg-secondary text-muted-foreground"
+                    }`}>
+                      {done ? "✓" : s}
+                    </div>
+                    <span className={`text-xs font-medium hidden sm:block ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                      {label}
+                    </span>
+                  </div>
+                  {i < STEPS.length - 1 && (
+                    <div className={`h-px w-8 transition-colors ${done ? "bg-primary/40" : "bg-border"}`} />
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
 
-        {step === 1 && (
-          <div className="space-y-5">
-            <h2 className="font-semibold text-lg">1. Patient info</h2>
-            <div className="space-y-1.5">
-              <Label htmlFor="sample">Sample name</Label>
-              <Input
-                id="sample"
-                placeholder="e.g. BUDDY_TUMOR_01"
-                value={sampleName}
-                onChange={(e) => setSampleName(e.target.value)}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="species">Species</Label>
-              <select
-                id="species"
-                value={species}
-                onChange={(e) => setSpecies(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                <option value="canis_lupus_familiaris">Dog (Canis lupus familiaris)</option>
-                <option value="homo_sapiens">Human (Homo sapiens)</option>
-                <option value="felis_catus">Cat (Felis catus)</option>
-              </select>
-            </div>
-            <Button onClick={() => setStep(2)} disabled={!sampleName.trim()} className="w-full">
-              Next →
-            </Button>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="space-y-5">
-            <h2 className="font-semibold text-lg">2. MHC/DLA alleles</h2>
-            <p className="text-muted-foreground text-sm">
-              Enter alleles as a comma-separated list, or pick a preset.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(PRESET_ALLELES).map(([label, value]) => (
-                <button
-                  key={label}
-                  onClick={() => setAlleles(value)}
-                  className="text-xs px-3 py-1.5 rounded-md border border-border hover:border-primary hover:text-primary transition-colors"
+        {/* Step content */}
+        <div className="rounded-2xl border border-border/60 bg-card p-7 shadow-xl shadow-black/10 animate-fade-up">
+          {step === 1 && (
+            <div className="space-y-5">
+              <div>
+                <h2
+                  className="text-lg font-bold mb-1"
+                  style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
                 >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="alleles">Alleles</Label>
-              <Textarea
-                id="alleles"
-                placeholder="HLA-A*02:01, HLA-B*07:02, …"
-                value={alleles}
-                onChange={(e) => setAlleles(e.target.value)}
-                rows={3}
-              />
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
-                ← Back
+                  Patient information
+                </h2>
+                <p className="text-muted-foreground text-sm">Basic details about the sample</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="sample" className="text-sm font-medium">Sample name</Label>
+                <Input
+                  id="sample"
+                  placeholder="e.g. BUDDY_TUMOR_01"
+                  value={sampleName}
+                  onChange={(e) => setSampleName(e.target.value)}
+                  className="h-10 rounded-lg bg-secondary/50 border-border/60"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="species" className="text-sm font-medium">Species</Label>
+                <select
+                  id="species"
+                  value={species}
+                  onChange={(e) => setSpecies(e.target.value)}
+                  className="w-full h-10 rounded-lg border border-border/60 bg-secondary/50 px-3 text-sm text-foreground focus:outline-none focus:border-primary"
+                >
+                  <option value="canis_lupus_familiaris">Dog (Canis lupus familiaris)</option>
+                  <option value="homo_sapiens">Human (Homo sapiens)</option>
+                  <option value="felis_catus">Cat (Felis catus)</option>
+                </select>
+              </div>
+              <Button
+                onClick={() => setStep(2)}
+                disabled={!sampleName.trim()}
+                className="w-full h-10 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 border-0"
+              >
+                Continue →
               </Button>
-              <Button onClick={() => setStep(3)} disabled={!alleles.trim()} className="flex-1">
-                Next →
-              </Button>
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 3 && (
-          <div className="space-y-5">
-            <h2 className="font-semibold text-lg">3. Upload VCF + submit</h2>
-            <div
-              className="rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors p-8 text-center cursor-pointer"
-              onClick={() => document.getElementById("vcf-input")?.click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault()
-                const f = e.dataTransfer.files[0]
-                if (f) setFile(f)
-              }}
-            >
-              <input
-                id="vcf-input"
-                type="file"
-                accept=".vcf,.vcf.gz,.gz"
-                className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
-              <p className="text-3xl mb-3">🧬</p>
-              {file ? (
-                <p className="text-primary font-medium text-sm">{file.name}</p>
-              ) : (
-                <>
-                  <p className="text-muted-foreground text-sm">Drag & drop a VCF file, or click to browse</p>
-                  <p className="text-muted-foreground/60 text-xs mt-1">.vcf or .vcf.gz accepted</p>
-                </>
+          {step === 2 && (
+            <div className="space-y-5">
+              <div>
+                <h2
+                  className="text-lg font-bold mb-1"
+                  style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+                >
+                  MHC / DLA alleles
+                </h2>
+                <p className="text-muted-foreground text-sm">Enter alleles or pick a preset</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(PRESET_ALLELES).map(([label, value]) => (
+                  <button
+                    key={label}
+                    onClick={() => setAlleles(value)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                      alleles === value
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/60 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="alleles" className="text-sm font-medium">Alleles</Label>
+                <Textarea
+                  id="alleles"
+                  placeholder="HLA-A*02:01, HLA-B*07:02, …"
+                  value={alleles}
+                  onChange={(e) => setAlleles(e.target.value)}
+                  rows={3}
+                  className="rounded-lg bg-secondary/50 border-border/60 resize-none text-sm"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setStep(1)} className="flex-1 h-10 rounded-lg border-border/60">
+                  ← Back
+                </Button>
+                <Button
+                  onClick={() => setStep(3)}
+                  disabled={!alleles.trim()}
+                  className="flex-1 h-10 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 border-0"
+                >
+                  Continue →
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-5">
+              <div>
+                <h2
+                  className="text-lg font-bold mb-1"
+                  style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+                >
+                  Upload VCF & submit
+                </h2>
+                <p className="text-muted-foreground text-sm">Drop your tumor variant call file</p>
+              </div>
+
+              <div
+                className={`rounded-xl border-2 border-dashed p-8 text-center cursor-pointer transition-colors ${
+                  file ? "border-primary/40 bg-primary/5" : "border-border/50 hover:border-primary/30 hover:bg-secondary/30"
+                }`}
+                onClick={() => document.getElementById("vcf-input")?.click()}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  const f = e.dataTransfer.files[0]
+                  if (f) setFile(f)
+                }}
+              >
+                <input
+                  id="vcf-input"
+                  type="file"
+                  accept=".vcf,.vcf.gz,.gz"
+                  className="hidden"
+                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                />
+                <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center text-xl mx-auto mb-3">
+                  🧬
+                </div>
+                {file ? (
+                  <p className="text-primary font-semibold text-sm">{file.name}</p>
+                ) : (
+                  <>
+                    <p className="text-muted-foreground text-sm font-medium">Drag & drop or click to browse</p>
+                    <p className="text-muted-foreground/60 text-xs mt-1">.vcf or .vcf.gz accepted</p>
+                  </>
+                )}
+              </div>
+
+              {/* Review */}
+              <div className="rounded-xl border border-border/40 bg-secondary/30 p-4 space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Sample</span>
+                  <span className="font-medium">{sampleName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Species</span>
+                  <span className="font-medium capitalize">{species.replace(/_/g, " ")}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground shrink-0">Alleles</span>
+                  <span className="font-mono text-xs text-right break-all">{alleles}</span>
+                </div>
+              </div>
+
+              {error && (
+                <p className="text-destructive text-sm bg-destructive/10 rounded-lg px-3 py-2">{error}</p>
               )}
+
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setStep(2)} className="flex-1 h-10 rounded-lg border-border/60">
+                  ← Back
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="flex-1 h-10 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 border-0"
+                >
+                  {loading ? "Submitting…" : "Submit Case"}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Pipeline execution wires in M5. Case registers as <em>pending</em>.
+              </p>
             </div>
-
-            <div className="rounded-lg border border-border bg-card/50 p-4 text-xs text-muted-foreground space-y-1">
-              <p><span className="text-foreground font-medium">Sample:</span> {sampleName}</p>
-              <p><span className="text-foreground font-medium">Species:</span> {species.replace(/_/g, " ")}</p>
-              <p><span className="text-foreground font-medium">Alleles:</span> {alleles}</p>
-            </div>
-
-            {error && <p className="text-destructive text-sm">{error}</p>}
-
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setStep(2)} className="flex-1">
-                ← Back
-              </Button>
-              <Button onClick={handleSubmit} disabled={loading} className="flex-1">
-                {loading ? "Submitting…" : "Submit Case"}
-              </Button>
-            </div>
-
-            <p className="text-xs text-muted-foreground text-center">
-              Pipeline execution is wired in M5. Case will register as <em>pending</em>.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   )

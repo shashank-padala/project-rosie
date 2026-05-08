@@ -36,63 +36,94 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-        <p className="text-4xl mb-4">📬</p>
-        <h1 className="text-xl font-semibold mb-2">Check your email</h1>
-        <p className="text-muted-foreground text-sm max-w-xs">
-          We sent a confirmation link to <strong>{email}</strong>. Click it to activate your
-          account.
+      <div className="min-h-screen flex flex-col items-center justify-center px-5 text-center animate-fade-up">
+        <div className="h-16 w-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-3xl mb-5">
+          📬
+        </div>
+        <h1
+          className="text-2xl font-bold mb-2"
+          style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+        >
+          Check your email
+        </h1>
+        <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
+          We sent a confirmation link to <strong className="text-foreground">{email}</strong>.
+          Click it to activate your account.
         </p>
-        <Link href="/" className="mt-6 text-primary text-sm hover:underline">
-          Back to home
+        <Link href="/" className="mt-7 text-primary text-sm font-medium hover:underline">
+          ← Back to home
         </Link>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex flex-col items-center justify-center px-5 bg-background">
+      <div className="w-full max-w-sm animate-fade-up">
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-semibold">
-            <span className="text-primary">🐾</span> Project Rosie
+          <Link href="/" className="inline-flex items-center gap-2 mb-6">
+            <span className="text-2xl">🐾</span>
+            <span
+              className="text-xl font-bold text-foreground"
+              style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+            >
+              Project Rosie
+            </span>
           </Link>
-          <p className="text-muted-foreground text-sm mt-2">Create your account</p>
+          <h1
+            className="text-2xl font-bold text-foreground mb-1"
+            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+          >
+            Create your account
+          </h1>
+          <p className="text-muted-foreground text-sm">Start submitting vaccine cases</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="min 8 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              minLength={8}
-              required
-            />
-          </div>
-          {error && <p className="text-destructive text-sm">{error}</p>}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creating account…" : "Create Account"}
-          </Button>
-        </form>
+        <div className="rounded-2xl border border-border/60 bg-card p-7 shadow-xl shadow-black/20">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-10 rounded-lg bg-secondary/50 border-border/60 focus:border-primary"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="min 8 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-10 rounded-lg bg-secondary/50 border-border/60 focus:border-primary"
+                minLength={8}
+                required
+              />
+            </div>
+            {error && (
+              <p className="text-destructive text-sm bg-destructive/10 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+            <Button
+              type="submit"
+              className="w-full h-10 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 border-0 mt-2"
+              disabled={loading}
+            >
+              {loading ? "Creating account…" : "Create Account"}
+            </Button>
+          </form>
+        </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
+        <p className="text-center text-sm text-muted-foreground mt-5">
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-primary hover:underline">
+          <Link href="/auth/login" className="text-primary hover:underline font-medium">
             Sign in
           </Link>
         </p>

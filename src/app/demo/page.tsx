@@ -20,26 +20,40 @@ export default async function DemoPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation />
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 pt-20 pb-12">
-        <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-sm text-primary">
-            <strong>Demo:</strong> HCC1395 breast cancer benchmark case.
-            Real pipeline output — no edits.
-          </p>
+      <main className="flex-1 max-w-6xl mx-auto w-full px-5 sm:px-6 pt-24 pb-12">
+        {/* Banner */}
+        <div className="rounded-xl border border-primary/20 bg-primary/5 px-5 py-3.5 mb-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-primary mb-0.5">Live Demo</p>
+            <p className="text-xs text-muted-foreground">
+              HCC1395 breast cancer benchmark — real pipeline output, no edits.
+            </p>
+          </div>
           <Link
             href="/auth/signup"
-            className="shrink-0 text-xs px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="shrink-0 text-xs px-4 py-2 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-md shadow-primary/20 whitespace-nowrap"
           >
             Submit your own VCF →
           </Link>
         </div>
 
         {error || !caseData ? (
-          <div className="rounded-xl border border-border bg-card p-12 text-center">
-            <p className="text-4xl mb-4">🧬</p>
-            <h2 className="text-lg font-semibold mb-2">Demo not yet seeded</h2>
-            <p className="text-muted-foreground text-sm">
-              Run <code className="bg-secondary px-1 rounded">python3 scripts/seed_demo.py</code> to load the HCC1395 benchmark case.
+          <div className="rounded-2xl border border-border/60 bg-card p-16 text-center">
+            <div className="h-14 w-14 rounded-2xl bg-secondary flex items-center justify-center text-3xl mx-auto mb-5">
+              🧬
+            </div>
+            <h2
+              className="text-xl font-bold mb-2"
+              style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+            >
+              Demo not yet seeded
+            </h2>
+            <p className="text-muted-foreground text-sm max-w-xs mx-auto leading-relaxed">
+              Run{" "}
+              <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono">
+                python3 scripts/seed_demo.py
+              </code>{" "}
+              to load the HCC1395 benchmark case.
             </p>
           </div>
         ) : (
