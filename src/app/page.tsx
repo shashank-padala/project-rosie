@@ -18,7 +18,7 @@ export default function HomePage() {
           <span className="text-primary">designed in 24 hours</span>
         </h1>
         <p className="text-lg text-muted-foreground max-w-xl mb-10 leading-relaxed">
-          Upload a tumor VCF. Get a ranked neoantigen candidate list, a Gemma 4 clinical report,
+          Upload a tumor VCF. Get a ranked neoantigen candidate list, an AI clinical report,
           and synthesis-ready mRNA. Built on open science.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
@@ -42,7 +42,7 @@ export default function HomePage() {
             { label: "Tumor VCF", icon: "🧬" },
             { label: "Variant Calling", icon: "🔍" },
             { label: "Epitope Scoring", icon: "⚗️" },
-            { label: "Gemma 4 Report", icon: "🤖" },
+            { label: "AI Report", icon: "🤖" },
             { label: "mRNA FASTA", icon: "💉" },
           ].map((step, i) => (
             <div key={i} className="flex items-center gap-2">
@@ -62,12 +62,28 @@ export default function HomePage() {
           <p className="text-center text-muted-foreground text-sm uppercase tracking-widest mb-8 font-medium">
             The Problem
           </p>
-          <blockquote className="text-center text-2xl sm:text-3xl font-medium leading-relaxed max-w-2xl mx-auto mb-12">
-            "Paul spent{" "}
-            <span className="text-primary">3 months</span> with a university
-            research lab to design one vaccine for one dog. That's what it takes
-            today. We're changing that."
-          </blockquote>
+          <div className="max-w-2xl mx-auto mb-12 space-y-5 text-center">
+            <p className="text-2xl sm:text-3xl font-medium leading-relaxed">
+              An ML scientist and tech entrepreneur spent{" "}
+              <span className="text-primary">3 months</span> with a university
+              research lab to design a personalized cancer vaccine for his dog.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              NBC News covered it as a{" "}
+              <a
+                href="https://youtu.be/14SgyUhSIGQ?si=iw5FrjprnY46SEHG"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
+              >
+                medical breakthrough
+              </a>
+              {" "}— because it was. He made something genuinely impossible possible.
+              But it required being an AI veteran with connections to university research
+              infrastructure. That&apos;s not ground reality for most dog owners.
+              It was a one-off. <strong className="text-foreground">We&apos;re making it the standard.</strong>
+            </p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { before: "3 months", after: "24 hours", label: "Design time" },
@@ -113,7 +129,7 @@ export default function HomePage() {
               {
                 num: "03",
                 title: "Clinical report + mRNA spec",
-                body: "Gemma 4 writes a veterinary clinical report. The pipeline outputs a codon-optimized mRNA FASTA ready for synthesis.",
+                body: "An AI model writes a veterinary clinical report. The pipeline outputs a codon-optimized mRNA FASTA ready for synthesis.",
               },
             ].map((step) => (
               <div
@@ -144,9 +160,9 @@ export default function HomePage() {
                 body: "Top 20 epitopes by composite score: IC50 binding affinity, immunogenicity prediction, variant allele frequency.",
               },
               {
-                icon: "🤖",
-                title: "Gemma 4 clinical report",
-                body: "Veterinary-grade markdown report with embedded charts, recommendations, and clinical rationale.",
+                icon: "📋",
+                title: "AI clinical report",
+                body: "Veterinary-grade report with embedded charts, candidate reasoning, and recommended next steps.",
               },
               {
                 icon: "📈",
