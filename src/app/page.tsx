@@ -9,8 +9,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center text-center px-5 sm:px-6 pt-36 pb-28 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,oklch(0.75_0.15_175/0.12)_0%,transparent_70%)] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_30%_at_50%_100%,oklch(0.75_0.15_175/0.04)_0%,transparent_100%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,hsl(160_84%_29%/0.06)_0%,transparent_70%)] pointer-events-none" />
 
         <div className="animate-fade-up">
           <Badge variant="outline" className="mb-7 text-primary border-primary/30 bg-primary/5 px-3.5 py-1 text-xs font-medium tracking-wide">

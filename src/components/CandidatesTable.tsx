@@ -38,7 +38,7 @@ export function CandidatesTable({ candidates }: { candidates: Candidate[] }) {
                   c.ic50_nm < 50
                     ? "text-primary font-medium"
                     : c.ic50_nm < 150
-                    ? "text-yellow-400"
+                    ? "text-amber-600"
                     : "text-muted-foreground"
                 }
               >
