@@ -114,16 +114,23 @@ These are locked-in for the hackathon build. Document here so we don't re-litiga
 ---
 
 ### Milestone 4: Next.js Frontend + API
-**Target: May 14**
+**Target: May 14 | ✅ Complete**
 
-- [ ] Supabase project: create, set up `cases` table (id, clinic_id, status, created_at, report_url, mrna_url), enable Realtime
-- [ ] GCS bucket: create, set lifecycle policy (7-day delete on pipeline work files), signed URL helper in Next.js API route
-- [ ] Case submission page: drag-and-drop VCF upload → GCS → Supabase insert → Cloud Run trigger → progress indicator
-- [ ] Pipeline status page: Supabase Realtime subscription on case row → live status updates as stages complete (no polling)
-- [ ] Report viewer page: renders clinical report in clean typography. Download buttons for report PDF and mRNA FASTA.
-- [ ] Chat widget: floating button on report page → Gemma 4 with full case context loaded → streamed response
-- [ ] Auth: Supabase Auth, email/password, single clinic login for demo
-- [ ] **Done**: upload VCF from browser → watch status update live → read report → ask chat widget a question
+- [x] Supabase `cases` table: schema with RLS, realtime enabled, demo policy for `user_id IS NULL` cases
+- [x] Auth: Supabase Auth email/password — login, signup with email confirmation, redirect to dashboard
+- [x] Landing page: hero, problem stats (3 months → 24 hours, $10K → $15), how-it-works, feature cards, footer
+- [x] Demo page `/demo`: auto-loads seeded HCC1395 benchmark case, full read-only report viewer
+- [x] Report viewer (tabbed): Clinical Report (markdown) | Candidates table (sortable, color-coded IC50) | mRNA Design (FASTA viewer + copy/download) | Charts (base64 PNGs from pipeline)
+- [x] Case submission form `/submit`: 3-step (patient info → alleles with presets → VCF drag-and-drop → POST `/api/cases`)
+- [x] Dashboard `/dashboard`: protected, lists user's cases with status badges, empty state CTA
+- [x] Case report page `/cases/[id]`: protected per-user, full report viewer + Gemma 4 chat
+- [x] Chat widget: floating "Ask Gemma 4" bubble → expands to chat panel → `POST /api/cases/[id]/chat` → Gemma 4 with case context
+- [x] API routes: `GET/POST /api/cases`, `GET /api/cases/[id]`, `POST /api/cases/[id]/chat`
+- [x] Seed script `scripts/seed_demo.py`: loads HCC1395 pipeline output → Supabase with base64 charts + mRNA FASTA
+- [x] TypeScript clean, production build passing (11 routes, 0 errors)
+- [ ] GCS bucket + signed URL helper — deferred to M5 (pipeline execution)
+- [ ] Realtime status subscription — deferred to M5 (requires live pipeline updates)
+- [x] **Done**: landing page live, demo viewer working with seeded HCC1395 data, auth flow complete, chat wired to Gemma 4
 
 ---
 
@@ -205,6 +212,7 @@ The pipeline makes decisions and uses concepts that are non-obvious without a bi
 
 - [From DNA to Vaccine Candidates — The Full Journey](docs/explainers/01-from-dna-to-vaccine-candidates.md) — What happens before a VCF file exists, every step of the pipeline explained in plain English, and a glossary of biology terms.
 - [Key Architecture Decisions](docs/explainers/02-key-decisions.md) — Why we start at VCF (not FASTQ), why NetMHCpan over MHCflurry, why no AlphaFold in Phase 1, why scoring is deterministic Python not an LLM.
+- [Frontend Architecture — M4 Web App](docs/explainers/03-frontend-architecture.md) — How the Next.js app is structured, the Supabase data model, the report viewer design, and how the Gemma 4 chat widget connects to case context.
 
 ---
 
@@ -224,7 +232,7 @@ Seeking: vet oncologist or computational biology researcher at UofT / OVC Guelph
 | M1 — Day 2 | Canine data validation: VEP annotation + DLA alleles | ⏸️ Parked | Needs Docker Engine + 3GB VEP cache + Figshare VCF download. Resuming after M2. |
 | M2 | Gemma 4 integration: Vertex AI, function calling, clinical report | ✅ Done | Gemma 4 on Vertex AI global endpoint. Multimodal: JSON + 2 PNGs → clinical report. Validated on HCC1395. |
 | M3 | mRNA sequence design: Biopython + canine codon table | ✅ Done | Top 3 epitopes (TESK1+FLNA+MC4R) → codon-optimized CDS → FASTA + design summary. CDS GC 68.5% ✓ |
-| M4 | Next.js frontend: case submission, live status, report viewer, chat | ⬜ Not started | — |
+| M4 | Next.js frontend: case submission, live status, report viewer, chat | ✅ Done | 11 routes, clean build. Landing page, demo viewer (HCC1395 seeded), auth, dashboard, submit form, report tabs, Gemma 4 chat widget. GCS + Realtime deferred to M5. |
 | M5 | Cloud deployment: Cloud Run, Vercel | ⬜ Not started | — |
 | M6 | End-to-end demo on real canine data | ⬜ Not started | — |
 | M7 | Validation outreach: OVC Guelph / UofT / OICR | ⬜ Not started | — |
