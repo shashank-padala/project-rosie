@@ -1,0 +1,17 @@
+services:
+  vep:
+    image: ensemblorg/ensembl-vep
+    volumes:
+      - ./data/canine:/data/input
+      - ./vep_cache:/root/.vep
+      - ./output:/data/output
+    command: >
+      vep
+      --input_file /data/input/tumor.vcf
+      --output_file /data/output/tumor_annotated.vcf
+      --format vcf --vcf
+      --species canis_lupus_familiaris
+      --cache --cache_version 111 --assembly CanFam4
+      --plugin Downstream --plugin Wildtype
+      --terms SO --pick --symbol --hgvs --transcript_version
+      --force_overwrite

@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Pipeline data and cache
+pipeline/vep_cache/
+pipeline/data/sample/pvacseq_example_data/
+pipeline/data/canine/*.vcf
+pipeline/data/canine/*.gz
+pipeline/output/
+pipeline/__pycache__/
+pipeline/modules/__pycache__/
