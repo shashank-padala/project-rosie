@@ -55,7 +55,7 @@ export function ChatWidget({ caseId }: { caseId: string }) {
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors text-sm font-medium"
       >
-        <span>🤖</span> Ask Gemma 4
+        <span>🤖</span> Ask Clinical AI
       </button>
     )
   }
@@ -65,8 +65,7 @@ export function ChatWidget({ caseId }: { caseId: string }) {
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/30">
         <div className="flex items-center gap-2">
           <span>🤖</span>
-          <span className="text-sm font-medium">Ask Gemma 4</span>
-          <span className="text-xs text-muted-foreground">about this case</span>
+          <span className="text-sm font-medium">Clinical AI Assistant</span>
         </div>
         <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground text-sm">
           ✕
