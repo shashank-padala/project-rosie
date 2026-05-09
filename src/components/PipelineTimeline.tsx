@@ -68,6 +68,23 @@ const STEP_EST: Partial<Record<CaseStatus, { label: string; maxSec: number }>> =
   designing: { label: "1–2 min",   maxSec: 120 },
 }
 
+// If no callback arrives within this long after the last update, treat as stalled
+const STALE_TIMEOUT_SEC: Partial<Record<CaseStatus, number>> = {
+  pending:   5 * 60,   // 5 min
+  running:   30 * 60,  // 30 min — pVACseq can genuinely take 15 min
+  scoring:   10 * 60,
+  reporting: 15 * 60,
+  designing: 10 * 60,
+}
+
+function isStale(caseData: Case, nowMs: number): boolean {
+  if (caseData.status === "completed" || caseData.status === "failed") return false
+  const limit = STALE_TIMEOUT_SEC[caseData.status]
+  if (!limit) return false
+  const sinceSec = (nowMs - new Date(caseData.updated_at).getTime()) / 1000
+  return sinceSec > limit
+}
+
 function fmtElapsed(sec: number): string {
   const m = Math.floor(sec / 60)
   const s = sec % 60
@@ -91,13 +108,13 @@ function getProgress(caseData: Case): CaseStatus {
   return "running"
 }
 
-function getStepState(stepStatus: CaseStatus, caseData: Case): StepState {
+function getStepState(stepStatus: CaseStatus, caseData: Case, stale: boolean): StepState {
   if (caseData.status === "completed") return "done"
   const progress = getProgress(caseData)
   const stepIdx = PIPELINE_STAGES.indexOf(stepStatus)
   const currentIdx = PIPELINE_STAGES.indexOf(progress)
   if (stepIdx < currentIdx) return "done"
-  if (stepIdx === currentIdx) return caseData.status === "failed" ? "error" : "active"
+  if (stepIdx === currentIdx) return (caseData.status === "failed" || stale) ? "error" : "active"
   return "upcoming"
 }
 
@@ -382,10 +399,12 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
     })
   }
 
+  const stale = isStale(caseData, now)
+
   return (
     <div>
       {STEPS.map((step, idx) => {
-        const state = getStepState(step.status, caseData)
+        const state = getStepState(step.status, caseData, stale)
         const isLast = idx === STEPS.length - 1
         const showArtifacts = state === "done" && stepHasArtifacts(step.status, caseData)
         const artifactKey = `artifact-${step.status}`
@@ -467,7 +486,9 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
               {state === "error" && (
                 <div className="mt-3 space-y-3">
                   <div className="text-xs text-destructive bg-destructive/10 rounded-lg px-3 py-2 leading-relaxed">
-                    {caseData.error_message ?? "An unexpected error occurred during this step."}
+                    {stale && !caseData.error_message
+                      ? "The pipeline stopped responding. This is likely a server-side failure — no action needed on your end."
+                      : (caseData.error_message ?? "An unexpected error occurred during this step.")}
                   </div>
                   <Link
                     href="/submit"
