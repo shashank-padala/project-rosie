@@ -101,7 +101,7 @@ async function triggerPipelineJob({
               { name: "CALLBACK_URL",               value: callbackUrl },
               { name: "PIPELINE_CALLBACK_SECRET",   value: secret },
               { name: "GCS_BUCKET",                 value: process.env.GCS_BUCKET ?? "" },
-              { name: "GCP_PROJECT_ID",             value: process.env.GCP_PROJECT_ID ?? "project-1ea30ea7-dc79-4a14-84b" },
+              { name: "GCP_PROJECT_ID",             value: process.env.GCP_PROJECT_ID ?? "" },
               { name: "GEMMA_MODEL",                value: process.env.GEMMA_MODEL ?? "gemma-4-26b-a4b-it-maas" },
             ],
           },
