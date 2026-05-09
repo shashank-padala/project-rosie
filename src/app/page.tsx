@@ -291,6 +291,12 @@ export default function HomePage() {
             >
               GitHub
             </a>
+            <Link href="/terms" className="hover:text-foreground transition-colors font-medium">
+              Terms
+            </Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors font-medium">
+              Privacy
+            </Link>
             <Badge variant="outline" className="border-primary/30 text-primary text-xs font-medium">
               Built for Gemma4Good
             </Badge>
