@@ -10,7 +10,7 @@ const NAV = [
   { label: "Dashboard", href: "/dashboard",  icon: LayoutDashboard },
   { label: "New Case",  href: "/submit",     icon: FilePlus },
   { label: "Docs",      href: "/docs",       icon: BookOpen },
-  { label: "Sample",    href: "/demo",       icon: FlaskConical },
+  { label: "Sample Output", href: "/demo",  icon: FlaskConical },
 ]
 
 interface Props {
