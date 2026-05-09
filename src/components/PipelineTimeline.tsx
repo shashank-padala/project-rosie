@@ -436,10 +436,26 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
 
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
 
-              {/* Active: elapsed + estimated remaining */}
+              {/* Active: stale detection or normal elapsed */}
               {state === "active" && (() => {
                 const est = STEP_EST[step.status]
-                const elapsedSec = Math.max(0, Math.floor((now - new Date(caseData.updated_at).getTime()) / 1000))
+                const stageStartMs = new Date(caseData.updated_at).getTime()
+                const elapsedSec = Math.max(0, Math.floor((now - stageStartMs) / 1000))
+                // If updated_at === created_at the pipeline never sent a single callback
+                const neverUpdated = caseData.updated_at === caseData.created_at
+                const stale = neverUpdated && elapsedSec > 300 // 5 min with no update = something's wrong
+
+                if (stale) {
+                  return (
+                    <div className="mt-3 rounded-lg bg-amber-500/10 border border-amber-500/20 px-3 py-2.5 space-y-1">
+                      <p className="text-xs font-semibold text-amber-500">No pipeline updates received</p>
+                      <p className="text-xs text-muted-foreground">
+                        {fmtElapsed(elapsedSec)} since submission with no progress — the job may have failed to start. Try re-submitting or contact support.
+                      </p>
+                    </div>
+                  )
+                }
+
                 return (
                   <div className="mt-3 flex items-center gap-3 flex-wrap">
                     <div className="flex items-center gap-1.5">

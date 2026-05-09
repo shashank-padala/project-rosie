@@ -67,14 +67,24 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // Trigger Cloud Run Job asynchronously — don't await so response is fast
-  triggerPipelineJob({
-    caseId: data.id,
-    gcsVcfPath: gcs_vcf_path,
-    sampleName: sample_name.trim(),
-    alleles: (alleles ?? []).join(","),
-    species: species ?? "canis_lupus_familiaris",
-  }).catch((err) => console.error("[cloud-run] trigger failed:", err))
+  // Trigger Cloud Run Job — await so we can mark failed immediately on error
+  try {
+    await triggerPipelineJob({
+      caseId: data.id,
+      gcsVcfPath: gcs_vcf_path,
+      sampleName: sample_name.trim(),
+      alleles: (alleles ?? []).join(","),
+      species: species ?? "canis_lupus_familiaris",
+    })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error("[cloud-run] trigger failed:", msg)
+    await supabase
+      .from("cases")
+      .update({ status: "failed", error_message: `Pipeline failed to start: ${msg}` })
+      .eq("id", data.id)
+    return NextResponse.json({ error: "Pipeline failed to start. Check server logs." }, { status: 500 })
+  }
 
   return NextResponse.json({ id: data.id }, { status: 201 })
   } catch (e) {
