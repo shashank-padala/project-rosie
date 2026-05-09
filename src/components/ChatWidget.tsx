@@ -74,7 +74,7 @@ export function ChatWidget({ caseId }: { caseId: string }) {
   /* ── Minimized: header bar only ── */
   if (state === "minimized") {
     return (
-      <div className="fixed bottom-6 right-6 z-50 w-52 rounded-xl border border-border bg-card shadow-xl overflow-hidden">
+      <div className="fixed bottom-6 right-6 z-50 w-64 rounded-xl border border-border bg-card shadow-xl overflow-hidden">
         <ChatHeader onMinimize={() => setState("open")} minimized />
       </div>
     )
