@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from modules.prediction import run_pvacseq
 from modules.scoring import score_candidates
 from modules.visualizations import generate_all
-from modules.gemma import generate_clinical_report
+from modules.gemma import generate_clinical_report, generate_mrna_synthesis_spec
 from modules.mrna_design import design_mrna
 
 CASE_ID                  = os.environ["CASE_ID"]
@@ -165,10 +165,21 @@ def main():
                 species=SPECIES,
             )
             summary_path = fasta_path.replace("_vaccine_mrna.fasta", "_mrna_design_summary.md")
-            mrna_summary = Path(summary_path).read_text() if Path(summary_path).exists() else ""
+            design_summary = Path(summary_path).read_text() if Path(summary_path).exists() else ""
         except Exception as e:
             callback("failed", error_message=f"mRNA design failed: {e}")
             sys.exit(1)
+
+        # Step 5b: Gemma 4 synthesis specification
+        print("[pipeline] Step 5b: Generating mRNA synthesis specification...")
+        try:
+            mrna_summary = generate_mrna_synthesis_spec(
+                design_summary=design_summary,
+                candidates_json_path=json_path,
+            )
+        except Exception as e:
+            print(f"[pipeline] Synthesis spec failed (non-fatal): {e}")
+            mrna_summary = design_summary  # fall back to Python-generated summary
 
         # Final callback with all results
         callback(

@@ -35,13 +35,15 @@ The entire design process — previously requiring months of expert manual work 
 | Gemma 4 | Gemma 4 27B IT via Vertex AI | Clinical report generation, multimodal chart interpretation, conversational assistant |
 | Auth (GCP) | Workload Identity Federation | Vercel → GCP OIDC — no service account keys |
 
-### Gemma 4 — Three Active Roles
+### Gemma 4 — Four Active Roles
 
 **Role 1 — Multimodal Visualization Interpreter**: Binding affinity distribution plots and mutation landscape charts are encoded as base64 PNGs and sent to Gemma 4's vision input alongside the candidate JSON. Extracts signal that parsed data alone cannot provide.
 
 **Role 2 — Clinical Report Generator**: Reasons across all pipeline outputs using the full context window. Produces a plain-language clinical report written for the veterinary oncologist, not the bioinformatician.
 
-**Role 3 — Conversational Case Assistant**: Chat interface in the report view. Full case context loaded. Vet asks questions in plain language, Gemma 4 answers in seconds.
+**Role 3 — mRNA Synthesis Specification**: After the mRNA construct is assembled, Gemma 4 generates a formal synthesis specification document — LNP formulation ratios, N1-methylpseudouridine modification instructions, QC requirements, cold chain specs, and dosing guidance — ready to email directly to an RNA synthesis lab (Trilink, Genscript).
+
+**Role 4 — Conversational Case Assistant**: Chat interface in the report view. Full case context loaded. Vet asks questions in plain language, Gemma 4 answers in seconds.
 
 ---
 

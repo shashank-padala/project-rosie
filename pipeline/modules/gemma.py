@@ -1,6 +1,6 @@
 """
 Gemma 4 integration via Vertex AI.
-Generates clinical reports and interprets visualizations from scored neoantigen candidates.
+Generates clinical reports, interprets visualizations, and produces mRNA synthesis specifications.
 """
 import os
 import json
@@ -134,6 +134,66 @@ def generate_clinical_report(
         binding_affinity_png=binding_affinity_png,
         mutation_landscape_png=mutation_landscape_png,
     )
+
+
+_SYNTHESIS_SPEC_PROMPT = """You are an mRNA therapeutics formulation expert. A veterinary oncology team needs to send a synthesis request to an RNA manufacturing partner for a personalized neoantigen vaccine.
+
+You will receive:
+1. The mRNA construct specification (sequence architecture, GC content, epitope details)
+2. The top neoantigen candidates the construct encodes
+
+Write a concise but complete synthesis specification document that can be emailed directly to an RNA synthesis lab (e.g., Trilink Biotechnologies, Genscript).
+
+Structure the document with these sections:
+1. **Synthesis Request Summary** — one paragraph: what this construct is, what it is for, species context
+2. **Sequence Specifications** — confirm key parameters: total length, CDS GC%, construct architecture (5'UTR → Kozak → CDS → 3'UTR → poly-A)
+3. **Chemical Modifications** — N1-methylpseudouridine (m1Ψ) substitution for all uridines: reason (reduces innate immune activation, improves stability and translation)
+4. **LNP Formulation Request** — recommend ionizable lipid (Dlin-MC3-DMA or SM-102) + DSPC + cholesterol + PEG-lipid; specify molar ratios (50:10:38.5:1.5); note species-appropriate particle size target (80–120 nm)
+5. **Quality Control Requirements** — RNA integrity (RIN > 8, gel electrophoresis), dsRNA ELISA (< 0.1%), endotoxin limit (< 0.1 EU/µg), residual DNA (< 10 ng/mg protein)
+6. **Storage and Cold Chain** — storage temperature (−80 °C for naked mRNA, −20 °C for LNP formulation), shipping on dry ice, expected shelf life
+7. **Dosing Guidance** — starting dose range for the species based on body weight and neoantigen vaccine literature; note this requires veterinary oncologist sign-off before administration
+
+Tone: technical and precise. This goes to a formulation scientist, not a clinician. No hedging — be direct and specific.
+Length: 450–550 words."""
+
+
+def generate_mrna_synthesis_spec(
+    design_summary: str,
+    candidates_json_path: str,
+) -> str:
+    client = genai.Client(vertexai=True, project=GCP_PROJECT, location=GCP_REGION)
+
+    with open(candidates_json_path) as f:
+        candidates = json.load(f)
+
+    top = candidates.get("top_candidates", [])[:5]
+    species = candidates.get("species", "canis_lupus_familiaris")
+
+    candidates_block = json.dumps({
+        "species": species,
+        "alleles": candidates.get("alleles", []),
+        "top_candidates": top,
+    }, indent=2)
+
+    contents = [
+        types.Content(role="user", parts=[
+            types.Part(text=_SYNTHESIS_SPEC_PROMPT),
+            types.Part(text=f"mRNA construct specification:\n\n{design_summary}"),
+            types.Part(text=f"Top neoantigen candidates encoded in this construct:\n\n```json\n{candidates_block}\n```"),
+            types.Part(text="Please write the synthesis specification document now."),
+        ])
+    ]
+
+    response = client.models.generate_content(
+        model=MODEL,
+        contents=contents,
+        config=types.GenerateContentConfig(
+            max_output_tokens=1024,
+            temperature=0.2,
+        ),
+    )
+
+    return response.text
 
 
 def _embed_images(report: str, binding_affinity_png: str, mutation_landscape_png: str) -> str:
