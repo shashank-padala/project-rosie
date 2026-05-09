@@ -51,15 +51,15 @@ export default function HomePage() {
             { label: "Tumor VCF", icon: "🧬" },
             { label: "Variant Calling", icon: "🔍" },
             { label: "Epitope Scoring", icon: "⚗️" },
-            { label: "AI Report", icon: "🤖" },
+            { label: "Neoantigen Report", icon: "🤖" },
             { label: "mRNA FASTA", icon: "💉" },
           ].map((step, i) => (
             <div key={i} className="flex items-center gap-2">
-              <div className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border/60 bg-card/60 min-w-[96px] hover:border-primary/30 transition-colors">
+              <div className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border bg-card min-w-[96px] shadow-sm hover:border-primary/40 hover:shadow-primary/5 transition-all">
                 <span className="text-xl">{step.icon}</span>
                 <span className="font-medium">{step.label}</span>
               </div>
-              {i < 4 && <span className="text-border/60 hidden sm:block text-base">→</span>}
+              {i < 4 && <span className="text-muted-foreground/60 hidden sm:block text-base font-bold">→</span>}
             </div>
           ))}
         </div>
