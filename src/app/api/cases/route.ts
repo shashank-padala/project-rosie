@@ -101,13 +101,19 @@ async function triggerPipelineJob({
   const secret = process.env.PIPELINE_CALLBACK_SECRET
 
   if (!jobName || !callbackUrl || !secret) {
-    console.warn("[cloud-run] env vars missing — skipping job trigger")
-    return
+    throw new Error(`[cloud-run] missing env vars: jobName=${!!jobName} callbackUrl=${!!callbackUrl} secret=${!!secret}`)
   }
+
+  // Support short name (rosie-pipeline) or full resource path
+  const projectId = process.env.GCP_PROJECT_ID ?? ""
+  const region = process.env.GCP_REGION ?? "us-central1"
+  const fullJobName = jobName.startsWith("projects/")
+    ? jobName
+    : `projects/${projectId}/locations/${region}/jobs/${jobName}`
 
   const token = await getGcpAccessToken()
 
-  const res = await fetch(`https://run.googleapis.com/v2/${jobName}:run`, {
+  const res = await fetch(`https://run.googleapis.com/v2/${fullJobName}:run`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
