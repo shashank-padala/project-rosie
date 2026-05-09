@@ -46,6 +46,16 @@ export default function SubmitPage() {
   const [loading, setLoading] = useState(false)
   const [uploadPhase, setUploadPhase] = useState<"idle" | "uploading" | "submitting">("idle")
 
+  async function safeJson(res: Response) {
+    const text = await res.text()
+    if (!text) throw new Error(`Server error ${res.status} (empty response)`)
+    try {
+      return JSON.parse(text)
+    } catch {
+      throw new Error(`Server error ${res.status}: ${text.slice(0, 200)}`)
+    }
+  }
+
   async function handleSubmit() {
     setError("")
     setLoading(true)
@@ -53,7 +63,7 @@ export default function SubmitPage() {
       // Step 1: Get signed GCS URL, upload VCF directly from browser
       setUploadPhase("uploading")
       const urlRes = await fetch(`/api/upload-url?filename=${encodeURIComponent(file!.name)}`)
-      const urlData = await urlRes.json()
+      const urlData = await safeJson(urlRes)
       if (!urlRes.ok) throw new Error(urlData.error ?? "Failed to get upload URL")
 
       const uploadRes = await fetch(urlData.uploadUri, {
@@ -75,7 +85,7 @@ export default function SubmitPage() {
           gcs_vcf_path: urlData.gcsPath,
         }),
       })
-      const data = await res.json()
+      const data = await safeJson(res)
       if (!res.ok) throw new Error(data.error ?? "Submission failed")
       router.push(`/cases/${data.id}`)
     } catch (e) {

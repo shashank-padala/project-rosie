@@ -18,6 +18,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  try {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -74,6 +75,10 @@ export async function POST(req: NextRequest) {
   }).catch((err) => console.error("[cloud-run] trigger failed:", err))
 
   return NextResponse.json({ id: data.id }, { status: 201 })
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Internal server error"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }
 
 async function triggerPipelineJob({
