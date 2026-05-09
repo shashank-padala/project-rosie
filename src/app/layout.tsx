@@ -7,12 +7,12 @@ const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"], weight:
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Project Rosie — Personalized Cancer Vaccines for Dogs",
+  title: "Rosie | Personalized Cancer Vaccines for Dogs",
   description:
     "Upload a tumor VCF. Get a ranked vaccine candidate list, an AI clinical report, and synthesis-ready mRNA in under 6 hours.",
   metadataBase: new URL("https://rosie.kiraklabs.com"),
   openGraph: {
-    title: "Project Rosie — Personalized Cancer Vaccines for Dogs",
+    title: "Rosie | Personalized Cancer Vaccines for Dogs",
     description: "Personalized cancer vaccines for dogs, designed by AI. Upload a tumor VCF, get ranked neoantigen candidates and a synthesis-ready mRNA construct.",
     type: "website",
     url: "https://rosie.kiraklabs.com",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Project Rosie — Personalized Cancer Vaccines for Dogs",
+    title: "Rosie | Personalized Cancer Vaccines for Dogs",
     description: "Upload a tumor VCF. Get ranked vaccine candidates, an AI clinical report, and synthesis-ready mRNA in under 6 hours.",
     images: ["/icon-512.png"],
   },
