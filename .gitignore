@@ -57,3 +57,5 @@ pipeline/data/canine/*.gz
 pipeline/output/
 pipeline/__pycache__/
 pipeline/modules/__pycache__/
+pipeline/netMHCpan-4.2cstatic.Linux.tar.gz
+pipeline/netMHCpan-4.2/
