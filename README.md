@@ -15,7 +15,7 @@ Takes two DNA sequencing files (tumor biopsy + healthy tissue) and produces:
 3. A plain-language clinical report for the veterinary oncologist
 4. A formal mRNA synthesis specification for the RNA manufacturing partner
 
-The entire design process — previously requiring months of expert manual work — runs in under 24 hours, costing approximately $15 in compute.
+The entire design process — previously requiring months of expert manual work — runs in ~6 hours, costing approximately $15 in compute.
 
 ---
 
@@ -71,7 +71,7 @@ These are locked-in for the hackathon build. Document here so we don't re-litiga
 
 **Hackathon deadline: ~May 18, 2026. Today: May 8. 10 days.**
 
-### Milestone 1: Bioinformatics Core — VCF to Ranked Candidates
+### Milestone 1: Pipeline Core — VCF to Ranked Candidates
 **Target: May 10 | Highest risk**
 
 - [ ] Install pVACtools + VEP via Docker (use official pVACtools image — bundles VEP)
@@ -189,7 +189,7 @@ Don't wait for the tool to be done. Send emails now with the blog as proof of co
 
 ## The Narrative
 
-> "Paul Conyngham spent months building this by hand with a university lab. We built the tool that lets any veterinary oncologist do it in 24 hours — with an open-weights model that clinics can run locally, keeping patient sequencing data on-premise."
+> "Paul Conyngham spent months building this by hand with a university lab. We built the tool that lets any veterinary oncologist do it in ~6 hours — with an open-weights model that clinics can run locally, keeping patient sequencing data on-premise."
 
 Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and cheaper than human trials. Every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data. The playbook for dogs becomes the playbook for humans.
 
@@ -228,12 +228,11 @@ Seeking: vet oncologist or computational biology researcher at UofT / OVC Guelph
 
 | Milestone | Description | Status | Notes |
 |---|---|---|---|
-| M1 — Day 1 | Bioinformatics core: pipeline validated on HCC1395 benchmark | ✅ Done | 191,645 epitopes → 1,648 candidates → top 20 ranked. TESK1 (IC50=3.5nM), FLNA confirmed as oncology genes. |
-| M1 — Day 2 | Canine data validation: VEP annotation + DLA alleles | ⏸️ Parked | Needs Docker Engine + 3GB VEP cache + Figshare VCF download. Resuming after M2. |
+| M1 — Pipeline Core | Bioinformatics core: pipeline validated on HCC1395 benchmark | ✅ Done | 191,645 epitopes → 1,648 candidates → top 20 ranked. TESK1 (IC50=3.5nM), FLNA confirmed as oncology genes. |
 | M2 | Gemma 4 integration: Vertex AI, function calling, clinical report | ✅ Done | Gemma 4 on Vertex AI global endpoint. Multimodal: JSON + 2 PNGs → clinical report. Validated on HCC1395. |
 | M3 | mRNA sequence design: Biopython + canine codon table | ✅ Done | Top 3 epitopes (TESK1+FLNA+MC4R) → codon-optimized CDS → FASTA + design summary. CDS GC 68.5% ✓ |
 | M4 | Next.js frontend: case submission, live status, report viewer, chat | ✅ Done | 11 routes, clean build. Landing page, demo viewer (HCC1395 seeded), auth, dashboard, submit form, report tabs, Gemma 4 chat widget. GCS + Realtime deferred to M5. |
 | M5 | Cloud deployment: Cloud Run, Vercel | ⬜ Not started | — |
-| M6 | End-to-end demo on real canine data | ⬜ Not started | — |
+| M6 — Canine Data | VEP annotation + DLA alleles + end-to-end deployed run on real canine mammary tumor VCF | ⬜ Not started | Absorbs parked M1-Day2 canine validation work |
 | M7 | Validation outreach: OVC Guelph / UofT / OICR | ⬜ Not started | — |
 | M8 | Hackathon submission: video, Kaggle writeup | ⬜ Not started | Deadline: May 18, 7:59 PM EDT |
