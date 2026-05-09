@@ -11,7 +11,7 @@ interface Message {
 const INTRO: Message = {
   role: "assistant",
   content:
-    "Hi, I'm Rosie — your clinical AI assistant. I have full context on this case: the ranked neoantigen candidates, binding affinity scores, clinical report, and mRNA design. Ask me anything.",
+    "Hi, I'm Rosie, your clinical AI assistant. I have full context on this case: the ranked neoantigen candidates, binding affinity scores, clinical report, and mRNA design. Ask me anything.",
 }
 
 type WidgetState = "closed" | "minimized" | "open"
