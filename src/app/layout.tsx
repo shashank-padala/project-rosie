@@ -9,11 +9,11 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   title: "Rosie | Personalized Cancer Vaccines for Dogs",
   description:
-    "Upload a tumor VCF. Get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and an mRNA vaccine design — in under 6 hours.",
+    "Upload a tumor VCF. Get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and a personalized mRNA vaccine sequence — in under 6 hours.",
   metadataBase: new URL("https://rosie.kiraklabs.com"),
   openGraph: {
     title: "Rosie | Personalized Cancer Vaccines for Dogs",
-    description: "Personalized cancer vaccines for dogs. Upload a tumor VCF, get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and an mRNA vaccine design.",
+    description: "Personalized cancer vaccines for dogs. Upload a tumor VCF, get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and a personalized mRNA vaccine sequence.",
     type: "website",
     url: "https://rosie.kiraklabs.com",
     images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "Project Rosie" }],
