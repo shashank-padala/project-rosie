@@ -23,7 +23,7 @@ export default async function DemoPage() {
         <div>
           <p className="text-sm font-semibold text-primary mb-0.5">Sample Case</p>
           <p className="text-xs text-muted-foreground">
-            HCC1395 breast cancer benchmark — real pipeline output, no edits.
+            Canine mammary tumor — PIK3CA V125M — real pipeline output, no edits.
           </p>
         </div>
         <Link
@@ -50,7 +50,7 @@ export default async function DemoPage() {
             <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono">
               python3 scripts/seed_demo.py
             </code>{" "}
-            to load the HCC1395 benchmark case.
+            to load the canine mammary tumor demo case.
           </p>
         </div>
       ) : (
