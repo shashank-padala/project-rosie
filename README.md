@@ -15,7 +15,7 @@ Takes two DNA sequencing files (tumor biopsy + healthy tissue) and produces:
 3. A plain-language clinical report for the veterinary oncologist
 4. A formal mRNA synthesis specification for the RNA manufacturing partner
 
-The entire design process — previously requiring months of expert manual work — runs in ~6 hours, costing approximately $15 in compute.
+The entire design process — previously requiring months of expert manual work — runs in <6 hours, costing approximately $15 in compute.
 
 ---
 
@@ -189,7 +189,7 @@ Don't wait for the tool to be done. Send emails now with the blog as proof of co
 
 ## The Narrative
 
-> "Paul Conyngham spent months building this by hand with a university lab. We built the tool that lets any veterinary oncologist do it in ~6 hours — with an open-weights model that clinics can run locally, keeping patient sequencing data on-premise."
+> "Paul Conyngham spent months building this by hand with a university lab. We built the tool that lets any veterinary oncologist do it in <6 hours — with an open-weights model that clinics can run locally, keeping patient sequencing data on-premise."
 
 Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and cheaper than human trials. Every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data. The playbook for dogs becomes the playbook for humans.
 
