@@ -205,6 +205,26 @@ const mdComponents = {
   ),
   img: () => null,
   hr: () => <hr className="border-border/40 my-4" />,
+  table: ({ children }: { children?: React.ReactNode }) => (
+    <div className="my-3 overflow-x-auto rounded-xl border border-border/40">
+      <table className="w-full text-xs border-collapse">{children}</table>
+    </div>
+  ),
+  thead: ({ children }: { children?: React.ReactNode }) => (
+    <thead className="bg-secondary/60">{children}</thead>
+  ),
+  tbody: ({ children }: { children?: React.ReactNode }) => (
+    <tbody className="divide-y divide-border/30">{children}</tbody>
+  ),
+  tr: ({ children }: { children?: React.ReactNode }) => (
+    <tr className="hover:bg-secondary/30 transition-colors">{children}</tr>
+  ),
+  th: ({ children }: { children?: React.ReactNode }) => (
+    <th className="px-3 py-2 text-left font-semibold text-muted-foreground/80 uppercase tracking-wider text-[10px] whitespace-nowrap">{children}</th>
+  ),
+  td: ({ children }: { children?: React.ReactNode }) => (
+    <td className="px-3 py-2 text-muted-foreground leading-relaxed">{children}</td>
+  ),
 }
 
 /* ─── Artifact components ─── */
