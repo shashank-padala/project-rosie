@@ -104,7 +104,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { before: "3 months", after: "<6 hours", label: "Design time", icon: "⏱️" },
-              { before: "Research lab required", after: "Any vet clinic", label: "Accessibility", icon: "🏥" },
+              { before: "Research lab required", after: "Any oncologist with sequencing data", label: "Accessibility", icon: "🏥" },
               { before: "$10,000+", after: "~$15", label: "Compute cost", icon: "💰" },
             ].map((stat) => (
               <div
@@ -148,8 +148,8 @@ export default function HomePage() {
               {
                 num: "02",
                 icon: "⚗️",
-                title: "AI scores 190K+ peptides",
-                body: "NetMHCpan evaluates every peptide combination across all mutations, alleles, and lengths. Top candidates ranked by composite score.",
+                title: "AI ranks every candidate epitope",
+                body: "NetMHCpan evaluates every peptide-allele combination across all mutations and lengths. Thousands of candidates per case, ranked by binding affinity and immunogenicity.",
               },
               {
                 num: "03",
