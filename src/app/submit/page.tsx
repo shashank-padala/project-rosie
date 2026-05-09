@@ -145,7 +145,7 @@ export default function SubmitPage() {
                 >
                   <option value="canis_lupus_familiaris">Dog (Canis lupus familiaris)</option>
                   <option value="homo_sapiens">Human (Homo sapiens)</option>
-                  <option value="felis_catus">Cat (Felis catus)</option>
+                  <option value="felis_catus" disabled>Cat (Felis catus) — coming soon</option>
                 </select>
               </div>
               <Button
