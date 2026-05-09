@@ -8,11 +8,11 @@ export function ReportViewer({ caseData }: { caseData: Case }) {
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Sidebar */}
-      <aside className="lg:w-52 shrink-0">
+      <aside className="lg:w-60 shrink-0">
         <div className="rounded-2xl border border-border/60 bg-card p-5 space-y-5 sticky top-20 shadow-xl shadow-black/10">
           <div>
-            <p className="text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Sample</p>
-            <p className="font-semibold text-sm break-all leading-snug">{caseData.sample_name}</p>
+            <p className="text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Case Details</p>
+            <p className="font-semibold text-sm break-words leading-snug">{caseData.sample_name}</p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Species</p>
