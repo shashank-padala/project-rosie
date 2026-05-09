@@ -104,7 +104,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { before: "3 months", after: "~6 hours", label: "Design time", icon: "⏱️" },
-              { before: "PhD lab required", after: "Any vet clinic", label: "Accessibility", icon: "🏥" },
+              { before: "Research lab required", after: "Any vet clinic", label: "Accessibility", icon: "🏥" },
               { before: "$10,000+", after: "~$15", label: "Compute cost", icon: "💰" },
             ].map((stat) => (
               <div
