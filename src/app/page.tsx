@@ -149,7 +149,7 @@ export default function HomePage() {
                 num: "02",
                 icon: "⚗️",
                 title: "AI scores 190K+ peptides",
-                body: "NetMHCpan predicts MHC binding affinity across all mutations × alleles × lengths. Top candidates ranked by composite score.",
+                body: "NetMHCpan evaluates every peptide combination across all mutations, alleles, and lengths. Top candidates ranked by composite score.",
               },
               {
                 num: "03",

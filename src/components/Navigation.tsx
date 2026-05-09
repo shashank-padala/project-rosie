@@ -22,6 +22,17 @@ export function Navigation() {
 
         <nav className="flex items-center gap-1">
           <Link
+            href="/docs"
+            className={cn(
+              "px-3.5 py-2 rounded-lg text-sm font-medium transition-colors",
+              path === "/docs"
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+            )}
+          >
+            Docs
+          </Link>
+          <Link
             href="/demo"
             className={cn(
               "px-3.5 py-2 rounded-lg text-sm font-medium transition-colors",
