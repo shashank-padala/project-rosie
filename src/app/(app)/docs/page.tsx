@@ -1,4 +1,3 @@
-import { Navigation } from "@/components/Navigation"
 import { Badge } from "@/components/ui/badge"
 
 const DOCS = [
@@ -69,64 +68,61 @@ const DOCS = [
 
 export default function DocsPage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navigation />
-      <main className="flex-1 max-w-4xl mx-auto w-full px-5 sm:px-6 pt-28 pb-16">
-        <div className="mb-10">
-          <h1
-            className="text-3xl font-bold mb-2"
-            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-          >
-            Docs &amp; Writing
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Pipeline explainers, architecture notes, and the Gemma4Good hackathon writeup.
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto w-full px-5 sm:px-6 pt-10 pb-16">
+      <div className="mb-10">
+        <h1
+          className="text-3xl font-bold mb-2"
+          style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+        >
+          Docs &amp; Writing
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          Pipeline explainers, architecture notes, and the Gemma4Good hackathon writeup.
+        </p>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {DOCS.map((doc) => (
-            <a
-              key={doc.title}
-              href={doc.href}
-              target={doc.external ? "_blank" : undefined}
-              rel={doc.external ? "noopener noreferrer" : undefined}
-              className="group rounded-2xl border border-border/60 bg-card p-6 shadow-sm hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 flex flex-col gap-3"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <Badge variant="outline" className={`text-xs font-semibold px-2 py-0.5 rounded-md ${doc.categoryStyle}`}>
-                  {doc.category}
-                </Badge>
-                <span className="text-muted-foreground/40 group-hover:text-primary/60 transition-colors text-sm">↗</span>
-              </div>
-              <div>
-                <h2
-                  className="font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors"
-                  style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                >
-                  {doc.title}
-                </h2>
-                <p className="text-muted-foreground text-sm leading-relaxed">{doc.description}</p>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <div className="mt-10 rounded-2xl border border-border/60 bg-secondary/30 px-6 py-5 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">Source code</p>
-            <p className="text-xs text-muted-foreground">Full pipeline, frontend, and scripts on GitHub.</p>
-          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {DOCS.map((doc) => (
           <a
-            href="https://github.com/shashank-padala/project-rosie"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 text-xs px-4 py-2 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
+            key={doc.title}
+            href={doc.href}
+            target={doc.external ? "_blank" : undefined}
+            rel={doc.external ? "noopener noreferrer" : undefined}
+            className="group rounded-2xl border border-border/60 bg-card p-6 shadow-sm hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 flex flex-col gap-3"
           >
-            GitHub →
+            <div className="flex items-center justify-between gap-3">
+              <Badge variant="outline" className={`text-xs font-semibold px-2 py-0.5 rounded-md ${doc.categoryStyle}`}>
+                {doc.category}
+              </Badge>
+              <span className="text-muted-foreground/40 group-hover:text-primary/60 transition-colors text-sm">↗</span>
+            </div>
+            <div>
+              <h2
+                className="font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors"
+                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+              >
+                {doc.title}
+              </h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">{doc.description}</p>
+            </div>
           </a>
+        ))}
+      </div>
+
+      <div className="mt-10 rounded-2xl border border-border/60 bg-secondary/30 px-6 py-5 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold text-foreground mb-0.5">Source code</p>
+          <p className="text-xs text-muted-foreground">Full pipeline, frontend, and scripts on GitHub.</p>
         </div>
-      </main>
+        <a
+          href="https://github.com/shashank-padala/project-rosie"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 text-xs px-4 py-2 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
+        >
+          GitHub →
+        </a>
+      </div>
     </div>
   )
 }
