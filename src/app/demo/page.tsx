@@ -24,7 +24,7 @@ export default async function DemoPage() {
         {/* Banner */}
         <div className="rounded-xl border border-primary/20 bg-primary/5 px-5 py-3.5 mb-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-primary mb-0.5">Live Demo</p>
+            <p className="text-sm font-semibold text-primary mb-0.5">Sample Case</p>
             <p className="text-xs text-muted-foreground">
               HCC1395 breast cancer benchmark — real pipeline output, no edits.
             </p>

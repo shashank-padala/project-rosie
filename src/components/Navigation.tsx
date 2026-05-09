@@ -30,7 +30,7 @@ export function Navigation() {
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary"
             )}
           >
-            Demo
+            Sample Case
           </Link>
           <Link
             href="/dashboard"

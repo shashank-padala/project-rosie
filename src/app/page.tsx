@@ -35,7 +35,7 @@ export default function HomePage() {
             href="/demo"
             className="px-7 py-3 rounded-xl bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25 text-sm"
           >
-            Try the Demo
+            View Sample Case
           </Link>
           <Link
             href="/auth/signup"
@@ -256,7 +256,7 @@ export default function HomePage() {
             href="/demo"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25 text-sm"
           >
-            View Demo Case
+            View Sample Case
             <span>→</span>
           </Link>
         </div>
