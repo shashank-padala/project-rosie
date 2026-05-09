@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     console.error("[cloud-run] trigger failed:", msg)
     await supabase
       .from("cases")
-      .update({ status: "failed", error_message: `Pipeline failed to start: ${msg}` })
+      .update({ status: "failed", error_message: "Pipeline failed to start. Please try re-submitting your case." })
       .eq("id", data.id)
     return NextResponse.json({ error: "Pipeline failed to start. Check server logs." }, { status: 500 })
   }

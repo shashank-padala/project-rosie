@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import Image from "next/image"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -436,26 +437,10 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
 
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
 
-              {/* Active: stale detection or normal elapsed */}
+              {/* Active: elapsed + estimated remaining */}
               {state === "active" && (() => {
                 const est = STEP_EST[step.status]
-                const stageStartMs = new Date(caseData.updated_at).getTime()
-                const elapsedSec = Math.max(0, Math.floor((now - stageStartMs) / 1000))
-                // If updated_at === created_at the pipeline never sent a single callback
-                const neverUpdated = caseData.updated_at === caseData.created_at
-                const stale = neverUpdated && elapsedSec > 300 // 5 min with no update = something's wrong
-
-                if (stale) {
-                  return (
-                    <div className="mt-3 rounded-lg bg-amber-500/10 border border-amber-500/20 px-3 py-2.5 space-y-1">
-                      <p className="text-xs font-semibold text-amber-500">No pipeline updates received</p>
-                      <p className="text-xs text-muted-foreground">
-                        {fmtElapsed(elapsedSec)} since submission with no progress — the job may have failed to start. Try re-submitting or contact support.
-                      </p>
-                    </div>
-                  )
-                }
-
+                const elapsedSec = Math.max(0, Math.floor((now - new Date(caseData.updated_at).getTime()) / 1000))
                 return (
                   <div className="mt-3 flex items-center gap-3 flex-wrap">
                     <div className="flex items-center gap-1.5">
@@ -478,10 +463,18 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
                 </p>
               )}
 
-              {/* Error message */}
-              {state === "error" && caseData.error_message && (
-                <div className="mt-3 text-xs text-destructive bg-destructive/10 rounded-lg px-3 py-2 leading-relaxed">
-                  {caseData.error_message}
+              {/* Error state */}
+              {state === "error" && (
+                <div className="mt-3 space-y-3">
+                  <div className="text-xs text-destructive bg-destructive/10 rounded-lg px-3 py-2 leading-relaxed">
+                    {caseData.error_message ?? "An unexpected error occurred during this step."}
+                  </div>
+                  <Link
+                    href="/submit"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity"
+                  >
+                    ↩ Re-submit case
+                  </Link>
                 </div>
               )}
 
