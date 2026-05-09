@@ -1,11 +1,40 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
+import type { User } from "@supabase/supabase-js"
 
 export function Navigation() {
   const path = usePathname()
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
+
+  async function handleSignOut() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push("/")
+  }
+
+  const avatarLetter = user?.email?.[0]?.toUpperCase() ?? "?"
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -54,12 +83,30 @@ export function Navigation() {
           >
             Dashboard
           </Link>
-          <Link
-            href="/auth/login"
-            className="ml-2 px-4 py-2 rounded-lg text-sm bg-hero-gradient text-primary-foreground hover:opacity-90 transition-opacity font-semibold shadow-lg shadow-primary/20"
-          >
-            Sign In
-          </Link>
+
+          {user ? (
+            <div className="ml-2 flex items-center gap-2">
+              <div
+                className="h-8 w-8 rounded-full bg-hero-gradient flex items-center justify-center text-primary-foreground text-sm font-bold shadow-lg shadow-primary/20 select-none"
+                title={user.email}
+              >
+                {avatarLetter}
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors font-medium"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="ml-2 px-4 py-2 rounded-lg text-sm bg-hero-gradient text-primary-foreground hover:opacity-90 transition-opacity font-semibold shadow-lg shadow-primary/20"
+            >
+              Sign In
+            </Link>
+          )}
         </nav>
       </div>
     </header>

@@ -3,7 +3,7 @@ import { createServerClient } from "@/lib/supabase/server"
 import { getGcpAccessToken } from "@/lib/gcp-auth"
 
 export async function GET() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -18,9 +18,27 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+  // Enforce 3-submission cap
+  const { count, error: countError } = await supabase
+    .from("cases")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+
+  if (countError) return NextResponse.json({ error: countError.message }, { status: 500 })
+
+  if ((count ?? 0) >= 3) {
+    return NextResponse.json(
+      {
+        error:
+          "Submission limit reached. You've used all 3 of your free submissions. Email shashank.padala@gmail.com with a short intro to request more.",
+      },
+      { status: 429 }
+    )
+  }
 
   const body = await req.json()
   const { sample_name, species, alleles, gcs_vcf_path } = body

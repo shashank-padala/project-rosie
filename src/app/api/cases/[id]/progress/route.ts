@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createServerClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server"
 
 export async function POST(
   req: NextRequest,
@@ -39,7 +39,7 @@ export async function POST(
   if (mutation_landscape_img_b64) update.mutation_landscape_img_b64 = mutation_landscape_img_b64
   if (error_message)              update.error_message = error_message
 
-  const supabase = createServerClient()
+  const supabase = createAdminClient()
   const { error } = await supabase.from("cases").update(update).eq("id", id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 

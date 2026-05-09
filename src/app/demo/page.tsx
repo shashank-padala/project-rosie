@@ -7,7 +7,7 @@ import Link from "next/link"
 export const dynamic = "force-dynamic"
 
 export default async function DemoPage() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { data: caseData, error } = await supabase
     .from("cases")
     .select("*")

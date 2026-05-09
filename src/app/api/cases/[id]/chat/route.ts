@@ -11,7 +11,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
 
