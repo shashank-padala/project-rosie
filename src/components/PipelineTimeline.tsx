@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -58,6 +58,27 @@ const STEPS: StepDef[] = [
     desc: "Your personalized vaccine design is complete. All artifacts are ready for review with your oncologist.",
   },
 ]
+
+const STEP_EST: Partial<Record<CaseStatus, { label: string; maxSec: number }>> = {
+  pending:   { label: "< 1 min",   maxSec: 60 },
+  running:   { label: "10–15 min", maxSec: 900 },
+  scoring:   { label: "1–3 min",   maxSec: 180 },
+  reporting: { label: "2–5 min",   maxSec: 300 },
+  designing: { label: "1–2 min",   maxSec: 120 },
+}
+
+function fmtElapsed(sec: number): string {
+  const m = Math.floor(sec / 60)
+  const s = sec % 60
+  return m > 0 ? `${m}m ${s.toString().padStart(2, "0")}s` : `${s}s`
+}
+
+function fmtRemaining(elapsedSec: number, maxSec: number): string {
+  const rem = maxSec - elapsedSec
+  if (rem <= 0) return "finishing up…"
+  const m = Math.floor(rem / 60)
+  return m > 0 ? `~${m} min left` : `~${rem}s left`
+}
 
 type StepState = "done" | "active" | "upcoming" | "error"
 
@@ -343,6 +364,13 @@ function ArtifactSection({ stepStatus, caseData }: { stepStatus: CaseStatus; cas
 
 export function PipelineTimeline({ caseData }: { caseData: Case }) {
   const [collapsedArtifacts, setCollapsedArtifacts] = useState<Set<string>>(new Set())
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (caseData.status === "completed" || caseData.status === "failed") return
+    const id = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [caseData.status])
 
   function toggleArtifact(key: string) {
     setCollapsedArtifacts((prev) => {
@@ -408,12 +436,30 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
 
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
 
-              {/* Active pulse */}
-              {state === "active" && (
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                  <span className="text-xs text-primary/80 font-medium">In progress</span>
-                </div>
+              {/* Active: elapsed + estimated remaining */}
+              {state === "active" && (() => {
+                const est = STEP_EST[step.status]
+                const elapsedSec = Math.max(0, Math.floor((now - new Date(caseData.updated_at).getTime()) / 1000))
+                return (
+                  <div className="mt-3 flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                      <span className="text-xs text-primary/80 font-medium">In progress</span>
+                    </div>
+                    {est && (
+                      <span className="text-xs text-muted-foreground/60 tabular-nums">
+                        {fmtElapsed(elapsedSec)} elapsed · {fmtRemaining(elapsedSec, est.maxSec)}
+                      </span>
+                    )}
+                  </div>
+                )
+              })()}
+
+              {/* Upcoming: estimated duration */}
+              {state === "upcoming" && STEP_EST[step.status] && (
+                <p className="mt-2 text-xs text-muted-foreground/40">
+                  est. {STEP_EST[step.status]!.label}
+                </p>
               )}
 
               {/* Error message */}

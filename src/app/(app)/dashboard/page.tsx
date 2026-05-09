@@ -91,7 +91,7 @@ export default async function DashboardPage() {
               <div className="col-span-1 text-right">
                 <Link
                   href={`/cases/${c.id}`}
-                  className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-secondary hover:bg-primary/10 text-muted-foreground hover:text-primary border border-border/50 hover:border-primary/30 transition-all"
                 >
                   View →
                 </Link>
