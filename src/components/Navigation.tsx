@@ -46,8 +46,11 @@ export function Navigation() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <Image src="/rosie-logo.png" alt="Rosie" height={32} width={120} className="h-8 w-auto" priority />
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image src="/icon-512.png" alt="Rosie" height={40} width={40} className="h-10 w-10" priority />
+          <span className="font-bold text-base tracking-tight" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+            Project Rosie
+          </span>
         </Link>
 
         <nav className="flex items-center gap-1">
