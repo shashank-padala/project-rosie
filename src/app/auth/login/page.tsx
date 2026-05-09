@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
+  const [agreed, setAgreed] = useState(false)
   const [error, setError] = useState("")
 
   async function handleGoogleSignIn() {
@@ -48,16 +49,37 @@ export default function LoginPage() {
           <p className="text-muted-foreground text-sm">Sign in to access your cases</p>
         </div>
 
-        <div className="rounded-2xl border border-border/60 bg-card p-7 shadow-xl shadow-black/20">
+        <div className="rounded-2xl border border-border/60 bg-card p-7 shadow-xl shadow-black/20 space-y-4">
           {error && (
-            <p className="text-destructive text-sm bg-destructive/10 rounded-lg px-3 py-2 mb-4">
+            <p className="text-destructive text-sm bg-destructive/10 rounded-lg px-3 py-2">
               {error}
             </p>
           )}
+
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-border accent-primary cursor-pointer shrink-0"
+            />
+            <span className="text-xs text-muted-foreground leading-relaxed">
+              I agree to the{" "}
+              <Link href="/terms" className="text-primary hover:underline font-medium" target="_blank">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="text-primary hover:underline font-medium" target="_blank">
+                Privacy Policy
+              </Link>
+              , and confirm this tool is for research purposes only and does not constitute medical advice.
+            </span>
+          </label>
+
           <Button
             onClick={handleGoogleSignIn}
-            disabled={loading}
-            className="w-full h-11 rounded-lg bg-card border border-border/60 text-foreground font-semibold hover:bg-secondary/60 transition-colors shadow-sm flex items-center justify-center gap-3"
+            disabled={loading || !agreed}
+            className="w-full h-11 rounded-lg bg-card border border-border/60 text-foreground font-semibold hover:bg-secondary/60 transition-colors shadow-sm flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed"
             variant="outline"
           >
             {loading ? (
@@ -87,18 +109,6 @@ export default function LoginPage() {
             )}
           </Button>
         </div>
-
-        <p className="text-center text-xs text-muted-foreground mt-5 leading-relaxed">
-          By signing in you agree to our{" "}
-          <Link href="/terms" className="text-primary hover:underline">
-            Terms
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy" className="text-primary hover:underline">
-            Privacy Policy
-          </Link>
-          .
-        </p>
       </div>
     </div>
   )
