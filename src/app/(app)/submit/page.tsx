@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -83,9 +82,6 @@ export default function SubmitPage() {
     <div className="max-w-xl mx-auto w-full px-5 sm:px-6 pt-10 pb-12">
       {/* Header */}
       <div className="mb-8">
-        <Link href="/dashboard" className="text-muted-foreground text-sm hover:text-foreground transition-colors font-medium">
-          ← Dashboard
-        </Link>
         <h1
           className="text-2xl font-bold mt-3 mb-1"
           style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
