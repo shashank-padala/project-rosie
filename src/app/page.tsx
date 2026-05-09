@@ -250,8 +250,8 @@ export default function HomePage() {
             See it in action
           </h2>
           <p className="text-muted-foreground mb-9 leading-relaxed text-base sm:text-lg max-w-md mx-auto">
-            Explore the full pipeline output on the HCC1395 breast cancer benchmark — ranked
-            candidates, clinical report, and mRNA construct.
+            Follow a real canine mammary tumor case end-to-end — from somatic VCF to ranked
+            neoantigen candidates, AI clinical report, and a synthesis-ready mRNA construct.
           </p>
           <Link
             href="/demo"
