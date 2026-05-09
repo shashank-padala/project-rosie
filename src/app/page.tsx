@@ -27,7 +27,7 @@ export default function HomePage() {
 
         <p className="animate-fade-up-2 text-lg sm:text-xl text-muted-foreground max-w-lg mb-10 leading-relaxed">
           Upload a tumor biopsy file. Get ranked vaccine targets, an AI clinical
-          report, and a synthesis-ready mRNA sequence. In <6 hours, not months.
+          report, and a synthesis-ready mRNA sequence. In &lt;6 hours, not months.
         </p>
 
         <div className="animate-fade-up-3 flex flex-col sm:flex-row gap-3">

@@ -25,11 +25,27 @@ export default function SubmitPage() {
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [uploadPhase, setUploadPhase] = useState<"idle" | "uploading" | "submitting">("idle")
 
   async function handleSubmit() {
     setError("")
     setLoading(true)
     try {
+      // Step 1: Get signed GCS URL, upload VCF directly from browser
+      setUploadPhase("uploading")
+      const urlRes = await fetch(`/api/upload-url?filename=${encodeURIComponent(file!.name)}`)
+      const urlData = await urlRes.json()
+      if (!urlRes.ok) throw new Error(urlData.error ?? "Failed to get upload URL")
+
+      const { url: postUrl, fields } = urlData.signedUrl
+      const form = new FormData()
+      Object.entries(fields as Record<string, string>).forEach(([k, v]) => form.append(k, v))
+      form.append("file", file!)
+      const uploadRes = await fetch(postUrl, { method: "POST", body: form })
+      if (!uploadRes.ok) throw new Error("VCF upload failed")
+
+      // Step 2: Create case + trigger Cloud Run Job
+      setUploadPhase("submitting")
       const res = await fetch("/api/cases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -37,7 +53,7 @@ export default function SubmitPage() {
           sample_name: sampleName,
           species,
           alleles: alleles.split(",").map((a) => a.trim()).filter(Boolean),
-          vcf_filename: file?.name ?? "",
+          gcs_vcf_path: urlData.gcsPath,
         }),
       })
       const data = await res.json()
@@ -46,6 +62,7 @@ export default function SubmitPage() {
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error")
       setLoading(false)
+      setUploadPhase("idle")
     }
   }
 
@@ -266,11 +283,11 @@ export default function SubmitPage() {
                   disabled={loading}
                   className="flex-1 h-10 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 border-0"
                 >
-                  {loading ? "Submitting…" : "Submit Case"}
+                  {uploadPhase === "uploading" ? "Uploading VCF…" : uploadPhase === "submitting" ? "Submitting…" : "Submit Case"}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground text-center">
-                Pipeline execution wires in M5. Case registers as <em>pending</em>.
+                VCF uploads directly to secure cloud storage. Pipeline starts immediately on submission.
               </p>
             </div>
           )}
