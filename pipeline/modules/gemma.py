@@ -13,13 +13,13 @@ GCP_PROJECT = os.getenv("GCP_PROJECT_ID", "project-1ea30ea7-dc79-4a14-84b")
 GCP_REGION  = os.getenv("GCP_REGION", "global")
 MODEL       = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it-maas")
 
-SYSTEM_PROMPT = """You are an AI assistant helping veterinary oncologists understand personalized cancer vaccine candidates for their patients.
+_SYSTEM_PROMPT_TEMPLATE = """You are an AI assistant helping {audience} understand personalized cancer vaccine candidates for their patients.
 
 You will receive:
 1. A JSON file with ranked neoantigen candidates identified from a tumor DNA sample
 2. Two charts: a binding affinity bar chart and a mutation landscape pie chart
 
-Your job is to write a clear, honest clinical report that a veterinary oncologist can act on.
+Your job is to write a clear, honest clinical report that {audience_short} can act on.
 
 Report structure:
 - Case Summary (2-3 sentences: species, cancer type if known, total mutations analyzed, candidates identified)
@@ -28,12 +28,54 @@ Report structure:
 - Recommended Next Steps (what the oncologist should do with this information — consult with RNA synthesis lab, consider immunotherapy combination, etc.)
 - Limitations and Uncertainties (be honest: what the pipeline cannot tell them, what validation is still needed)
 
-Species-specific notes:
-- For canine cases (canis_lupus_familiaris): the alleles are DLA (Dog Leukocyte Antigen) alleles, not human HLA. Name them explicitly — e.g. "DLA-88*50101" — when discussing which alleles each peptide binds. IC50 thresholds are the same as human HLA: < 50 nM = strong binder, 50-500 nM = weak binder.
-- For human cases: use HLA allele names as given. Clinical context is human oncology.
+{species_notes}
 
-Tone: clinical but accessible. No jargon without explanation. Write for a vet who is expert in oncology but not in computational biology.
+Tone: clinical but accessible. No jargon without explanation. Write for {audience_tone}.
 Length: 400-600 words."""
+
+_SPECIES_CONFIG = {
+    "canis_lupus_familiaris": {
+        "audience":      "veterinary oncologists",
+        "audience_short": "a veterinary oncologist",
+        "audience_tone": "a vet who is expert in oncology but not in computational biology",
+        "species_notes": (
+            "The alleles are DLA (Dog Leukocyte Antigen) alleles, not human HLA. "
+            "Name them explicitly — e.g. \"DLA-88*50101\" — when discussing which alleles each peptide binds. "
+            "IC50 thresholds: < 50 nM = strong binder, 50–500 nM = weak binder."
+        ),
+    },
+    "homo_sapiens": {
+        "audience":      "oncologists",
+        "audience_short": "an oncologist",
+        "audience_tone": "a clinician who is expert in oncology but not in computational biology",
+        "species_notes": (
+            "The alleles are HLA (Human Leukocyte Antigen) alleles. "
+            "Use HLA allele names as given (e.g. \"HLA-A*02:01\"). "
+            "IC50 thresholds: < 50 nM = strong binder, 50–500 nM = weak binder."
+        ),
+    },
+    "felis_catus": {
+        "audience":      "veterinary oncologists",
+        "audience_short": "a veterinary oncologist",
+        "audience_tone": "a vet who is expert in oncology but not in computational biology",
+        "species_notes": (
+            "This is a feline case. The MHC alleles are feline leukocyte antigen (FLA) alleles. "
+            "IC50 thresholds: < 50 nM = strong binder, 50–500 nM = weak binder."
+        ),
+    },
+}
+
+_DEFAULT_SPECIES_CONFIG = {
+    "audience":      "oncologists",
+    "audience_short": "an oncologist",
+    "audience_tone": "a clinician who is expert in oncology but not in computational biology",
+    "species_notes": "Use allele names as given. IC50 thresholds: < 50 nM = strong binder, 50–500 nM = weak binder.",
+}
+
+
+def _build_system_prompt(species: str) -> str:
+    cfg = _SPECIES_CONFIG.get(species, _DEFAULT_SPECIES_CONFIG)
+    return _SYSTEM_PROMPT_TEMPLATE.format(**cfg)
 
 
 def _encode_image(path: str) -> tuple[str, str]:
@@ -51,9 +93,12 @@ def generate_clinical_report(
     with open(candidates_json_path) as f:
         candidates = json.load(f)
 
+    species = candidates.get("species", "homo_sapiens")
+    system_prompt = _build_system_prompt(species)
+
     summary = {
         "case_id":                    candidates["case_id"],
-        "species":                    candidates["species"],
+        "species":                    species,
         "alleles":                    candidates["alleles"],
         "total_mutations_analyzed":   candidates["total_mutations_analyzed"],
         "candidates_after_filtering": candidates["candidates_after_filtering"],
@@ -65,7 +110,7 @@ def generate_clinical_report(
 
     contents = [
         types.Content(role="user", parts=[
-            types.Part(text=SYSTEM_PROMPT),
+            types.Part(text=system_prompt),
             types.Part(text=f"Here are the ranked neoantigen candidates:\n\n```json\n{json.dumps(summary, indent=2)}\n```"),
             types.Part(text="Binding affinity chart (top 20 candidates by IC50):"),
             types.Part(inline_data=types.Blob(mime_type=ba_mime, data=ba_data)),
