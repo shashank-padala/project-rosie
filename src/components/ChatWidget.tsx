@@ -75,7 +75,7 @@ export function ChatWidget({ caseId }: { caseId: string }) {
   if (state === "minimized") {
     return (
       <div className="fixed bottom-6 right-6 z-50 w-72 rounded-xl border border-border bg-card shadow-xl overflow-hidden">
-        <ChatHeader onMinimize={() => setState("open")} onClose={() => setState("closed")} minimized />
+        <ChatHeader onMinimize={() => setState("open")} minimized />
       </div>
     )
   }
@@ -83,7 +83,7 @@ export function ChatWidget({ caseId }: { caseId: string }) {
   /* ── Open: full chat window ── */
   return (
     <div className="fixed bottom-6 right-6 z-50 w-80 sm:w-96 flex flex-col rounded-xl border border-border bg-card shadow-2xl shadow-black/20 overflow-hidden max-h-[520px]">
-      <ChatHeader onMinimize={() => setState("minimized")} onClose={() => setState("closed")} />
+      <ChatHeader onMinimize={() => setState("minimized")} />
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[260px] max-h-[360px]">
@@ -147,54 +147,41 @@ export function ChatWidget({ caseId }: { caseId: string }) {
 
 function ChatHeader({
   onMinimize,
-  onClose,
   minimized = false,
 }: {
   onMinimize: () => void
-  onClose: () => void
   minimized?: boolean
 }) {
   return (
     <div
       className="flex items-center justify-between px-4 py-3 bg-primary cursor-pointer select-none"
-      onClick={minimized ? onMinimize : undefined}
+      onClick={onMinimize}
     >
       <div className="flex items-center gap-2.5">
         <div className="h-7 w-7 rounded-full bg-white/15 flex items-center justify-center text-sm">
           🐾
         </div>
         <div>
-          <p className="text-sm font-semibold text-primary-foreground leading-none">Rosie</p>
+          <p className="text-sm font-semibold text-primary-foreground leading-none">Ask Rosie</p>
           <p className="text-[10px] text-primary-foreground/70 mt-0.5">Clinical AI Assistant</p>
         </div>
         <span className="ml-1 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
       </div>
-      <div className="flex items-center gap-1">
-        <button
-          onClick={(e) => { e.stopPropagation(); onMinimize() }}
-          className="h-6 w-6 rounded flex items-center justify-center text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 transition-colors"
-          aria-label={minimized ? "Expand" : "Minimize"}
-        >
-          {minimized ? (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M2 7l3-3 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          ) : (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M2 5h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          )}
-        </button>
-        <button
-          onClick={(e) => { e.stopPropagation(); onClose() }}
-          className="h-6 w-6 rounded flex items-center justify-center text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 transition-colors"
-          aria-label="Close"
-        >
+      <button
+        onClick={(e) => { e.stopPropagation(); onMinimize() }}
+        className="h-6 w-6 rounded flex items-center justify-center text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 transition-colors"
+        aria-label={minimized ? "Expand" : "Minimize"}
+      >
+        {minimized ? (
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path d="M2.5 2.5l5 5M7.5 2.5l-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M2 7l3-3 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </button>
-      </div>
+        ) : (
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M2 5h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        )}
+      </button>
     </div>
   )
 }
