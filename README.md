@@ -137,7 +137,7 @@ The entire design process — previously requiring months of expert manual work 
 
 ## The Narrative
 
-> "Paul Conyngham, an AI entrepreneur from Australia, spent months in December 2024 building a personalized cancer vaccine for his dog by hand with a university research lab. We built the tool that lets any veterinary oncologist do it in under 6 hours, with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
+> "Paul Conyngham, an AI entrepreneur from Australia, spent months in December 2025 building a personalized cancer vaccine for his dog by hand with a university research lab. We built the tool that lets any veterinary oncologist do it in under 6 hours, with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
 
 Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and cheaper than human trials. Every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data. The playbook for dogs becomes the playbook for humans.
 
