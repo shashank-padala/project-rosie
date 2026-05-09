@@ -37,11 +37,11 @@ export default function SubmitPage() {
       const urlData = await urlRes.json()
       if (!urlRes.ok) throw new Error(urlData.error ?? "Failed to get upload URL")
 
-      const { url: postUrl, fields } = urlData.signedUrl
-      const form = new FormData()
-      Object.entries(fields as Record<string, string>).forEach(([k, v]) => form.append(k, v))
-      form.append("file", file!)
-      const uploadRes = await fetch(postUrl, { method: "POST", body: form })
+      const uploadRes = await fetch(urlData.uploadUri, {
+        method: "PUT",
+        headers: { "Content-Type": "application/octet-stream" },
+        body: file!,
+      })
       if (!uploadRes.ok) throw new Error("VCF upload failed")
 
       // Step 2: Create case + trigger Cloud Run Job

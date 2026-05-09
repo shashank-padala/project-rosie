@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { Storage } from "@google-cloud/storage"
 import { createServerClient } from "@/lib/supabase/server"
-
-function getStorage() {
-  const credJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
-  if (!credJson) throw new Error("GOOGLE_APPLICATION_CREDENTIALS_JSON not set")
-  const credentials = JSON.parse(credJson)
-  return new Storage({ credentials, projectId: credentials.project_id })
-}
+import { getGcpAccessToken } from "@/lib/gcp-auth"
 
 export async function GET(req: NextRequest) {
   const supabase = createServerClient()
@@ -22,14 +15,27 @@ export async function GET(req: NextRequest) {
   if (!bucket) return NextResponse.json({ error: "GCS_BUCKET not configured" }, { status: 500 })
 
   const gcsPath = `vcf/${user.id}/${Date.now()}/${filename}`
+  const token = await getGcpAccessToken()
 
-  const [signedUrl] = await getStorage()
-    .bucket(bucket)
-    .file(gcsPath)
-    .generateSignedPostPolicyV4({
-      expires: Date.now() + 15 * 60 * 1000,
-      conditions: [["content-length-range", 0, 500 * 1024 * 1024]],
-    })
+  // Initiate a GCS resumable upload — server gets the URI, browser uploads directly
+  const res = await fetch(
+    `https://storage.googleapis.com/upload/storage/v1/b/${bucket}/o?uploadType=resumable&name=${encodeURIComponent(gcsPath)}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-Upload-Content-Type": "application/octet-stream",
+      },
+      body: JSON.stringify({}),
+    }
+  )
 
-  return NextResponse.json({ signedUrl, gcsPath: `gs://${bucket}/${gcsPath}` })
+  if (!res.ok) {
+    const text = await res.text()
+    return NextResponse.json({ error: `GCS error: ${text}` }, { status: 500 })
+  }
+
+  const uploadUri = res.headers.get("Location")!
+  return NextResponse.json({ uploadUri, gcsPath: `gs://${bucket}/${gcsPath}` })
 }

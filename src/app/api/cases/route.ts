@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { GoogleAuth } from "google-auth-library"
 import { createServerClient } from "@/lib/supabase/server"
+import { getGcpAccessToken } from "@/lib/gcp-auth"
 
 export async function GET() {
   const supabase = createServerClient()
@@ -74,19 +74,13 @@ async function triggerPipelineJob({
   const jobName = process.env.CLOUD_RUN_JOB_NAME
   const callbackUrl = process.env.NEXT_PUBLIC_APP_URL
   const secret = process.env.PIPELINE_CALLBACK_SECRET
-  const credJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
 
-  if (!jobName || !callbackUrl || !secret || !credJson) {
+  if (!jobName || !callbackUrl || !secret) {
     console.warn("[cloud-run] env vars missing — skipping job trigger")
     return
   }
 
-  const credentials = JSON.parse(credJson)
-  const auth = new GoogleAuth({
-    credentials,
-    scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-  })
-  const token = await auth.getAccessToken()
+  const token = await getGcpAccessToken()
 
   const res = await fetch(`https://run.googleapis.com/v2/${jobName}:run`, {
     method: "POST",
@@ -107,7 +101,7 @@ async function triggerPipelineJob({
               { name: "CALLBACK_URL",               value: callbackUrl },
               { name: "PIPELINE_CALLBACK_SECRET",   value: secret },
               { name: "GCS_BUCKET",                 value: process.env.GCS_BUCKET ?? "" },
-              { name: "GCP_PROJECT_ID",             value: credentials.project_id },
+              { name: "GCP_PROJECT_ID",             value: process.env.GCP_PROJECT_ID ?? "project-1ea30ea7-dc79-4a14-84b" },
               { name: "GEMMA_MODEL",                value: process.env.GEMMA_MODEL ?? "gemma-4-26b-a4b-it-maas" },
             ],
           },
