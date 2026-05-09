@@ -61,18 +61,13 @@ export default function SubmitPage() {
     setError("")
     setLoading(true)
     try {
-      // Step 1: Get signed GCS URL, upload VCF directly from browser
+      // Step 1: Upload VCF via server (avoids browser→GCS CORS)
       setUploadPhase("uploading")
-      const urlRes = await fetch(`/api/upload-url?filename=${encodeURIComponent(file!.name)}`)
-      const urlData = await safeJson(urlRes)
-      if (!urlRes.ok) throw new Error(urlData.error ?? "Failed to get upload URL")
-
-      const uploadRes = await fetch(urlData.uploadUri, {
-        method: "PUT",
-        headers: { "Content-Type": "application/octet-stream" },
-        body: file!,
-      })
-      if (!uploadRes.ok) throw new Error("VCF upload failed")
+      const formData = new FormData()
+      formData.append("file", file!)
+      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData })
+      const uploadData = await safeJson(uploadRes)
+      if (!uploadRes.ok) throw new Error(uploadData.error ?? "Upload failed")
 
       // Step 2: Create case + trigger Cloud Run Job
       setUploadPhase("submitting")
@@ -83,7 +78,7 @@ export default function SubmitPage() {
           sample_name: sampleName,
           species,
           alleles: alleles.split(",").map((a) => a.trim()).filter(Boolean),
-          gcs_vcf_path: urlData.gcsPath,
+          gcs_vcf_path: uploadData.gcsPath,
         }),
       })
       const data = await safeJson(res)
