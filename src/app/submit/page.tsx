@@ -15,6 +15,11 @@ const PRESET_ALLELES: Record<string, string> = {
   "Canine DLA (common)":   "DLA-8850101,DLA-8850801",
 }
 
+const SPECIES_DEFAULT_ALLELES: Record<string, string> = {
+  canis_lupus_familiaris: "DLA-8850101,DLA-8850801",
+  homo_sapiens:           "HLA-A*02:01,HLA-A*01:01,HLA-B*07:02",
+}
+
 const STEPS = ["Patient info", "Alleles", "Upload & Submit"]
 
 export default function SubmitPage() {
@@ -31,7 +36,11 @@ export default function SubmitPage() {
   }, [router])
   const [sampleName, setSampleName] = useState("")
   const [species, setSpecies] = useState("canis_lupus_familiaris")
-  const [alleles, setAlleles] = useState("")
+  const [alleles, setAlleles] = useState(SPECIES_DEFAULT_ALLELES["canis_lupus_familiaris"])
+
+  useEffect(() => {
+    setAlleles(SPECIES_DEFAULT_ALLELES[species] ?? "")
+  }, [species])
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
