@@ -274,7 +274,35 @@ function ChartsArtifact({
   )
 }
 
-function ReportArtifact({ markdown }: { markdown: string }) {
+function downloadText(content: string, filename: string) {
+  const blob = new Blob([content], { type: "text/plain" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function fileSlug(name: string) {
+  return name.replace(/[^a-z0-9]+/gi, "_").toLowerCase()
+}
+
+function DownloadButton({ onClick, label }: { onClick: () => void; label: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/50 bg-secondary/50 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+    >
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M6 1v7M3 5.5l3 3 3-3M1.5 10h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      {label}
+    </button>
+  )
+}
+
+function ReportArtifact({ markdown, sampleName }: { markdown: string; sampleName: string }) {
   const [showFull, setShowFull] = useState(false)
   const PREVIEW = 800
   const isLong = markdown.length > PREVIEW
@@ -282,7 +310,13 @@ function ReportArtifact({ markdown }: { markdown: string }) {
 
   return (
     <div className="rounded-xl border border-border/40 bg-card/50 p-4">
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-3">Clinical Report</p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">Clinical Report</p>
+        <DownloadButton
+          label="Download .md"
+          onClick={() => downloadText(markdown, `${fileSlug(sampleName)}_clinical_report.md`)}
+        />
+      </div>
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
         {content}
       </ReactMarkdown>
@@ -299,7 +333,7 @@ function ReportArtifact({ markdown }: { markdown: string }) {
   )
 }
 
-function MRNAArtifact({ fasta, summary }: { fasta: string; summary: string }) {
+function MRNAArtifact({ fasta, summary, sampleName }: { fasta: string; summary: string; sampleName: string }) {
   const [showFullFasta, setShowFullFasta] = useState(false)
   const [showFullSummary, setShowFullSummary] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -320,9 +354,15 @@ function MRNAArtifact({ fasta, summary }: { fasta: string; summary: string }) {
       <div className="rounded-xl border border-border/40 bg-secondary/20 p-4">
         <div className="flex items-center justify-between mb-2">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">mRNA Sequence (FASTA)</p>
-          <button onClick={copy} className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium">
-            {copied ? "✓ Copied" : "Copy"}
-          </button>
+          <div className="flex items-center gap-2">
+            <DownloadButton
+              label="Download .fasta"
+              onClick={() => downloadText(fasta, `${fileSlug(sampleName)}_vaccine_mrna.fasta`)}
+            />
+            <button onClick={copy} className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium">
+              {copied ? "✓ Copied" : "Copy"}
+            </button>
+          </div>
         </div>
         <pre className="text-xs font-mono text-primary leading-relaxed overflow-x-auto whitespace-pre-wrap break-all">
           {showFullFasta ? fasta : `${header}\n${seqPreview}${isLong ? "\n…" : ""}`}
@@ -339,7 +379,13 @@ function MRNAArtifact({ fasta, summary }: { fasta: string; summary: string }) {
 
       {summary && (
         <div className="rounded-xl border border-border/40 bg-card/50 p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-2">mRNA Summary</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">Synthesis Specification</p>
+            <DownloadButton
+              label="Download .md"
+              onClick={() => downloadText(summary, `${fileSlug(sampleName)}_synthesis_spec.md`)}
+            />
+          </div>
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
             {showFullSummary ? summary : summary.slice(0, 400)}
           </ReactMarkdown>
@@ -368,12 +414,20 @@ function ArtifactSection({ stepStatus, caseData }: { stepStatus: CaseStatus; cas
           bindingImg={caseData.binding_affinity_img_b64}
           mutationImg={caseData.mutation_landscape_img_b64}
         />
-        {caseData.clinical_report_md && <ReportArtifact markdown={caseData.clinical_report_md} />}
+        {caseData.clinical_report_md && (
+          <ReportArtifact markdown={caseData.clinical_report_md} sampleName={caseData.sample_name} />
+        )}
       </div>
     )
   }
   if (stepStatus === "designing" && caseData.mrna_fasta) {
-    return <MRNAArtifact fasta={caseData.mrna_fasta} summary={caseData.mrna_summary_md ?? ""} />
+    return (
+      <MRNAArtifact
+        fasta={caseData.mrna_fasta}
+        summary={caseData.mrna_summary_md ?? ""}
+        sampleName={caseData.sample_name}
+      />
+    )
   }
   return null
 }
