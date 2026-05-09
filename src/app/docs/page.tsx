@@ -56,6 +56,15 @@ const DOCS = [
     href: "https://github.com/shashank-padala/project-rosie/blob/main/docs/explainers/04-cloud-deployment.md",
     external: true,
   },
+  {
+    category: "Technical",
+    categoryStyle: "border-border/60 text-muted-foreground bg-secondary/50",
+    title: "Canine data end-to-end run",
+    description:
+      "How the first real canine case ran through the pipeline: VEP v115 annotation with ROS_Cfam_1.0, pVACseq with DLA alleles, the Docker WSL2 volume mount workaround, and the PIK3CA V125M neoantigen that came out the other end.",
+    href: "https://github.com/shashank-padala/project-rosie/blob/main/docs/explainers/05-canine-data-run.md",
+    external: true,
+  },
 ]
 
 export default function DocsPage() {

@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 const PRESET_ALLELES: Record<string, string> = {
   "Human MHC-I (common)": "HLA-A*02:01,HLA-A*01:01,HLA-B*07:02",
-  "Canine DLA (common)":   "DLA-88*50101,DLA-88*50801,DLA-12*00101",
+  "Canine DLA (common)":   "DLA-8850101,DLA-8850801",
 }
 
 const STEPS = ["Patient info", "Alleles", "Upload & Submit"]

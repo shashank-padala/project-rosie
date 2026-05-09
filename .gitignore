@@ -46,6 +46,8 @@ next-env.d.ts
 
 # Pipeline secrets
 pipeline/.env
+rosie-sa-key.json
+*-key.json
 
 # Pipeline data and cache
 pipeline/vep_cache/

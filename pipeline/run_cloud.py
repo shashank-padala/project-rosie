@@ -21,15 +21,17 @@ from modules.visualizations import generate_all
 from modules.gemma import generate_clinical_report
 from modules.mrna_design import design_mrna
 
-CASE_ID                 = os.environ["CASE_ID"]
-GCS_VCF_PATH            = os.environ["GCS_VCF_PATH"]        # gs://bucket/path/file.vcf
-GCS_BUCKET              = os.environ["GCS_BUCKET"]
-SAMPLE_NAME             = os.environ["SAMPLE_NAME"]
-ALLELES                 = os.environ["ALLELES"]              # comma-separated
-SPECIES                 = os.environ.get("SPECIES", "homo_sapiens")
-CALLBACK_URL            = os.environ["CALLBACK_URL"]         # Vercel deployment URL
+CASE_ID                  = os.environ["CASE_ID"]
+GCS_VCF_PATH             = os.environ["GCS_VCF_PATH"]        # gs://bucket/path/file.vcf
+GCS_BUCKET               = os.environ["GCS_BUCKET"]
+SAMPLE_NAME              = os.environ["SAMPLE_NAME"]
+ALLELES                  = os.environ["ALLELES"]              # comma-separated
+SPECIES                  = os.environ.get("SPECIES", "homo_sapiens")
+CALLBACK_URL             = os.environ["CALLBACK_URL"]         # Vercel deployment URL
 PIPELINE_CALLBACK_SECRET = os.environ["PIPELINE_CALLBACK_SECRET"]
-PREDICTORS              = os.environ.get("PREDICTORS", "NetMHCpan")
+PREDICTORS               = os.environ.get("PREDICTORS", "NetMHCpan")
+SKIP_PREDICTION          = os.environ.get("SKIP_PREDICTION", "").lower() == "true"
+GCS_TSV_PATH             = os.environ.get("GCS_TSV_PATH", "")  # only used when SKIP_PREDICTION=true
 
 
 def callback(status: str, **fields):
@@ -48,7 +50,7 @@ def callback(status: str, **fields):
         print(f"[callback] ERROR {status}: {e}", file=sys.stderr)
 
 
-def download_vcf(gcs_path: str, dest: str) -> str:
+def _download_gcs(gcs_path: str, dest: str) -> str:
     # gcs_path: gs://bucket/object
     parts = gcs_path[5:].split("/", 1)
     bucket_name, blob_name = parts[0], parts[1]
@@ -58,6 +60,14 @@ def download_vcf(gcs_path: str, dest: str) -> str:
     blob.download_to_filename(local_path)
     print(f"[gcs] Downloaded {gcs_path} → {local_path}")
     return local_path
+
+
+def download_vcf(gcs_path: str, dest: str) -> str:
+    return _download_gcs(gcs_path, dest)
+
+
+def download_tsv(gcs_path: str, dest: str) -> str:
+    return _download_gcs(gcs_path, dest)
 
 
 def png_to_b64(path: str) -> str:
@@ -78,19 +88,30 @@ def main():
         out_dir  = os.path.join(tmpdir, "output")
         Path(out_dir).mkdir()
 
-        # Step 1: pVACseq prediction
-        print("[pipeline] Step 1/5: pVACseq prediction...")
-        try:
-            tsv_path = run_pvacseq(
-                vcf_path=vcf_path,
-                sample_name=SAMPLE_NAME,
-                alleles=alleles,
-                predictors=predictors,
-                output_dir=out_dir,
-            )
-        except Exception as e:
-            callback("failed", error_message=f"Prediction failed: {e}")
-            sys.exit(1)
+        # Step 1: pVACseq prediction (or load pre-computed TSV)
+        if SKIP_PREDICTION:
+            if not GCS_TSV_PATH:
+                callback("failed", error_message="SKIP_PREDICTION=true but GCS_TSV_PATH not set")
+                sys.exit(1)
+            print(f"[pipeline] Step 1/5: Skipping pVACseq — loading TSV from {GCS_TSV_PATH}")
+            try:
+                tsv_path = download_tsv(GCS_TSV_PATH, out_dir)
+            except Exception as e:
+                callback("failed", error_message=f"TSV download failed: {e}")
+                sys.exit(1)
+        else:
+            print("[pipeline] Step 1/5: pVACseq prediction...")
+            try:
+                tsv_path = run_pvacseq(
+                    vcf_path=vcf_path,
+                    sample_name=SAMPLE_NAME,
+                    alleles=alleles,
+                    predictors=predictors,
+                    output_dir=out_dir,
+                )
+            except Exception as e:
+                callback("failed", error_message=f"Prediction failed: {e}")
+                sys.exit(1)
 
         # Step 2: Score and rank
         print("[pipeline] Step 2/5: Scoring candidates...")

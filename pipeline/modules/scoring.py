@@ -91,7 +91,7 @@ def score_candidates(tsv_path: str, sample_name: str, alleles: list[str],
         "case_id": sample_name,
         "species": species,
         "alleles": alleles,
-        "total_mutations_analyzed": len(df),
+        "total_mutations_analyzed": df["Mutation"].nunique() if "Mutation" in df.columns else len(df),
         "candidates_after_filtering": len(filtered),
         "top_candidates": candidates,
         "visualization_paths": {

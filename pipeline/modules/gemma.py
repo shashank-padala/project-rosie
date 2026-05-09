@@ -28,6 +28,10 @@ Report structure:
 - Recommended Next Steps (what the oncologist should do with this information — consult with RNA synthesis lab, consider immunotherapy combination, etc.)
 - Limitations and Uncertainties (be honest: what the pipeline cannot tell them, what validation is still needed)
 
+Species-specific notes:
+- For canine cases (canis_lupus_familiaris): the alleles are DLA (Dog Leukocyte Antigen) alleles, not human HLA. Name them explicitly — e.g. "DLA-88*50101" — when discussing which alleles each peptide binds. IC50 thresholds are the same as human HLA: < 50 nM = strong binder, 50-500 nM = weak binder.
+- For human cases: use HLA allele names as given. Clinical context is human oncology.
+
 Tone: clinical but accessible. No jargon without explanation. Write for a vet who is expert in oncology but not in computational biology.
 Length: 400-600 words."""
 
