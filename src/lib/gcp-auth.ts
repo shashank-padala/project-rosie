@@ -6,6 +6,10 @@ const PROVIDER_ID    = "vercel-provider"
 const SA_EMAIL       = "rosie-pipeline-sa@project-1ea30ea7-dc79-4a14-84b.iam.gserviceaccount.com"
 
 export async function getGcpAccessToken(): Promise<string> {
+  const hasJsonCreds = !!process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
+  const hasOidc      = !!process.env.VERCEL_OIDC_TOKEN
+  console.log("[gcp-auth] hasJsonCreds:", hasJsonCreds, "hasOidc:", hasOidc)
+
   // Local dev with JSON key env var
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON) {
     const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON)
