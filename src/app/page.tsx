@@ -46,18 +46,19 @@ export default function HomePage() {
         </div>
 
         {/* Pipeline flow */}
-        <div className="animate-fade-up-4 mt-16 flex flex-col sm:flex-row items-center gap-2 text-xs text-muted-foreground max-w-2xl w-full justify-center">
+        <div className="animate-fade-up-4 mt-16 flex flex-col sm:flex-row items-center gap-2 text-xs text-muted-foreground max-w-3xl w-full justify-center">
           {[
-            { label: "Tumor VCF", icon: "🧬" },
-            { label: "Variant Calling", icon: "🔍" },
-            { label: "Epitope Scoring", icon: "⚗️" },
-            { label: "Neoantigen Report", icon: "🤖" },
-            { label: "mRNA FASTA", icon: "💉" },
+            { label: "Tumor VCF", plain: "Your dog's cancer DNA", icon: "🧬" },
+            { label: "Variant Calling", plain: "Spot mutations", icon: "🔍" },
+            { label: "Epitope Scoring", plain: "Rank immune targets", icon: "⚗️" },
+            { label: "Neoantigen Report", plain: "Personalised vaccine plan", icon: "🤖" },
+            { label: "mRNA FASTA", plain: "Ready for the lab", icon: "💉" },
           ].map((step, i) => (
             <div key={i} className="flex items-center gap-2">
-              <div className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border bg-card min-w-[96px] shadow-sm hover:border-primary/40 hover:shadow-primary/5 transition-all">
+              <div className="flex flex-col items-center gap-1 px-4 py-3 rounded-xl border border-border bg-card min-w-[108px] shadow-sm hover:border-primary/40 hover:shadow-primary/5 transition-all text-center">
                 <span className="text-xl">{step.icon}</span>
-                <span className="font-medium">{step.label}</span>
+                <span className="font-semibold text-foreground text-xs">{step.label}</span>
+                <span className="text-muted-foreground/70 text-[10px] leading-tight">{step.plain}</span>
               </div>
               {i < 4 && <span className="text-muted-foreground/60 hidden sm:block text-base font-bold">→</span>}
             </div>
