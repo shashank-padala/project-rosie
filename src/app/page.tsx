@@ -35,7 +35,7 @@ export default function HomePage() {
             href="/demo"
             className="px-7 py-3 rounded-xl bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25 text-sm"
           >
-            View Sample Case — Demo
+            View Sample Case (Demo)
           </Link>
           <Link
             href="/auth/login"
@@ -73,32 +73,44 @@ export default function HomePage() {
             The Problem
           </p>
           <h2
-            className="text-center text-3xl sm:text-4xl font-bold mb-6 max-w-2xl mx-auto leading-tight"
+            className="text-center text-3xl sm:text-4xl font-bold mb-12 max-w-2xl mx-auto leading-tight"
             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
           >
             One dog. One vaccine. Three months.{" "}
             <span className="text-gradient">One breakthrough.</span>
           </h2>
-          <div className="max-w-2xl mx-auto mb-14 text-center space-y-4">
-            <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-              An ML scientist and tech entrepreneur dedicated three months and a university
-              research lab to designing a personalized cancer vaccine for his dog.
-              NBC News called it{" "}
-              <a
-                href="https://youtu.be/14SgyUhSIGQ?si=iw5FrjprnY46SEHG"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors font-medium"
-              >
-                a medical breakthrough
-              </a>
-              {" "}— and it was.
-            </p>
-            <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-              But it required being an AI veteran with rare access to university infrastructure.
-              That's not available to most dog owners and their vets.{" "}
-              <span className="text-foreground font-semibold">It was a one-off. We're making it the standard.</span>
-            </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center mb-14">
+            <div className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
+                An ML scientist and tech entrepreneur dedicated three months and a university
+                research lab to designing a personalized cancer vaccine for his dog.
+                NBC News called it{" "}
+                <a
+                  href="https://youtu.be/14SgyUhSIGQ?si=iw5FrjprnY46SEHG"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors font-medium"
+                >
+                  a medical breakthrough
+                </a>
+                . And it was.
+              </p>
+              <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
+                But it required being an AI veteran with rare access to university infrastructure.
+                That's not available to most dog owners and their vets.{" "}
+                <span className="text-foreground font-semibold">It was a one-off. We're making it the standard.</span>
+              </p>
+            </div>
+            <div className="rounded-2xl overflow-hidden border border-border/60 shadow-xl shadow-black/10 aspect-video">
+              <iframe
+                src="https://www.youtube.com/embed/14SgyUhSIGQ"
+                title="NBC News: Dog cancer vaccine breakthrough"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -250,7 +262,7 @@ export default function HomePage() {
             See it in action
           </h2>
           <p className="text-muted-foreground mb-9 leading-relaxed text-base sm:text-lg max-w-md mx-auto">
-            Follow a real canine mammary tumor case end-to-end — from somatic VCF to ranked
+            Follow a real canine mammary tumor case from somatic VCF to ranked
             neoantigen candidates, AI clinical report, and a synthesis-ready mRNA construct.
           </p>
           <Link
