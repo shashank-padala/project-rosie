@@ -353,7 +353,7 @@ function ReportArtifact({ markdown, sampleName }: { markdown: string; sampleName
   )
 }
 
-function MRNAArtifact({ fasta, summary, sampleName }: { fasta: string; summary: string; sampleName: string }) {
+function MRNAArtifact({ fasta, summary, sampleName, caseId }: { fasta: string; summary: string; sampleName: string; caseId: string }) {
   const [showFullFasta, setShowFullFasta] = useState(false)
   const [showFullSummary, setShowFullSummary] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -401,10 +401,17 @@ function MRNAArtifact({ fasta, summary, sampleName }: { fasta: string; summary: 
         <div className="rounded-xl border border-border/40 bg-card/50 p-4">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">Synthesis Specification</p>
-            <DownloadButton
-              label="Download .md"
-              onClick={() => downloadText(summary, `${fileSlug(sampleName)}_synthesis_spec.md`)}
-            />
+            <a
+              href={`/api/cases/${caseId}/download?type=synthesis-pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/50 bg-secondary/50 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M6 1v7M3 5.5l3 3 3-3M1.5 10h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Save as PDF
+            </a>
           </div>
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
             {showFullSummary ? summary : summary.slice(0, 400)}
@@ -446,6 +453,7 @@ function ArtifactSection({ stepStatus, caseData }: { stepStatus: CaseStatus; cas
         fasta={caseData.mrna_fasta}
         summary={caseData.mrna_summary_md ?? ""}
         sampleName={caseData.sample_name}
+        caseId={caseData.id}
       />
     )
   }

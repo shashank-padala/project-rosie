@@ -136,25 +136,57 @@ def generate_clinical_report(
     )
 
 
-_SYNTHESIS_SPEC_PROMPT = """You are an mRNA therapeutics formulation expert. A veterinary oncology team needs to send a synthesis request to an RNA manufacturing partner for a personalized neoantigen vaccine.
+_SYNTHESIS_SPEC_PROMPT = """You are an mRNA therapeutics formulation expert preparing a formal synthesis order for an RNA contract manufacturing organization (CMO). A veterinary oncology team is ordering a personalized neoantigen mRNA vaccine construct.
 
 You will receive:
-1. The mRNA construct specification (sequence architecture, GC content, epitope details)
-2. The top neoantigen candidates the construct encodes
+1. The mRNA construct specification (sequence architecture, GC content, codon optimization, epitope details)
+2. The top neoantigen candidates encoded in the construct
 
-Write a concise but complete synthesis specification document that can be emailed directly to an RNA synthesis lab (e.g., Trilink Biotechnologies, Genscript).
+Write a formal synthesis specification document suitable for submission to a CMO (e.g., TriLink Biotechnologies, Aldevron, Genscript). This document becomes part of the batch record. Be technically precise — it goes to a formulation scientist, not a clinician.
 
 Structure the document with these sections:
-1. **Synthesis Request Summary** — one paragraph: what this construct is, what it is for, species context
-2. **Sequence Specifications** — confirm key parameters: total length, CDS GC%, construct architecture (5'UTR → Kozak → CDS → 3'UTR → poly-A)
-3. **Chemical Modifications** — N1-methylpseudouridine (m1Ψ) substitution for all uridines: reason (reduces innate immune activation, improves stability and translation)
-4. **LNP Formulation Request** — recommend ionizable lipid (Dlin-MC3-DMA or SM-102) + DSPC + cholesterol + PEG-lipid; specify molar ratios (50:10:38.5:1.5); note species-appropriate particle size target (80–120 nm)
-5. **Quality Control Requirements** — RNA integrity (RIN > 8, gel electrophoresis), dsRNA ELISA (< 0.1%), endotoxin limit (< 0.1 EU/µg), residual DNA (< 10 ng/mg protein)
-6. **Storage and Cold Chain** — storage temperature (−80 °C for naked mRNA, −20 °C for LNP formulation), shipping on dry ice, expected shelf life
-7. **Dosing Guidance** — starting dose range for the species based on body weight and neoantigen vaccine literature; note this requires veterinary oncologist sign-off before administration
 
-Tone: technical and precise. This goes to a formulation scientist, not a clinician. No hedging — be direct and specific.
-Length: 450–550 words."""
+1. **Synthesis Request Summary**
+   One paragraph: construct purpose, patient species, number of epitopes encoded, intended use (research-grade investigational vaccine).
+
+2. **IVT Template Specification**
+   - Template format: linearized plasmid or PCR product with T7 promoter upstream of construct
+   - Promoter: T7 RNA polymerase
+   - Template length: [derive from construct data]
+   - Note any sequence verification requirement (Sanger or NGS) before IVT
+
+3. **Sequence Specifications**
+   Markdown table with columns: Element | Sequence/Parameter | Length (nt) | Notes
+   Rows: 5'UTR, Kozak, CDS, 3'UTR, Poly-A tail, Total construct
+
+4. **Capping and Chemical Modifications**
+   - 5' cap: CleanCap® AG (cap1 analog, co-transcriptional) — specify TriLink Cat# N-7413 or equivalent cap1 analog; reason: cap1 avoids innate immune recognition (IFIT1/IFIT3), superior to ARCA
+   - Modified nucleotides: 100% N1-methylpseudouridine (m1Ψ) substitution for all uridines; reason: abolishes TLR7/TLR8 activation, increases translational yield 10–100×
+   - Purification: **HPLC purification required** to remove immunostimulatory dsRNA byproducts; note this is non-negotiable for therapeutic-grade material
+
+5. **LNP Formulation Request**
+   - Lipid system: SM-102 (ionizable) + DSPC + cholesterol + PEG2000-DMG
+   - Molar ratios: 50:10:38.5:1.5
+   - N/P ratio: 6
+   - Target particle size: 80–120 nm (PDI < 0.2)
+   - Encapsulation efficiency: > 85% (Ribogreen assay)
+   - Buffer: PBS pH 7.4 or 25 mM sodium acetate pH 4.0 (pre-dilution)
+
+6. **Quality Control Requirements**
+   Markdown table with columns: Test | Method | Acceptance Criterion
+   Rows: RNA integrity (RIN > 8.0, Bioanalyzer or Fragment Analyzer), dsRNA content (J2 dsRNA ELISA, < 0.1% w/w), Endotoxin (LAL, < 0.1 EU/µg RNA), Residual DNA (qPCR, < 10 ng/mg), Identity (sequence confirmed by RT-PCR), Concentration (UV A260), Encapsulation efficiency (Ribogreen, > 85%)
+
+7. **Scale and Storage**
+   - Requested scale: 100–200 µg RNA (research/investigational grade)
+   - Naked mRNA storage: −80 °C, single-use aliquots, avoid freeze-thaw
+   - LNP formulation storage: −20 °C, protected from light, 6-month stability target
+   - Shipping: dry ice, overnight courier
+
+8. **Dosing Guidance**
+   Species-appropriate starting dose range (µg/kg body weight) based on canine neoantigen vaccine literature; state that final dose and schedule require veterinary oncologist sign-off prior to administration.
+
+Tone: formal, technical, direct. No hedging. Use markdown tables for sections 3 and 6.
+Length: 650–800 words."""
 
 
 def generate_mrna_synthesis_spec(
@@ -188,7 +220,7 @@ def generate_mrna_synthesis_spec(
         model=MODEL,
         contents=contents,
         config=types.GenerateContentConfig(
-            max_output_tokens=1024,
+            max_output_tokens=2048,
             temperature=0.2,
         ),
     )

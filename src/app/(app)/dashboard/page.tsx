@@ -119,8 +119,10 @@ export default async function DashboardPage() {
                       FASTA
                     </a>
                     <a
-                      href={`/api/cases/${c.id}/download?type=synthesis`}
-                      title="Download synthesis specification (.md)"
+                      href={`/api/cases/${c.id}/download?type=synthesis-pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Save synthesis specification as PDF"
                       className="h-7 px-2 rounded-md flex items-center gap-1 text-[11px] font-medium text-muted-foreground/60 hover:text-foreground hover:bg-secondary border border-transparent hover:border-border/50 transition-all"
                     >
                       <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
