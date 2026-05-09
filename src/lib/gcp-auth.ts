@@ -21,6 +21,13 @@ export async function getGcpAccessToken(): Promise<string> {
   // Vercel production: WIF via OIDC token
   const oidcToken = process.env.VERCEL_OIDC_TOKEN
   if (oidcToken) {
+    // Log token claims (header+payload only, not signature) for debugging
+    try {
+      const [, payload] = oidcToken.split(".")
+      const claims = JSON.parse(Buffer.from(payload, "base64url").toString())
+      console.log("[gcp-auth] OIDC claims:", JSON.stringify({ iss: claims.iss, aud: claims.aud, sub: claims.sub?.slice(0, 60) }))
+    } catch { console.log("[gcp-auth] could not decode OIDC token") }
+
     const stsRes = await fetch("https://sts.googleapis.com/v1/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -33,7 +40,11 @@ export async function getGcpAccessToken(): Promise<string> {
         subject_token_type:    "urn:ietf:params:oauth:token-type:jwt",
       }),
     })
-    if (!stsRes.ok) throw new Error(`STS exchange failed: ${await stsRes.text()}`)
+    if (!stsRes.ok) {
+      const body = await stsRes.text()
+      console.log("[gcp-auth] STS failed:", body)
+      throw new Error(`STS exchange failed: ${body}`)
+    }
     const { access_token: federatedToken } = await stsRes.json()
 
     const impersonateRes = await fetch(
@@ -44,7 +55,11 @@ export async function getGcpAccessToken(): Promise<string> {
         body: JSON.stringify({ scope: ["https://www.googleapis.com/auth/cloud-platform"] }),
       }
     )
-    if (!impersonateRes.ok) throw new Error(`Impersonation failed: ${await impersonateRes.text()}`)
+    if (!impersonateRes.ok) {
+      const body = await impersonateRes.text()
+      console.log("[gcp-auth] impersonation failed:", body)
+      throw new Error(`Impersonation failed: ${body}`)
+    }
     const { accessToken } = await impersonateRes.json()
     return accessToken
   }

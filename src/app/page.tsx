@@ -35,13 +35,13 @@ export default function HomePage() {
             href="/demo"
             className="px-7 py-3 rounded-xl bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25 text-sm"
           >
-            View Sample Case (Demo)
+            View Sample Output
           </Link>
           <Link
             href="/auth/login"
             className="px-7 py-3 rounded-xl border border-border bg-secondary text-secondary-foreground font-semibold hover:bg-secondary/70 transition-colors text-sm"
           >
-            Submit Your Case
+            🧬 Upload Your Case
           </Link>
         </div>
 
