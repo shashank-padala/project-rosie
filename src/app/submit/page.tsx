@@ -57,6 +57,7 @@ export default function SubmitPage() {
   }
 
   async function handleSubmit() {
+    if (!file) { setError("Please select a VCF file first"); return }
     setError("")
     setLoading(true)
     try {
@@ -309,7 +310,7 @@ export default function SubmitPage() {
                 </Button>
                 <Button
                   onClick={handleSubmit}
-                  disabled={loading}
+                  disabled={loading || !file}
                   className="flex-1 h-10 rounded-lg bg-hero-gradient text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 border-0"
                 >
                   {uploadPhase === "uploading" ? "Uploading VCF…" : uploadPhase === "submitting" ? "Submitting…" : "Submit Case"}
