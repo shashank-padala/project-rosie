@@ -8,6 +8,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import requests
@@ -37,17 +38,28 @@ GCS_TSV_PATH             = os.environ.get("GCS_TSV_PATH", "")  # only used when 
 def callback(status: str, **fields):
     url = f"{CALLBACK_URL.rstrip('/')}/api/cases/{CASE_ID}/progress"
     payload = {"status": status, **fields}
-    try:
-        r = requests.post(
-            url,
-            json=payload,
-            headers={"Authorization": f"Bearer {PIPELINE_CALLBACK_SECRET}"},
-            timeout=30,
-        )
-        r.raise_for_status()
-        print(f"[callback] {status} → {r.status_code}")
-    except Exception as e:
-        print(f"[callback] ERROR {status}: {e}", file=sys.stderr)
+    # Retry completed/failed callbacks — if these don't land, the case stays stuck
+    is_critical = status in ("completed", "failed")
+    max_attempts = 4 if is_critical else 1
+    for attempt in range(max_attempts):
+        try:
+            r = requests.post(
+                url,
+                json=payload,
+                headers={"Authorization": f"Bearer {PIPELINE_CALLBACK_SECRET}"},
+                timeout=30,
+            )
+            r.raise_for_status()
+            print(f"[callback] {status} → {r.status_code}")
+            return
+        except Exception as e:
+            print(f"[callback] ERROR {status} (attempt {attempt + 1}/{max_attempts}): {e}", file=sys.stderr)
+            if attempt < max_attempts - 1:
+                time.sleep(5 * (attempt + 1))
+    if is_critical:
+        # Force container to exit non-zero so Cloud Run records the failure visibly
+        print(f"[callback] CRITICAL: could not deliver '{status}' after {max_attempts} attempts — exiting", file=sys.stderr)
+        sys.exit(2)
 
 
 def _download_gcs(gcs_path: str, dest: str) -> str:
