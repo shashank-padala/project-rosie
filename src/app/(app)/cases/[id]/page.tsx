@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { Navigation } from "@/components/Navigation"
 import { ReportViewer } from "@/components/ReportViewer"
 import { ChatWidget } from "@/components/ChatWidget"
 import { createClient } from "@/lib/supabase/client"
@@ -34,7 +33,6 @@ export default function CasePage() {
 
     load()
 
-    // Realtime: re-fetch full row on any change so we get new columns atomically
     const channel = supabase
       .channel(`case-${id}`)
       .on(
@@ -59,34 +57,25 @@ export default function CasePage() {
 
   if (notFound) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navigation />
-        <main className="flex-1 flex items-center justify-center">
-          <p className="text-muted-foreground">Case not found.</p>
-        </main>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-muted-foreground">Case not found.</p>
       </div>
     )
   }
 
   if (!caseData) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navigation />
-        <main className="flex-1 flex items-center justify-center">
-          <p className="text-muted-foreground text-sm">Loading…</p>
-        </main>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-muted-foreground text-sm">Loading…</p>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navigation />
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 pt-20 pb-12">
-        <h1 className="text-xl font-semibold mb-6">{caseData.sample_name}</h1>
-        <ReportViewer caseData={caseData} />
-        {caseData.status === "completed" && <ChatWidget caseId={id} />}
-      </main>
+    <div className="max-w-6xl mx-auto w-full px-4 pt-10 pb-12">
+      <h1 className="text-xl font-semibold mb-6">{caseData.sample_name}</h1>
+      <ReportViewer caseData={caseData} />
+      {caseData.status === "completed" && <ChatWidget caseId={id} />}
     </div>
   )
 }

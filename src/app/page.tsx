@@ -1,8 +1,13 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { Navigation } from "@/components/Navigation"
 import { Badge } from "@/components/ui/badge"
+import { createServerClient } from "@/lib/supabase/server"
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) redirect("/dashboard")
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation />
