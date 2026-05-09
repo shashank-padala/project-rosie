@@ -9,11 +9,29 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   title: "Project Rosie — Personalized Cancer Vaccines for Dogs",
   description:
-    "Upload a tumor VCF. Get a ranked vaccine candidate list, an AI clinical report, and synthesis-ready mRNA in 24 hours.",
+    "Upload a tumor VCF. Get a ranked vaccine candidate list, an AI clinical report, and synthesis-ready mRNA in under 6 hours.",
+  metadataBase: new URL("https://rosie.kiraklabs.com"),
   openGraph: {
-    title: "Project Rosie",
-    description: "Personalized cancer vaccines for dogs — designed by AI, validated by science.",
+    title: "Project Rosie — Personalized Cancer Vaccines for Dogs",
+    description: "Personalized cancer vaccines for dogs, designed by AI. Upload a tumor VCF, get ranked neoantigen candidates and a synthesis-ready mRNA construct.",
     type: "website",
+    url: "https://rosie.kiraklabs.com",
+    images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "Project Rosie" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Project Rosie — Personalized Cancer Vaccines for Dogs",
+    description: "Upload a tumor VCF. Get ranked vaccine candidates, an AI clinical report, and synthesis-ready mRNA in under 6 hours.",
+    images: ["/icon-512.png"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+    shortcut: "/favicon-16x16.png",
   },
 }
 
