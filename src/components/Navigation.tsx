@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
@@ -45,14 +46,8 @@ export function Navigation() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="text-xl leading-none">🐾</span>
-          <span
-            className="text-lg font-bold text-foreground"
-            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-          >
-            Project Rosie
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image src="/rosie-logo.png" alt="Rosie" height={32} width={120} className="h-8 w-auto" priority />
         </Link>
 
         <nav className="flex items-center gap-1">
