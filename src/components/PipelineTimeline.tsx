@@ -41,8 +41,8 @@ const STEPS: StepDef[] = [
   },
   {
     status: "reporting",
-    tag: "Visualization · AI Narrative",
-    title: "AI Clinical Report",
+    tag: "Charts · AI Clinical Report",
+    title: "Report Generation",
     desc: "Binding affinity and mutation-landscape charts are generated, then Gemma 4 interprets the data into a clinician-ready narrative highlighting the most actionable candidates.",
     gemma4: true,
   },

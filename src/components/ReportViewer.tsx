@@ -42,14 +42,18 @@ export function ReportViewer({ caseData }: { caseData: Case }) {
           )}
           {caseData.candidates_after_filtering != null && (
             <div>
-              <p className="text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">After filter</p>
+              <p className="text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Candidates</p>
               <p className="text-sm font-semibold">{caseData.candidates_after_filtering.toLocaleString()}</p>
+              <p className="text-[10px] text-muted-foreground/50 mt-0.5">after IC50 filtering</p>
             </div>
           )}
           <div>
             <p className="text-xs text-muted-foreground mb-1 font-semibold uppercase tracking-wide">Submitted</p>
             <p className="text-xs text-muted-foreground">
-              {new Date(caseData.created_at).toLocaleDateString()}
+              {new Date(caseData.created_at).toLocaleDateString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" })}
+            </p>
+            <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+              {new Date(caseData.created_at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
             </p>
           </div>
         </div>
