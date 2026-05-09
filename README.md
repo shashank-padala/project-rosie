@@ -128,21 +128,26 @@ These are locked-in for the hackathon build. Document here so we don't re-litiga
 - [x] API routes: `GET/POST /api/cases`, `GET /api/cases/[id]`, `POST /api/cases/[id]/chat`
 - [x] Seed script `scripts/seed_demo.py`: loads HCC1395 pipeline output → Supabase with base64 charts + mRNA FASTA
 - [x] TypeScript clean, production build passing (11 routes, 0 errors)
-- [ ] GCS bucket + signed URL helper — deferred to M5 (pipeline execution)
-- [ ] Realtime status subscription — deferred to M5 (requires live pipeline updates)
+- [x] GCS bucket + resumable upload URL helper (`/api/upload-url`)
+- [x] Supabase Realtime subscription on `/cases/[id]` — live status without polling
 - [x] **Done**: landing page live, demo viewer working with seeded HCC1395 data, auth flow complete, chat wired to Gemma 4
 
 ---
 
 ### Milestone 5: Cloud Deployment
-**Target: May 15**
+**Target: May 15 | ✅ Complete**
 
-- [ ] Containerize Python pipeline: single Dockerfile with pVACtools + VEP cache + all Python dependencies. Push to Artifact Registry.
-- [ ] Cloud Run Job: deploy pipeline container as a Cloud Run Job (batch workload, not a service)
-- [ ] Cloud Run bridge service (FastAPI, ~150 lines): `POST /trigger` (accepts VCF GCS path + case ID, starts Cloud Run Job) + `POST /callback` (pipeline stage completion → write status to Supabase)
-- [ ] Secret Manager: wire `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_APPLICATION_CREDENTIALS`, `GCS_BUCKET` into Cloud Run
-- [ ] Vercel deployment: set `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_CLOUD_PROJECT` as env vars
-- [ ] **Done**: upload VCF from deployed web app → Cloud Run job completes → report appears in browser
+- [x] `pipeline/run_cloud.py` — Cloud Run Job entry point: downloads VCF from GCS, runs all 5 pipeline stages, POSTs progress callbacks after each stage
+- [x] `pipeline/Dockerfile` — ENTRYPOINT updated to `run_cloud.py`
+- [x] Docker image built locally, pushed to Artifact Registry (`us-central1-docker.pkg.dev/project-1ea30ea7-dc79-4a14-84b/rosie-pipeline/pipeline:latest`)
+- [x] Cloud Run Job created: `rosie-pipeline` (8Gi RAM, 4 CPU, 3h timeout, us-central1)
+- [x] GCS bucket: `project-rosie-pipeline` with 30-day lifecycle rule
+- [x] Workload Identity Federation: Vercel → GCP auth via OIDC (no service account key — org policy blocks key creation)
+- [x] `/api/upload-url` — returns GCS resumable upload URI for direct browser→GCS upload
+- [x] `/api/cases/[id]/progress` — callback endpoint pipeline calls after each stage (secret-authenticated)
+- [x] `/api/cases` POST — triggers Cloud Run Job via REST API after case insert
+- [x] Vercel env vars: `GCS_BUCKET`, `GCP_PROJECT_ID`, `CLOUD_RUN_JOB_NAME`, `PIPELINE_CALLBACK_SECRET`, `NEXT_PUBLIC_APP_URL`
+- [x] **Done**: VCF upload → Cloud Run Job → stage callbacks → Supabase Realtime → report in browser
 
 ---
 
@@ -169,7 +174,7 @@ Don't wait for the tool to be done. Send emails now with the blog as proof of co
 - Ontario Institute for Cancer Research (OICR), Toronto — cancer genomics, most likely to respond quickly to a technical pitch.
 
 **Email template (4 sentences):**
-> "I built an open-source AI pipeline that automates personalized cancer vaccine design for dogs using Gemma 4. A case that took a 17-year ML veteran three months and a university lab now takes 24 hours. I'd value 30 minutes of your time to review the clinical report output and tell me what's wrong. Here's the write-up: [blog link]."
+> "I built an open-source AI pipeline that automates personalized cancer vaccine design for dogs using Gemma 4. A case that took a 17-year ML veteran three months and a university research lab now takes under 6 hours. I'd value 30 minutes of your time to review the clinical report output and tell me what's wrong. Here's the write-up: [blog link]."
 
 - [ ] Send to 5-8 people across those institutions
 - [ ] Prepare 1-page validation guide: what you're asking them to evaluate (report quality, candidate prioritization logic, what's missing for clinical use)
@@ -213,6 +218,7 @@ The pipeline makes decisions and uses concepts that are non-obvious without a bi
 - [From DNA to Vaccine Candidates — The Full Journey](docs/explainers/01-from-dna-to-vaccine-candidates.md) — What happens before a VCF file exists, every step of the pipeline explained in plain English, and a glossary of biology terms.
 - [Key Architecture Decisions](docs/explainers/02-key-decisions.md) — Why we start at VCF (not FASTQ), why NetMHCpan over MHCflurry, why no AlphaFold in Phase 1, why scoring is deterministic Python not an LLM.
 - [Frontend Architecture — M4 Web App](docs/explainers/03-frontend-architecture.md) — How the Next.js app is structured, the Supabase data model, the report viewer design, and how the Gemma 4 chat widget connects to case context.
+- [Cloud Deployment Architecture — M5](docs/explainers/04-cloud-deployment.md) — How the pipeline runs in the cloud: GCS, Cloud Run Jobs, Workload Identity Federation, and the callback pattern for live status updates.
 
 ---
 
@@ -232,7 +238,7 @@ Seeking: vet oncologist or computational biology researcher at UofT / OVC Guelph
 | M2 | Gemma 4 integration: Vertex AI, function calling, clinical report | ✅ Done | Gemma 4 on Vertex AI global endpoint. Multimodal: JSON + 2 PNGs → clinical report. Validated on HCC1395. |
 | M3 | mRNA sequence design: Biopython + canine codon table | ✅ Done | Top 3 epitopes (TESK1+FLNA+MC4R) → codon-optimized CDS → FASTA + design summary. CDS GC 68.5% ✓ |
 | M4 | Next.js frontend: case submission, live status, report viewer, chat | ✅ Done | 11 routes, clean build. Landing page, demo viewer (HCC1395 seeded), auth, dashboard, submit form, report tabs, Gemma 4 chat widget. GCS + Realtime deferred to M5. |
-| M5 | Cloud deployment: Cloud Run, Vercel | ⬜ Not started | — |
+| M5 — Cloud Deployment | GCS upload, Cloud Run Job, WIF auth, Realtime status | ✅ Done | Browser→GCS resumable upload. Cloud Run Job (8Gi/4CPU/3h). WIF replaces SA keys. Stage callbacks update Supabase in real time. |
 | M6 — Canine Data | VEP annotation + DLA alleles + end-to-end deployed run on real canine mammary tumor VCF | ⬜ Not started | Absorbs parked M1-Day2 canine validation work |
 | M7 | Validation outreach: OVC Guelph / UofT / OICR | ⬜ Not started | — |
 | M8 | Hackathon submission: video, Kaggle writeup | ⬜ Not started | Deadline: May 18, 7:59 PM EDT |

@@ -47,6 +47,15 @@ const DOCS = [
     href: "https://github.com/shashank-padala/project-rosie/blob/main/docs/explainers/03-frontend-architecture.md",
     external: true,
   },
+  {
+    category: "Technical",
+    categoryStyle: "border-border/60 text-muted-foreground bg-secondary/50",
+    title: "Cloud deployment architecture",
+    description:
+      "How the pipeline runs in the cloud: GCS uploads, Cloud Run Jobs, Workload Identity Federation, and the callback pattern that drives live status updates in the browser.",
+    href: "https://github.com/shashank-padala/project-rosie/blob/main/docs/explainers/04-cloud-deployment.md",
+    external: true,
+  },
 ]
 
 export default function DocsPage() {
