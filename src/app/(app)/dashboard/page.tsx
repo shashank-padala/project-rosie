@@ -62,11 +62,11 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="rounded-2xl border border-border/60 bg-card overflow-hidden shadow-xl shadow-black/10">
-          <div className="px-5 py-3.5 border-b border-border/50 bg-secondary/30">
+          <div className="px-5 py-3 border-b border-border/50 bg-secondary/30">
             <div className="grid grid-cols-12 gap-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <div className="col-span-4">Sample</div>
-              <div className="col-span-3 hidden sm:block">Species</div>
-              <div className="col-span-2">Status</div>
+              <div className="col-span-2 hidden sm:block">Species</div>
+              <div className="col-span-3">Status</div>
               <div className="col-span-2 hidden md:block">Submitted</div>
               <div className="col-span-1"></div>
             </div>
@@ -74,27 +74,27 @@ export default async function DashboardPage() {
           {cases.map((c, i) => (
             <div
               key={c.id}
-              className={`px-5 py-4 grid grid-cols-12 gap-4 items-center hover:bg-secondary/20 transition-colors ${
+              className={`relative px-5 py-4 grid grid-cols-12 gap-4 items-center group hover:bg-secondary/30 transition-colors cursor-pointer ${
                 i < cases.length - 1 ? "border-b border-border/40" : ""
               }`}
             >
+              {/* Full-row link overlay */}
+              <Link href={`/cases/${c.id}`} className="absolute inset-0" aria-label={`View case ${c.sample_name}`} />
+
               <div className="col-span-4 font-medium text-sm truncate">{c.sample_name}</div>
-              <div className="col-span-3 text-muted-foreground text-sm capitalize hidden sm:block truncate">
+              <div className="col-span-2 text-muted-foreground text-sm capitalize hidden sm:block truncate">
                 {c.species.replace(/_/g, " ")}
               </div>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 <StatusBadge status={c.status} />
               </div>
               <div className="col-span-2 text-muted-foreground text-sm hidden md:block">
                 {new Date(c.created_at).toLocaleDateString()}
               </div>
-              <div className="col-span-1 text-right">
-                <Link
-                  href={`/cases/${c.id}`}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-secondary hover:bg-primary/10 text-muted-foreground hover:text-primary border border-border/50 hover:border-primary/30 transition-all"
-                >
-                  View →
-                </Link>
+              <div className="col-span-1 flex justify-end">
+                <span className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/40 group-hover:text-primary group-hover:bg-primary/10 transition-all text-sm">
+                  →
+                </span>
               </div>
             </div>
           ))}
