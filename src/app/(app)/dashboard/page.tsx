@@ -87,7 +87,7 @@ export default async function DashboardPage() {
               <div className="col-span-2 hidden sm:block">Species</div>
               <div className="col-span-2">Status</div>
               <div className="col-span-2 hidden md:block">Submitted</div>
-              <div className="col-span-2 hidden md:block text-right">Actions</div>
+              <div className="col-span-2 hidden md:block">Actions</div>
             </div>
           </div>
 
