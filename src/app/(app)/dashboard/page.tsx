@@ -82,7 +82,7 @@ export default async function DashboardPage() {
 
           {/* Column headers */}
           <div className="px-5 py-2.5 border-b border-border/20">
-            <div className="grid grid-cols-12 gap-4 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40">
+            <div className="grid grid-cols-12 gap-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
               <div className="col-span-4">Case</div>
               <div className="col-span-2 hidden sm:block">Species</div>
               <div className="col-span-2">Status</div>
