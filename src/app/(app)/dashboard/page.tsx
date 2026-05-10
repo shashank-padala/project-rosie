@@ -65,7 +65,7 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-border/60 bg-card overflow-hidden shadow-xl shadow-black/10">
           <div className="px-5 py-3 border-b border-border/50 bg-secondary/30">
             <div className="grid grid-cols-12 gap-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <div className="col-span-2">Sample</div>
+              <div className="col-span-2">Case Name</div>
               <div className="col-span-2 hidden sm:block">Species</div>
               <div className="col-span-2">Status</div>
               <div className="col-span-2 hidden md:block">Submitted</div>
