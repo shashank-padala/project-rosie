@@ -9,9 +9,9 @@ interface Props {
 }
 
 const DOWNLOADS = [
-  { label: "Clinical Report", ext: ".pdf",   type: "report-pdf",    blank: true  },
-  { label: "mRNA Sequence",   ext: ".fasta", type: "fasta",         blank: false },
-  { label: "Synthesis Spec",  ext: ".pdf",   type: "synthesis-pdf", blank: true  },
+  { label: "Download Clinical Report", ext: ".pdf",   type: "report-pdf",    blank: true  },
+  { label: "Download mRNA Sequence",   ext: ".fasta", type: "fasta",         blank: false },
+  { label: "Download mRNA Specs",      ext: ".pdf",   type: "synthesis-pdf", blank: true  },
 ] as const
 
 export function CaseDashboardActions({ caseId, completed }: Props) {
@@ -32,19 +32,18 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
         <div ref={ref} className="relative">
           <button
             onClick={() => setOpen((o) => !o)}
-            className="flex items-center gap-1 text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            title="Downloads"
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
           >
-            Downloads
-            <svg
-              width="9" height="9" viewBox="0 0 9 9" fill="none"
-              className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`}
-            >
-              <path d="M1.5 3l3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <circle cx="7" cy="2.5"  r="1.2" />
+              <circle cx="7" cy="7"    r="1.2" />
+              <circle cx="7" cy="11.5" r="1.2" />
             </svg>
           </button>
 
           {open && (
-            <div className="absolute right-0 top-full mt-1.5 z-50 w-48 rounded-xl border border-border/50 bg-card shadow-lg shadow-black/15 overflow-hidden">
+            <div className="absolute right-0 top-full mt-1.5 z-50 w-56 rounded-xl border border-border/50 bg-card shadow-lg shadow-black/15 overflow-hidden">
               {DOWNLOADS.map(({ label, ext, type, blank }) => (
                 <a
                   key={type}
@@ -52,9 +51,9 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
                   target={blank ? "_blank" : undefined}
                   rel={blank ? "noopener noreferrer" : undefined}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 text-xs hover:bg-secondary/60 transition-colors group"
+                  className="flex items-center justify-between px-3 py-2.5 text-xs hover:bg-secondary/60 transition-colors group"
                 >
-                  <span className="text-foreground">{label}</span>
+                  <span className="text-foreground font-medium">{label}</span>
                   <span className="font-mono text-[10px] text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors">{ext}</span>
                 </a>
               ))}
