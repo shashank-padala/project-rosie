@@ -1,0 +1,25 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="Somatic mutation">
+##INFO=<ID=VT,Number=1,Type=String,Description="Variant type">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Total read depth">
+##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele fraction">
+##reference=ROS_Cfam_1.0
+##contig=<ID=5,length=89022265>
+##contig=<ID=13,length=64671682>
+##contig=<ID=25,length=51837565>
+##contig=<ID=26,length=40584822>
+##contig=<ID=34,length=41710480>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	TUMOR	NORMAL
+5	32669717	.	G	A	60	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:28,22:50:0.44	0/0:45,0:45:0.00
+5	32669747	.	T	C	55	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:31,19:50:0.38	0/0:42,0:42:0.00
+25	7891626	.	T	C	62	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:25,25:50:0.50	0/0:48,0:48:0.00
+25	7891666	.	T	C	58	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:29,21:50:0.42	0/0:44,0:44:0.00
+26	39409228	.	A	G	65	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:22,28:50:0.56	0/0:46,0:46:0.00
+26	39409238	.	C	T	52	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:33,17:50:0.34	0/0:43,0:43:0.00
+34	12545798	.	G	A	70	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:20,30:50:0.60	0/0:47,0:47:0.00
+34	12545828	.	G	A	64	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:26,24:50:0.48	0/0:45,0:45:0.00
+13	47757010	.	C	T	68	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:24,26:50:0.52	0/0:46,0:46:0.00
+13	47757040	.	G	A	57	PASS	SOMATIC;VT=SNP	GT:AD:DP:AF	0/1:30,20:50:0.40	0/0:44,0:44:0.00

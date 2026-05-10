@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -81,7 +82,7 @@ export default function SubmitPage() {
   return (
     <div className="max-w-xl mx-auto w-full px-5 sm:px-6 pt-10 pb-12">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-7">
         <h1
           className="text-2xl font-bold mt-3 mb-1"
           style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
@@ -89,34 +90,78 @@ export default function SubmitPage() {
           New Case
         </h1>
         <p className="text-muted-foreground text-sm">Submit a tumor VCF to start the pipeline</p>
+      </div>
 
-        {/* Step progress */}
-        <div className="mt-6 flex items-center gap-2">
-          {STEPS.map((label, i) => {
-            const s = i + 1
-            const active = s === step
-            const done = s < step
-            return (
-              <div key={label} className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                    done ? "bg-primary text-primary-foreground" :
-                    active ? "bg-primary/20 text-primary border border-primary/40" :
-                    "bg-secondary text-muted-foreground"
-                  }`}>
-                    {done ? "✓" : s}
-                  </div>
-                  <span className={`text-xs font-medium hidden sm:block ${active ? "text-foreground" : "text-muted-foreground"}`}>
-                    {label}
-                  </span>
-                </div>
-                {i < STEPS.length - 1 && (
-                  <div className={`h-px w-8 transition-colors ${done ? "bg-primary/40" : "bg-border"}`} />
-                )}
-              </div>
-            )
-          })}
+      {/* How VCFs are produced — educational context */}
+      <details className="mb-7 group rounded-2xl border border-border/40 bg-card overflow-hidden">
+        <summary className="flex items-center justify-between gap-3 px-5 py-3.5 cursor-pointer list-none hover:bg-secondary/30 transition-colors">
+          <div className="flex items-center gap-2.5">
+            <span className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="7" cy="7" r="5.5" />
+                <path d="M7 4.5v3M7 9.5v.01" />
+              </svg>
+            </span>
+            <span className="text-sm font-semibold">Where does a VCF come from?</span>
+          </div>
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground/60 transition-transform group-open:rotate-180">
+            <path d="M3 4.5l3 3 3-3" />
+          </svg>
+        </summary>
+        <div className="px-5 pb-5 pt-1 text-xs text-muted-foreground leading-relaxed space-y-3.5">
+          <p className="text-foreground/80">
+            A VCF (Variant Call Format) file lists somatic mutations found in a tumor by comparing it against matched healthy DNA from the same patient. To produce one:
+          </p>
+          <ol className="space-y-2.5 ml-0.5">
+            <li className="flex gap-2.5">
+              <span className="h-4 w-4 shrink-0 mt-px rounded-full bg-secondary text-foreground text-[10px] font-bold flex items-center justify-center">1</span>
+              <span><span className="font-semibold text-foreground">Collect samples.</span> Take a tumor biopsy and a matched normal sample (whole blood or buccal swab) from the same patient.</span>
+            </li>
+            <li className="flex gap-2.5">
+              <span className="h-4 w-4 shrink-0 mt-px rounded-full bg-secondary text-foreground text-[10px] font-bold flex items-center justify-center">2</span>
+              <span><span className="font-semibold text-foreground">Send to a sequencing lab.</span> Whole-exome (WES) or whole-genome (WGS) sequencing on Illumina/PacBio. You receive raw reads as <code className="font-mono text-[10.5px] bg-secondary/70 px-1 py-px rounded">.fastq.gz</code> files.</span>
+            </li>
+            <li className="flex gap-2.5">
+              <span className="h-4 w-4 shrink-0 mt-px rounded-full bg-secondary text-foreground text-[10px] font-bold flex items-center justify-center">3</span>
+              <span><span className="font-semibold text-foreground">Align reads.</span> Map FASTQ reads to a reference genome (BWA-MEM, minimap2) → <code className="font-mono text-[10.5px] bg-secondary/70 px-1 py-px rounded">.bam</code> files for tumor and normal.</span>
+            </li>
+            <li className="flex gap-2.5">
+              <span className="h-4 w-4 shrink-0 mt-px rounded-full bg-secondary text-foreground text-[10px] font-bold flex items-center justify-center">4</span>
+              <span><span className="font-semibold text-foreground">Call somatic variants.</span> Run Mutect2, Strelka2, or VarScan2 (tumor vs. normal) → produces the <code className="font-mono text-[10.5px] bg-secondary/70 px-1 py-px rounded">.vcf</code> you upload here.</span>
+            </li>
+          </ol>
+          <p className="pt-1 text-[11px] text-muted-foreground/70">
+            Project Rosie picks up from the VCF and handles annotation, neoantigen prediction, ranking, clinical reporting, and mRNA design.
+          </p>
         </div>
+      </details>
+
+      {/* Step progress */}
+      <div className="mb-7 flex items-center gap-2">
+        {STEPS.map((label, i) => {
+          const s = i + 1
+          const active = s === step
+          const done = s < step
+          return (
+            <div key={label} className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                  done ? "bg-primary text-primary-foreground" :
+                  active ? "bg-primary/20 text-primary border border-primary/40" :
+                  "bg-secondary text-muted-foreground"
+                }`}>
+                  {done ? "✓" : s}
+                </div>
+                <span className={`text-xs font-medium hidden sm:block ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                  {label}
+                </span>
+              </div>
+              {i < STEPS.length - 1 && (
+                <div className={`h-px w-8 transition-colors ${done ? "bg-primary/40" : "bg-border"}`} />
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {/* Step content */}
@@ -289,6 +334,85 @@ export default function SubmitPage() {
             </p>
           </div>
         )}
+      </div>
+
+      {/* Resources */}
+      <div className="mt-7">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-3 px-1">
+          Don&apos;t have a VCF yet?
+        </p>
+        <div className="rounded-2xl border border-border/40 bg-card divide-y divide-border/20 overflow-hidden">
+          <a
+            href="/samples/canine_mammary_tumor_sample.vcf"
+            download
+            className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/30 transition-colors group"
+          >
+            <span className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2.5" y="1.5" width="9" height="11" rx="1.2" />
+                <path d="M5 5h4M5 7.5h4M5 10h2.5" />
+              </svg>
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground leading-tight">Sample VCF — Canine mammary tumor</p>
+              <p className="text-[11px] text-muted-foreground/70 mt-0.5 leading-tight">10 somatic SNVs · ready to upload above</p>
+            </div>
+            <span className="text-muted-foreground/40 group-hover:text-foreground shrink-0 transition-colors">
+              <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 1.5v6M3.5 5.5L6 8l2.5-2.5" />
+                <path d="M2 10h8" />
+              </svg>
+            </span>
+          </a>
+
+          <Link
+            href="/demo"
+            className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/30 transition-colors group"
+          >
+            <span className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2.5 7c1.5-2.7 3.5-4 4.5-4s3 1.3 4.5 4c-1.5 2.7-3.5 4-4.5 4S4 9.7 2.5 7z" />
+                <circle cx="7" cy="7" r="1.5" />
+              </svg>
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground leading-tight">View a demo report</p>
+              <p className="text-[11px] text-muted-foreground/70 mt-0.5 leading-tight">See full pipeline output before you submit your own case</p>
+            </div>
+            <span className="text-muted-foreground/40 group-hover:text-foreground shrink-0 transition-colors">
+              <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 2.5l3.5 3.5L4 9.5" />
+              </svg>
+            </span>
+          </Link>
+
+          <a
+            href="https://caninecommons.cancer.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/30 transition-colors group"
+          >
+            <span className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <ellipse cx="7" cy="7" rx="5.5" ry="2.5" />
+                <ellipse cx="7" cy="7" rx="2.5" ry="5.5" />
+                <circle cx="7" cy="7" r="5.5" />
+              </svg>
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground leading-tight">Integrated Canine Data Commons</p>
+              <p className="text-[11px] text-muted-foreground/70 mt-0.5 leading-tight">NCI public canine cancer dataset · download more samples</p>
+            </div>
+            <span className="text-muted-foreground/40 group-hover:text-foreground shrink-0 transition-colors">
+              <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 2.5h4.5V7M9.5 2.5L5 7M4 4.5H3.5a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V9" />
+              </svg>
+            </span>
+          </a>
+        </div>
+        <p className="text-[10.5px] text-muted-foreground/60 mt-3 px-1 leading-relaxed">
+          For human samples, browse <a href="https://www.cbioportal.org/" target="_blank" rel="noopener noreferrer" className="underline decoration-muted-foreground/30 underline-offset-2 hover:text-foreground hover:decoration-foreground/40 transition-colors">cBioPortal (TCGA, ICGC)</a>.
+        </p>
       </div>
     </div>
   )
