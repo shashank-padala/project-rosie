@@ -48,9 +48,10 @@ const STEPS: StepDef[] = [
   },
   {
     status: "designing",
-    tag: "Codon-Optimized mRNA Assembly",
+    tag: "mRNA Assembly · Gemma 4 Synthesis Spec",
     title: "mRNA Vaccine Design",
-    desc: "Top epitopes are back-translated using canine codon tables and assembled into a synthesis-ready construct with UTRs, Kozak sequence, and poly-A tail.",
+    desc: "Top epitopes are back-translated using canine codon tables and assembled into a synthesis-ready construct with UTRs, Kozak sequence, and poly-A tail. Gemma 4 generates the CMO-ready synthesis specification.",
+    gemma4: true,
   },
   {
     status: "completed",
@@ -540,6 +541,48 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
                     {step.title}
                   </h3>
                 </div>
+
+                {/* Header-level download buttons for done steps */}
+                {state === "done" && step.status === "reporting" && caseData.clinical_report_md && (
+                  <a
+                    href={`/api/cases/${caseData.id}/download?type=report-pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Download Clinical Report (PDF)"
+                    className="shrink-0 h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
+                  >
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                      <path d="M6.5 1.5v7M3.5 6l3 3 3-3M1.5 11.5h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                )}
+                {state === "done" && step.status === "designing" && caseData.mrna_fasta && (
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <a
+                      href={`/api/cases/${caseData.id}/download?type=fasta`}
+                      title="Download mRNA Sequence (.fasta)"
+                      className="h-7 px-2 rounded-lg flex items-center gap-1 text-[11px] font-medium text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
+                    >
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <path d="M5.5 1v7M3 6l2.5 2.5L8 6M1 10h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      FASTA
+                    </a>
+                    <a
+                      href={`/api/cases/${caseData.id}/download?type=synthesis-pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Download Synthesis Specification (PDF)"
+                      className="h-7 px-2 rounded-lg flex items-center gap-1 text-[11px] font-medium text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
+                    >
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <path d="M5.5 1v7M3 6l2.5 2.5L8 6M1 10h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Spec
+                    </a>
+                  </div>
+                )}
+
                 {step.gemma4 && state !== "upcoming" && <Gemma4Badge />}
               </div>
 
