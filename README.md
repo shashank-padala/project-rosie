@@ -137,6 +137,45 @@ The entire design process — previously requiring months of expert manual work 
 
 ---
 
+## Phase 2 Roadmap
+
+### FASTQ → VCF ingestion (the single biggest adoption lever)
+
+Phase 1 starts from a VCF, which assumes the user has already done somatic variant calling. In practice, **most veterinary clinics receive raw FASTQ files from their sequencing partner** and don't have a bioinformatician on staff to convert them. This is the largest adoption barrier in the current product.
+
+**Phase 2 closes the gap with a standard tumor-vs-normal calling pipeline**, all open source:
+
+| Step | Tool | Purpose |
+|---|---|---|
+| 1 | BWA-MEM2 (or minimap2) | Align FASTQ reads to ROS_Cfam_1.0 reference → BAM |
+| 2 | samtools + GATK MarkDuplicates | Sort, deduplicate |
+| 3 | GATK BaseRecalibrator (BQSR) | Correct base quality scores using known variants (canine dbSNP equivalent) |
+| 4 | Mutect2 (GATK) or Strelka2 | Tumor-vs-normal somatic variant calling → VCF |
+| 5 | (existing pipeline) | VEP annotation, neoantigen prediction, mRNA design, etc. |
+
+**Tradeoffs:**
+
+| Dimension | Phase 1 (VCF in) | Phase 2 (FASTQ in) |
+|---|---|---|
+| Compute cost / case | ~$15 | ~$80–200 (alignment + Mutect2) |
+| Runtime / case | < 6 h | ~10–14 h |
+| Storage / case | ~10 KB (VCF) | ~30–60 GB (FASTQ + BAM) |
+| Reference assets baked into image | minimal | ~20 GB (canine reference + indexes) |
+| **Vet clinic addressable market** | **~5%** (those with bioinformatics support) | **~80%** (anyone with a sequencing partner) |
+| UI complexity | 1 file upload | 2 file uploads (tumor + normal) + sample-swap detection |
+
+The 16× compute cost increase and 100× storage increase are the real reasons this is Phase 2 not Phase 1 — both are acceptable for a 2-week clinical turnaround but require funded operations to absorb. They are not a technical barrier.
+
+### Other Phase 2 items
+
+- **AlphaFold-Multimer / ESMFold** for peptide-MHC structure prediction. Adds ~5–10% ranking precision over sequence-only NetMHCpan, at the cost of GPU hours per case. Worthwhile only after FASTQ ingestion is shipped.
+- **PyClone-VI** for proper subclonal clonality estimation (currently using VAF as a proxy).
+- **Nextflow** orchestration replacing the current Python entry script — production reproducibility story for regulatory filings.
+- **LinearDesign** for mRNA secondary-structure-aware codon optimization (currently using highest-frequency codon per amino acid).
+- **Multi-construct boost dosing** — design a prime construct (top 3 epitopes) and a boost construct (next 3) for sequential administration.
+
+---
+
 ## The Narrative
 
 > "Paul Conyngham, an AI entrepreneur from Australia, spent months in late 2025 building a personalized cancer vaccine for his dog by hand with a university research lab. We built the tool that lets any veterinary oncologist do it in under 6 hours, with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
