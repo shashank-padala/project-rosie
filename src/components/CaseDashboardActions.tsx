@@ -1,7 +1,5 @@
 "use client"
 
-import Link from "next/link"
-
 interface Props {
   caseId: string
   completed: boolean
@@ -56,15 +54,6 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
         </>
       )}
 
-      <Link
-        href={`/cases/${caseId}`}
-        className="h-7 px-2.5 rounded-md flex items-center gap-1 text-[11px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-      >
-        View
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M2 5h6M5.5 2.5L8 5l-2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </Link>
     </div>
   )
 }

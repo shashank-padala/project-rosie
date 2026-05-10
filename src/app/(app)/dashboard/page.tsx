@@ -69,7 +69,8 @@ export default async function DashboardPage() {
               <div className="col-span-2 hidden sm:block">Species</div>
               <div className="col-span-2">Status</div>
               <div className="col-span-2 hidden md:block">Submitted</div>
-              <div className="col-span-4 hidden md:block text-right">Actions</div>
+              <div className="col-span-3 hidden md:block text-right">Downloads</div>
+              <div className="col-span-1"></div>
             </div>
           </div>
           {cases.map((c, i) => (
@@ -89,8 +90,16 @@ export default async function DashboardPage() {
               <div className="col-span-2 text-muted-foreground text-sm hidden md:block">
                 {new Date(c.created_at).toLocaleDateString()}
               </div>
-              <div className="col-span-4 relative z-10 hidden md:flex justify-end">
+              <div className="col-span-3 relative z-10 hidden md:flex justify-end">
                 <CaseDashboardActions caseId={c.id} completed={c.status === "completed"} />
+              </div>
+              <div className="col-span-1 relative z-10 hidden md:flex justify-end">
+                <Link
+                  href={`/cases/${c.id}`}
+                  className="h-7 px-2.5 rounded-md flex items-center gap-1 text-[11px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                >
+                  View Case
+                </Link>
               </div>
             </div>
           ))}
