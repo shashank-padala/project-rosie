@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { createPortal } from "react-dom"
 import Link from "next/link"
 
 interface Props {
@@ -44,7 +45,6 @@ const DOWNLOADS = [
       <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2.5" y="1.5" width="9" height="11" rx="1.2" />
         <path d="M5 5h4M5 7.5h3M5 10h4" />
-        <circle cx="10.5" cy="10" r="0.5" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
@@ -70,8 +70,13 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
         btnRef.current && !btnRef.current.contains(e.target as Node)
       ) setOpen(false)
     }
+    function onScroll() { setOpen(false) }
     document.addEventListener("mousedown", onOutside)
-    return () => document.removeEventListener("mousedown", onOutside)
+    window.addEventListener("scroll", onScroll, true)
+    return () => {
+      document.removeEventListener("mousedown", onOutside)
+      window.removeEventListener("scroll", onScroll, true)
+    }
   }, [])
 
   function handleOpen() {
@@ -81,6 +86,45 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
     }
     setOpen((o) => !o)
   }
+
+  const dropdown = (
+    <div
+      ref={menuRef}
+      style={{ position: "fixed", top: pos.top, right: pos.right, zIndex: 9999 }}
+      className="w-56 rounded-xl border border-border/50 bg-card shadow-lg shadow-black/15 overflow-hidden"
+    >
+      {DOWNLOADS.map(({ label, ext, type, blank, icon }) =>
+        completed ? (
+          <a
+            key={type}
+            href={`/api/cases/${caseId}/download?type=${type}`}
+            target={blank ? "_blank" : undefined}
+            rel={blank ? "noopener noreferrer" : undefined}
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2.5 text-xs hover:bg-secondary/60 transition-colors group"
+          >
+            <span className="text-muted-foreground/50 group-hover:text-muted-foreground shrink-0 transition-colors">{icon}</span>
+            <span className="text-foreground font-medium flex-1">{label}</span>
+            <span className="text-muted-foreground/30 group-hover:text-muted-foreground/60 shrink-0 transition-colors"><DownloadIcon /></span>
+          </a>
+        ) : (
+          <div
+            key={type}
+            className="flex items-center gap-2.5 px-3 py-2.5 text-xs opacity-35 cursor-not-allowed"
+          >
+            <span className="text-muted-foreground/50 shrink-0">{icon}</span>
+            <span className="text-foreground font-medium flex-1">{label}</span>
+            <span className="text-muted-foreground/30 shrink-0"><DownloadIcon /></span>
+          </div>
+        )
+      )}
+      {!completed && (
+        <p className="px-3 py-2 text-[10px] text-muted-foreground/50 border-t border-border/30">
+          Available when case completes
+        </p>
+      )}
+    </div>
+  )
 
   return (
     <div className="flex items-center gap-3">
@@ -104,44 +148,7 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
         </svg>
       </button>
 
-      {open && (
-        <div
-          ref={menuRef}
-          style={{ position: "fixed", top: pos.top, right: pos.right, zIndex: 9999 }}
-          className="w-56 rounded-xl border border-border/50 bg-card shadow-lg shadow-black/15 overflow-hidden"
-        >
-          {DOWNLOADS.map(({ label, ext, type, blank, icon }) =>
-            completed ? (
-              <a
-                key={type}
-                href={`/api/cases/${caseId}/download?type=${type}`}
-                target={blank ? "_blank" : undefined}
-                rel={blank ? "noopener noreferrer" : undefined}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2.5 text-xs hover:bg-secondary/60 transition-colors group"
-              >
-                <span className="text-muted-foreground/50 group-hover:text-muted-foreground shrink-0 transition-colors">{icon}</span>
-                <span className="text-foreground font-medium flex-1">{label}</span>
-                <span className="text-muted-foreground/30 group-hover:text-muted-foreground/60 shrink-0 transition-colors"><DownloadIcon /></span>
-              </a>
-            ) : (
-              <div
-                key={type}
-                className="flex items-center gap-2.5 px-3 py-2.5 text-xs opacity-35 cursor-not-allowed"
-              >
-                <span className="text-muted-foreground/50 shrink-0">{icon}</span>
-                <span className="text-foreground font-medium flex-1">{label}</span>
-                <span className="text-muted-foreground/30 shrink-0"><DownloadIcon /></span>
-              </div>
-            )
-          )}
-          {!completed && (
-            <p className="px-3 py-2 text-[10px] text-muted-foreground/50 border-t border-border/30">
-              Available when case completes
-            </p>
-          )}
-        </div>
-      )}
+      {open && typeof document !== "undefined" && createPortal(dropdown, document.body)}
     </div>
   )
 }

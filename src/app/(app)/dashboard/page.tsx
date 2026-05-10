@@ -135,7 +135,7 @@ export default async function DashboardPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="col-span-2 relative z-10 hidden md:block">
+                <div className="col-span-2 hidden md:block">
                   <CaseDashboardActions caseId={c.id} completed={c.status === "completed"} />
                 </div>
               </div>
