@@ -66,7 +66,7 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
         href={`/cases/${caseId}`}
         className="h-7 px-2.5 rounded-md flex items-center text-[11px] font-semibold bg-hero-gradient text-primary-foreground hover:opacity-90 transition-opacity shadow-sm shadow-primary/20"
       >
-        View Case Details
+        View Case
       </Link>
     </div>
   )
