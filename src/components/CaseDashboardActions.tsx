@@ -64,12 +64,8 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
 
       <Link
         href={`/cases/${caseId}`}
-        className="h-7 px-2.5 rounded-md flex items-center gap-1.5 text-[11px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+        className="h-7 px-2.5 rounded-md flex items-center text-[11px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
       >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <ellipse cx="6" cy="6" rx="4.5" ry="3" stroke="currentColor" strokeWidth="1.3"/>
-          <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
-        </svg>
         View Case Details
       </Link>
     </div>
