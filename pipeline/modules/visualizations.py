@@ -56,9 +56,9 @@ def generate_mutation_landscape(tsv_path: str | None, candidates: list[dict], ou
         if "Variant Type" in df.columns:
             counts = df["Variant Type"].value_counts()
         else:
-            counts = pd.Series({c["variant_type"]: 1 for c in candidates if c.get("variant_type")})
+            counts = pd.Series([c["variant_type"] for c in candidates if c.get("variant_type")]).value_counts()
     else:
-        counts = pd.Series({c["variant_type"]: 1 for c in candidates if c.get("variant_type")})
+        counts = pd.Series([c["variant_type"] for c in candidates if c.get("variant_type")]).value_counts()
 
     if counts.empty:
         return
