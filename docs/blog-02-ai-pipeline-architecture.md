@@ -1,19 +1,10 @@
-# Project Rosie: An Open Source AI Pipeline for Personalized Cancer Vaccine Design
+# Project Rosie: The Larger Vision
 
-> **⚠ Note from the maintainer (May 2026):** This is the **original pre-implementation design vision** drafted in April 2026. Several pieces it describes as built were either deferred to Phase 2 or implemented differently (no AlphaFold, no PyClone-VI, no LinearDesign, no Nextflow, no native function-calling agentic orchestration; the synthesis spec is now a Jinja template, not LLM-generated; the orchestration is a deterministic Python script on Cloud Run Jobs).
->
-> For the **actual implementation as shipped**, read these instead:
-> - [`docs/hackathon-writeup.md`](hackathon-writeup.md) — the Kaggle submission writeup with current architecture and Gemma roles
-> - [`docs/explainers/02-key-decisions.md`](explainers/02-key-decisions.md) — every choice and tradeoff in the shipped pipeline
-> - The project [README](../README.md) — current status and milestones
->
-> This document is preserved for context on the original design thinking; do not treat it as a description of the live system.
+*The Phase 2+ architecture for an open-source personalized cancer vaccine platform. Where Gemma 4's native function calling, multimodal vision, and 256K context become the irreplaceable intelligence layer in a fully agentic clinical pipeline.*
 
----
+> **How to read this doc.** The hackathon submission ([writeup](hackathon-writeup.md), [README](../README.md)) covers what's shipped today: a deterministic Python pipeline starting from a VCF, with Gemma 4 acting as a pre-flight advisor, multimodal report writer, sensitivity narrator, and conversational case assistant. **This document is the larger vision.** It describes where the platform grows from there: full FASTQ ingestion, agentic tool orchestration, structural validation with AlphaFold, multi-cancer support, and the path to compassionate-use veterinary deployment that becomes the playbook for human trials. Many of the components below are Phase 2+ targets, not currently running. They are written in declarative tense to communicate the architectural target clearly.
 
-*How Gemma 4's native function calling, multimodal vision, and 256K context make it the irreplaceable intelligence layer in a canine personalized cancer vaccine pipeline, not a report formatter bolted on at the end.*
-
-*Published: April 21, 2026 · padala.ai · Track: Health & Sciences · Gemma4Good Hackathon*
+*Originally drafted: April 21, 2026 · padala.ai · Track: Health & Sciences · Gemma4Good Hackathon*
 
 ---
 

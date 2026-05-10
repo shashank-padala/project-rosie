@@ -203,7 +203,7 @@ Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and ch
 
 - **[Hackathon Writeup](docs/hackathon-writeup.md)** — the Kaggle Gemma4Good submission writeup (architecture + Gemma roles + decisions + limitations)
 - [Blog: The Case for Personalized Canine Cancer Vaccines](docs/blog-01-cancer-vaccine-case.md)
-- [Blog: Original Architecture Vision (pre-implementation design doc)](docs/blog-02-ai-pipeline-architecture.md)
+- [Project Rosie — The Larger Vision (Phase 2+ architecture)](docs/blog-02-ai-pipeline-architecture.md)
 - [Hackathon: Gemma4Good — Health & Sciences track](https://www.kaggle.com/competitions/gemma4good)
 - [pVACtools Documentation](https://pvactools.readthedocs.io)
 - [Gemma 4 on Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/open-models/use-gemma)
