@@ -75,13 +75,10 @@ export default async function DashboardPage() {
           {cases.map((c, i) => (
             <div
               key={c.id}
-              className={`group relative px-5 py-4 grid grid-cols-12 gap-3 items-center hover:bg-secondary/30 transition-colors cursor-pointer ${
+              className={`px-5 py-4 grid grid-cols-12 gap-3 items-center hover:bg-secondary/30 transition-colors ${
                 i < cases.length - 1 ? "border-b border-border/40" : ""
               }`}
             >
-              {/* Full-row link — sits below the kebab */}
-              <Link href={`/cases/${c.id}`} className="absolute inset-0" aria-label={`Open case ${c.sample_name}`} />
-
               <div className="col-span-3 font-medium text-sm truncate">{c.sample_name}</div>
               <div className="col-span-2 text-muted-foreground text-sm capitalize hidden sm:block truncate">
                 {c.species.replace(/_/g, " ")}
