@@ -64,22 +64,22 @@ export default async function DashboardPage() {
       ) : (
         <div className="rounded-2xl border border-border/60 bg-card overflow-hidden shadow-xl shadow-black/10">
           <div className="px-5 py-3 border-b border-border/50 bg-secondary/30">
-            <div className="grid grid-cols-12 gap-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <div className="col-span-4">Sample</div>
+            <div className="grid grid-cols-12 gap-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <div className="col-span-3">Sample</div>
               <div className="col-span-2 hidden sm:block">Species</div>
               <div className="col-span-2">Status</div>
               <div className="col-span-2 hidden md:block">Submitted</div>
-              <div className="col-span-2 hidden md:block text-right">Actions</div>
+              <div className="col-span-3 hidden md:block text-right">Actions</div>
             </div>
           </div>
           {cases.map((c, i) => (
             <div
               key={c.id}
-              className={`px-5 py-4 grid grid-cols-12 gap-4 items-center hover:bg-secondary/30 transition-colors ${
+              className={`px-5 py-4 grid grid-cols-12 gap-3 items-center hover:bg-secondary/30 transition-colors ${
                 i < cases.length - 1 ? "border-b border-border/40" : ""
               }`}
             >
-              <div className="col-span-4 min-w-0">
+              <div className="col-span-3 min-w-0">
                 <Link
                   href={`/cases/${c.id}`}
                   className="font-medium text-sm truncate block hover:text-primary transition-colors"
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
               <div className="col-span-2 text-muted-foreground text-sm hidden md:block">
                 {new Date(c.created_at).toLocaleDateString()}
               </div>
-              <div className="col-span-2 hidden md:flex justify-end">
+              <div className="col-span-3 hidden md:flex justify-end">
                 <CaseDashboardActions caseId={c.id} completed={c.status === "completed"} />
               </div>
             </div>
