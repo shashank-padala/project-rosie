@@ -103,3 +103,46 @@ All weights are visible in `pipeline/modules/scoring.py`. Changing them requires
 - Treatments validated in dogs frequently translate to human oncology trials.
 
 **Trade-off:** HLA allele databases and training data for predictors are much richer for human alleles than canine DLA alleles. NetMHCpan's canine predictions are less validated than its human predictions.
+
+---
+
+## Decision 8 — Templated mRNA synthesis spec, not LLM-generated
+
+**What we chose:** The mRNA synthesis specification (the document a vet emails to a CMO like Trilink or Genscript) is rendered from a Jinja template. Patient/case-specific fields are populated from structured pipeline output; the manufacturing parameters (cap analog, modifications, LNP ratios, QC release criteria) are deterministic constants.
+
+**What we initially built:** Gemma 4 generated the synthesis spec from a structured prompt. We replaced it.
+
+**Why:**
+- The spec is intended to be sent **verbatim** to a contract manufacturer. A formulation scientist who sees a hallucinated catalog number, a drifted QC threshold, or hedged language ("consult your bioinformatician") will dismiss the entire tool — and rightly so.
+- All variability in this document is patient/case data. The manufacturing science is fixed: CleanCap® AG cap1 (TriLink Cat# N-7413), 100% N1-methylpseudouridine substitution, SM-102 LNP at 50:10:38.5:1.5 molar ratio, RIN ≥ 8.0 release criterion, etc.
+- Templating is the correct tool for "deterministic structure, parameterized data."
+
+**Implementation:** `pipeline/templates/synthesis_spec.md.j2` + `pipeline/modules/synthesis_spec.py`. The pipeline calls `generate_synthesis_spec(design_data, candidates_json_path)` after `mrna_design()`.
+
+**Trade-off:** None worth noting. The previous LLM-generated version offered no value the template doesn't, and added measurable risk.
+
+**Principle this represents:** *AI for interpretation, deterministic code for compliance.*
+
+---
+
+## Decision 9 — Gemma as advisor, not just report-writer
+
+**What we chose:** Two new Gemma touchpoints around the deterministic pipeline:
+
+1. **Pre-flight VCF advisor** — runs on the submit page *before* the pipeline kicks off. The browser parses structural facts from the uploaded VCF (variant count, INFO keys, sample columns, somatic-flag presence, chromosomes, FILTER values) and sends them to Gemma. Gemma identifies 0–3 issues that would meaningfully degrade neoantigen prediction quality (mixed germline+somatic, no matched normal, all variants non-PASS, etc.). Returns typed advisory notes (info / warning / critical). Never blocks submission.
+
+2. **Sensitivity narrator** — runs on the report page *after* the pipeline completes. The user moves IC50 and tumor VAF threshold sliders; the kept/dropped candidates re-rank instantly client-side (no Gemma cost per slider tick). On explicit request ("Ask Gemma to interpret"), Gemma writes a one-paragraph plain-English read on the tradeoff.
+
+**Why:** A pure "report-writer at the end of the pipeline" is what every Health & Sciences track entry will use Gemma for — table stakes. The advisor framing puts Gemma into roles a deterministic pipeline genuinely cannot perform: reasoning *before* the run (catching VCF issues that would otherwise cost the user 6 hours of compute) and reasoning *across* what-if scenarios (interactive interpretation rather than static output).
+
+**Why this division is also defensible to a clinician/regulator:** The pipeline science remains deterministic and auditable. Gemma is purely an interpretation layer on top — it does not change which candidates survive, which thresholds apply, or which FASTA gets shipped. That separation is the framing that makes the tool acceptable in a clinical setting once it eventually moves there.
+
+**Implementation:**
+- `src/lib/vcf-stats.ts` (browser-side parser)
+- `src/app/api/vcf-advisor/route.ts` (Gemma endpoint)
+- `src/components/VcfAdvisor.tsx` (UI on `/submit`)
+- `src/lib/sensitivity.ts` (client-side re-rank)
+- `src/app/api/cases/[id]/sensitivity-narrate/route.ts` (Gemma endpoint)
+- `src/components/SensitivityPanel.tsx` (UI on `/cases/[id]` and `/demo`)
+
+**Trade-off:** Each Gemma call costs latency (~2–5 s) and quota on the Vertex AI MaaS endpoint. Pre-flight is auto-triggered on file select (one call per file); sensitivity narration requires explicit click. Both are designed to bound cost without making the feature feel transactional.
