@@ -75,18 +75,14 @@ export default async function DashboardPage() {
           {cases.map((c, i) => (
             <div
               key={c.id}
-              className={`px-5 py-4 grid grid-cols-12 gap-3 items-center hover:bg-secondary/30 transition-colors ${
+              className={`group relative px-5 py-4 grid grid-cols-12 gap-3 items-center hover:bg-secondary/30 transition-colors cursor-pointer ${
                 i < cases.length - 1 ? "border-b border-border/40" : ""
               }`}
             >
-              <div className="col-span-3 min-w-0">
-                <Link
-                  href={`/cases/${c.id}`}
-                  className="font-medium text-sm truncate block hover:text-primary transition-colors"
-                >
-                  {c.sample_name}
-                </Link>
-              </div>
+              {/* Full-row link — sits below the kebab */}
+              <Link href={`/cases/${c.id}`} className="absolute inset-0" aria-label={`Open case ${c.sample_name}`} />
+
+              <div className="col-span-3 font-medium text-sm truncate">{c.sample_name}</div>
               <div className="col-span-2 text-muted-foreground text-sm capitalize hidden sm:block truncate">
                 {c.species.replace(/_/g, " ")}
               </div>
@@ -96,7 +92,7 @@ export default async function DashboardPage() {
               <div className="col-span-2 text-muted-foreground text-sm hidden md:block">
                 {new Date(c.created_at).toLocaleDateString()}
               </div>
-              <div className="col-span-3 hidden md:flex justify-end">
+              <div className="col-span-3 relative z-10 hidden md:flex justify-end">
                 <CaseDashboardActions caseId={c.id} completed={c.status === "completed"} />
               </div>
             </div>
