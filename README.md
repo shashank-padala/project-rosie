@@ -104,34 +104,35 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 - Workload Identity Federation: Vercel OIDC → GCP (no service account keys)
 - Pipeline trigger awaited at submission; failures mark case `failed` immediately
 
-**Canine Data — Local Validation (M6, partial)**
+**Canine Data — End-to-End (M6)**
 - VEP CanFam4 (ROS_Cfam_1.0, v115) cache downloaded and running
 - Synthetic canine somatic VCF with real coordinates in TP53, BRCA2, PTEN, PIK3CA, KIT
-- pVACseq + scoring + Gemma 4 report + mRNA design — all stages validated locally
-- Strong neoantigen identified: PIK3CA V125M → MPMCEFDMVK, IC50 128 nM on DLA-8850801
+- pVACseq + scoring + Gemma 4 report + mRNA design validated end-to-end (local + cloud)
+- Strong neoantigen identified on the seed VCF: PIK3CA V125M → MPMCEFDMVK, IC50 128 nM on DLA-8850801
+- Public demo case (`/demo`) seeded from an enriched 7-candidate canine dataset spanning PIK3CA, TP53, BRCA2, KIT, PTEN — visually rich charts, real templated synthesis spec
+- Re-submit UI for failed cases; pipeline errors surface immediately on failure
+- One-shot scripts (`pipeline/scripts/build_demo.py`, `pipeline/scripts/wipe_and_seed_demo.py`) to regenerate the demo from local pipeline outputs
+
+**Hackathon Writeup (M8, partial)**
+- Kaggle writeup drafted: [`docs/hackathon-writeup.md`](docs/hackathon-writeup.md) — ~1,420 words, title and subtitle sized for Kaggle's character limits
+- README + key-decisions doc + frontend-architecture doc updated to match the actual implementation (templated synthesis spec, Gemma advisor pattern, vertical pipeline timeline)
 
 ---
 
 ### 🔄 In Progress
 
-**End-to-end cloud submission on canine VCF**
-- Cloud pipeline confirmed live; corrected `NEXT_PUBLIC_APP_URL` env var on Vercel
-- Re-submit UI added for failed cases; pipeline error surfaced immediately on failure
-- Remaining: submit annotated canine VCF through web app → confirm cloud run completes → verify report
+**Validation Outreach (M7)**
+- Targets identified: OVC Guelph comparative oncology, OICR, UofT Donnelly Centre
+- 1-page validation guide drafting next: what to evaluate, what's deliberately missing for clinical use, what we want feedback on
 
 ---
 
 ### ⬜ TODO
 
-**Validation Outreach (M7)**
-- [ ] Send to 5–8 researchers across OVC Guelph / UofT Donnelly Centre / OICR
-- [ ] Prepare 1-page validation guide: what to evaluate, what's missing for clinical use
-
-**Hackathon Submission (M8)**
-- [ ] Record 3-minute Loom: upload → pipeline runs → report appears → chat question answered
-- [ ] Kaggle writeup: blog content + architecture diagram + validation feedback
-- [ ] GitHub: clean setup instructions, architecture diagram (Excalidraw → PNG)
-- [ ] Submit before deadline
+**Hackathon Submission (M8 — remaining)**
+- [ ] Record 3-minute Loom: upload → pipeline runs → report appears → advisor flags an issue → chat question answered
+- [ ] Cover image / architecture diagram for the Kaggle Media Gallery
+- [ ] Final Kaggle submission (writeup + video + repo + live demo + cover image)
 
 ---
 
@@ -143,10 +144,11 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 | M2 — Gemma 4 | Vertex AI, multimodal input, clinical report generator | ✅ Done |
 | M3 — mRNA Design | Biopython + canine codon table, synthesis-ready FASTA | ✅ Done |
 | M4 — Frontend | Case submission, live status timeline, report viewer, chat | ✅ Done |
+| M4b — Gemma Advisor | Pre-flight VCF check + sensitivity panel + templated synthesis spec | ✅ Done |
 | M5 — Cloud | GCS upload, Cloud Run Job, WIF auth, Realtime callbacks | ✅ Done |
-| M6 — Canine Data | VEP + DLA alleles + end-to-end cloud run on real canine VCF | 🔄 In Progress |
-| M7 — Validation | Outreach to OVC Guelph / UofT / OICR | ⬜ Not started |
-| M8 — Submission | Video, Kaggle writeup, GitHub cleanup | ⬜ Not started |
+| M6 — Canine Data | VEP + DLA alleles + end-to-end cloud run on canine VCF + enriched public demo | ✅ Done |
+| M7 — Validation | Outreach to OVC Guelph / OICR / UofT Donnelly Centre | 🔄 In Progress |
+| M8 — Submission | Writeup ✅ · Video, cover image, final submit | 🔄 In Progress |
 
 ---
 

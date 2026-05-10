@@ -1,8 +1,19 @@
 # Project Rosie: An Open Source AI Pipeline for Personalized Cancer Vaccine Design
 
-*How Gemma 4's native function calling, multimodal vision, and 256K context make it the irreplaceable intelligence layer in a canine personalized cancer vaccine pipeline — not a report formatter bolted on at the end.*
+> **⚠ Note from the maintainer (May 2026):** This is the **original pre-implementation design vision** drafted in April 2026. Several pieces it describes as built were either deferred to Phase 2 or implemented differently (no AlphaFold, no PyClone-VI, no LinearDesign, no Nextflow, no native function-calling agentic orchestration; the synthesis spec is now a Jinja template, not LLM-generated; the orchestration is a deterministic Python script on Cloud Run Jobs).
+>
+> For the **actual implementation as shipped**, read these instead:
+> - [`docs/hackathon-writeup.md`](hackathon-writeup.md) — the Kaggle submission writeup with current architecture and Gemma roles
+> - [`docs/explainers/02-key-decisions.md`](explainers/02-key-decisions.md) — every choice and tradeoff in the shipped pipeline
+> - The project [README](../README.md) — current status and milestones
+>
+> This document is preserved for context on the original design thinking; do not treat it as a description of the live system.
 
-*Published: April 21, 2026 — padala.ai | Track: Health & Sciences | Gemma4Good Hackathon*
+---
+
+*How Gemma 4's native function calling, multimodal vision, and 256K context make it the irreplaceable intelligence layer in a canine personalized cancer vaccine pipeline, not a report formatter bolted on at the end.*
+
+*Published: April 21, 2026 · padala.ai · Track: Health & Sciences · Gemma4Good Hackathon*
 
 ---
 

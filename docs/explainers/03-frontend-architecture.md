@@ -2,6 +2,8 @@
 
 *Written for engineers and product people who are not familiar with the Next.js / Supabase stack used here. Biology background not needed.*
 
+> **Updates since this doc was first written (M4):** several stubs described below have shipped. The Report Viewer is now a **vertical pipeline timeline** (`src/components/PipelineTimeline.tsx`), not the tabbed view originally planned. The Submit form does **real GCS upload** to a resumable upload session and triggers Cloud Run Jobs (no more "filename discarded" stub). Supabase Realtime drives live status. A **Gemma Advisor layer** (M4b) was added — see the dedicated section near the bottom of this doc. The dashboard table was also redesigned (`src/components/CaseDashboardActions.tsx` for the per-row actions). The original M4 narrative below is preserved for historical context.
+
 ---
 
 ## What M4 Is
@@ -159,3 +161,42 @@ M5 will wire up the pieces M4 left as stubs:
 - **Cloud Run trigger**: after inserting the case row, `POST /trigger` on the FastAPI bridge service to start the pipeline job
 - **Realtime status**: subscribe to the Supabase `cases` channel on the `/cases/[id]` page — status updates from Cloud Run callbacks appear live without page refresh
 - **GCS URL images**: replace base64 PNG columns with signed GCS URLs, update `ReportViewer` to use `src={caseData.binding_affinity_url}` instead of the base64 data URI
+
+---
+
+## Gemma Advisor Components (M4b — shipped)
+
+Two Gemma-powered components were added on top of the M4 base — they are the project's primary differentiator beyond "LLM as report-writer at the end of a pipeline." See `docs/explainers/02-key-decisions.md` Decision 9 for the rationale; this section covers the frontend wiring.
+
+### `<VcfAdvisor>` — pre-flight VCF check
+
+Mounted on the submit page (`src/app/(app)/submit/page.tsx`) inside step 3, between the dropzone and the review summary card.
+
+| File | Purpose |
+|---|---|
+| `src/lib/vcf-stats.ts` | Pure browser-side VCF parser. Reads up to the first 5 MB of the file, extracts variant count, INFO keys, sample columns (TUMOR/NORMAL detection), somatic-flag presence, chromosomes seen, FILTER values, fileformat header, reference header. Never throws. |
+| `src/components/VcfAdvisor.tsx` | UI. Watches the `file` prop; on change, parses stats client-side, then POSTs to `/api/vcf-advisor`. Renders loading pill ("Gemma is reviewing your VCF…"), then 0–3 typed advisory notes (info / warning / critical), or a "✓ VCF looks clean" check. |
+| `src/app/api/vcf-advisor/route.ts` | Server endpoint. Auth-gated (logged-in user). Sends structural facts to `gemma-4-26b-a4b-it-maas` with a strict-JSON prompt; safe-parses the response; returns `{ notes: AdvisoryNote[] }`. Degrades to `{ notes: [] }` on Gemma failure — never blocks Submit. |
+
+**UX shape:** auto-runs on file select (one Gemma call per file). Loading state inline, never modal. Submit always usable regardless of advisor outcome.
+
+### `<SensitivityPanel>` — what-if threshold explorer
+
+Mounted in `src/components/PipelineTimeline.tsx` immediately after `<CandidatesArtifact>` for cases with `candidates_json` populated. Visible on both `/cases/[id]` (logged-in user cases) and `/demo` (public demo case).
+
+| File | Purpose |
+|---|---|
+| `src/lib/sensitivity.ts` | Pure client-side re-rank. `applySensitivity(candidates, thresholds)` returns `{ kept, dropped }` based on IC50 and VAF cutoffs. Defaults mirror `pipeline/modules/scoring.py:12-13` (`HARD_FILTER_IC50=500`, `HARD_FILTER_VAF=0.01`). |
+| `src/components/SensitivityPanel.tsx` | UI. Collapsible card with two range inputs (IC50 log-scale 50→1000 nM, VAF linear 0.01→0.50). Live counter row updates instantly on slider drag — no Gemma call until the user clicks "Ask Gemma to interpret". |
+| `src/app/api/cases/[id]/sensitivity-narrate/route.ts` | Server endpoint. Auth-gated with the same dual-mode pattern as the chat route (logged-in user OR `user_id IS NULL` for the demo). Sends thresholds + kept/dropped lists to Gemma; returns `{ narrative: string }`. |
+
+**UX shape:** instant slider feedback at zero LLM cost. Narrative generated only on explicit user request — keeps Vertex AI quota use bounded.
+
+### Pattern to copy when adding more advisor features
+
+Both components follow the same shape:
+1. **Pure lib** (`src/lib/*.ts`) — does the structured work (parsing or filtering) with zero side effects.
+2. **API route** (`src/app/api/.../route.ts`) — auth gate + Gemma call + safe-parse fallback.
+3. **Component** (`src/components/*.tsx`) — wires the lib to the route to the UI; degrades gracefully when Gemma fails.
+
+This separation keeps Gemma's role clearly bounded (interpretation only) and makes the underlying logic auditable without an LLM in the loop.
