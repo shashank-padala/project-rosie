@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface Props {
   caseId: string
@@ -57,9 +58,20 @@ const DownloadIcon = () => (
   </svg>
 )
 
+const TrashIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3.5h10M5 3.5V2.2c0-.4.3-.7.7-.7h2.6c.4 0 .7.3.7.7v1.3" />
+    <path d="M3.2 3.5l.6 8.3c0 .4.4.7.8.7h4.8c.4 0 .8-.3.8-.7l.6-8.3" />
+    <path d="M5.8 6v4.2M8.2 6v4.2" />
+  </svg>
+)
+
 export function CaseDashboardActions({ caseId, completed }: Props) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [pos, setPos] = useState({ top: 0, right: 0 })
+  const [confirming, setConfirming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const btnRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -85,6 +97,25 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
       setPos({ top: rect.bottom + 6, right: window.innerWidth - rect.right })
     }
     setOpen((o) => !o)
+  }
+
+  async function handleDelete() {
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/cases/${caseId}`, { method: "DELETE" })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        alert(`Failed to delete case: ${body?.error ?? res.statusText}`)
+        setDeleting(false)
+        return
+      }
+      setOpen(false)
+      setConfirming(false)
+      router.refresh()
+    } catch (e) {
+      alert(`Failed to delete case: ${(e as Error).message}`)
+      setDeleting(false)
+    }
   }
 
   const dropdown = (
@@ -123,6 +154,37 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
           Available when case completes
         </p>
       )}
+
+      {!confirming ? (
+        <button
+          onClick={() => setConfirming(true)}
+          className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs hover:bg-red-500/10 transition-colors group border-t border-border/30 text-red-500"
+        >
+          <span className="shrink-0"><TrashIcon /></span>
+          <span className="font-medium flex-1 text-left">Delete Case</span>
+        </button>
+      ) : (
+        <div className="border-t border-border/30 bg-red-500/5 px-3 py-2.5 space-y-2">
+          <p className="text-[11px] text-foreground font-medium leading-snug">Delete this case permanently?</p>
+          <p className="text-[10px] text-muted-foreground/70 leading-snug">All artifacts will be removed and cannot be recovered.</p>
+          <div className="flex gap-1.5 pt-0.5">
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="h-6 px-2 rounded text-[10px] font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+            >
+              {deleting ? "Deleting…" : "Delete"}
+            </button>
+            <button
+              onClick={() => setConfirming(false)}
+              disabled={deleting}
+              className="h-6 px-2 rounded text-[10px] font-semibold bg-secondary text-foreground hover:bg-secondary/70 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 
@@ -138,7 +200,7 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
       <button
         ref={btnRef}
         onClick={handleOpen}
-        title="Downloads"
+        title="More options"
         className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
