@@ -109,7 +109,7 @@ def design_mrna(
     output_dir: str,
     n_epitopes: int = N_EPITOPES,
     species: str = "canis_lupus_familiaris",
-) -> str:
+) -> dict:
     with open(candidates_json_path) as f:
         data = json.load(f)
 
@@ -137,6 +137,9 @@ def design_mrna(
     cds_only  = build_construct(peptides, species)
     gc_cds    = gc_content(cds_only)
 
+    cds_start = len(FIVE_PRIME_UTR) + len(KOZAK) + 3  # +3 for ATG
+    cds_end   = len(mrna_seq) - len(THREE_PRIME_UTR) - len(POLY_A)
+
     print(f"[mrna] Epitopes selected : {', '.join(f'{p} ({g})' for p, g in zip(peptides, genes))}")
     print(f"[mrna] Construct length  : {len(mrna_seq)} nt  (CDS: {len(cds_only)} nt)")
     print(f"[mrna] GC — CDS          : {gc_cds:.1%}", "✓" if 0.50 <= gc_cds <= 0.70 else "⚠ outside 50–70% target")
@@ -163,7 +166,30 @@ def design_mrna(
     Path(summary_path).write_text(summary)
     print(f"[mrna] Design summary → {summary_path}")
 
-    return out_path
+    return {
+        "fasta_path": out_path,
+        "summary_path": summary_path,
+        "design_data": {
+            "sample":         sample,
+            "species":        species,
+            "peptides":       peptides,
+            "genes":          genes,
+            "mrna_seq":       mrna_seq,
+            "cds_seq":        cds_only,
+            "gc_full":        gc,
+            "gc_cds":         gc_cds,
+            "five_utr_len":   len(FIVE_PRIME_UTR),
+            "kozak_seq":      KOZAK + "ATG",
+            "cds_len":        len(cds_only),
+            "three_utr_len":  len(THREE_PRIME_UTR),
+            "polya_len":      len(POLY_A),
+            "total_len":      len(mrna_seq),
+            "cds_start":      cds_start,
+            "cds_end":        cds_end,
+            "linker_seq":     CTL_LINKER,
+            "linker_count":   max(0, len(peptides) - 1),
+        },
+    }
 
 
 def _wrap(seq: str, width: int = 60) -> str:

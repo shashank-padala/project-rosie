@@ -19,8 +19,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 from modules.prediction import run_pvacseq
 from modules.scoring import score_candidates
 from modules.visualizations import generate_all
-from modules.gemma import generate_clinical_report, generate_mrna_synthesis_spec
+from modules.gemma import generate_clinical_report
 from modules.mrna_design import design_mrna
+from modules.synthesis_spec import generate_synthesis_spec
 
 CASE_ID                  = os.environ["CASE_ID"]
 GCS_VCF_PATH             = os.environ["GCS_VCF_PATH"]        # gs://bucket/path/file.vcf
@@ -171,27 +172,28 @@ def main():
         print("[pipeline] Step 5/5: Designing mRNA construct...")
         callback("designing")
         try:
-            fasta_path = design_mrna(
+            design_result = design_mrna(
                 candidates_json_path=json_path,
                 output_dir=out_dir,
                 species=SPECIES,
             )
-            summary_path = fasta_path.replace("_vaccine_mrna.fasta", "_mrna_design_summary.md")
-            design_summary = Path(summary_path).read_text() if Path(summary_path).exists() else ""
+            fasta_path   = design_result["fasta_path"]
+            summary_path = design_result["summary_path"]
+            design_data  = design_result["design_data"]
         except Exception as e:
             callback("failed", error_message=f"mRNA design failed: {e}")
             sys.exit(1)
 
-        # Step 5b: Gemma 4 synthesis specification
-        print("[pipeline] Step 5b: Generating mRNA synthesis specification...")
+        # Step 5b: Templated mRNA synthesis specification (deterministic, CMO-grade)
+        print("[pipeline] Step 5b: Rendering mRNA synthesis specification (templated)...")
         try:
-            mrna_summary = generate_mrna_synthesis_spec(
-                design_summary=design_summary,
+            mrna_summary = generate_synthesis_spec(
+                design_data=design_data,
                 candidates_json_path=json_path,
             )
         except Exception as e:
-            print(f"[pipeline] Synthesis spec failed (non-fatal): {e}")
-            mrna_summary = design_summary  # fall back to Python-generated summary
+            print(f"[pipeline] Synthesis spec render failed (non-fatal): {e}")
+            mrna_summary = Path(summary_path).read_text() if Path(summary_path).exists() else ""
 
         # Final callback with all results
         callback(

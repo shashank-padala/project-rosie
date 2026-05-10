@@ -1,0 +1,127 @@
+# mRNA Synthesis Specification — Personalized Neoantigen Vaccine
+
+| | |
+|---|---|
+| **Order ID** | {{ order_id }} |
+| **Sample** | {{ sample }} |
+| **Patient species** | {{ species_label }} |
+| **Date generated** | {{ date }} |
+| **Document classification** | Research Use Only · Investigational material |
+
+---
+
+## 1. Synthesis Request Summary
+
+This document specifies the synthesis of a personalized multi-epitope mRNA vaccine construct encoding **{{ n_epitopes }} tumor-specific neoantigen{{ 's' if n_epitopes != 1 else '' }}** identified from somatic variant calling on patient `{{ sample }}`. The construct is intended for **investigational/research use only** and requires veterinary oncologist sign-off prior to administration.
+
+## 2. Construct Identification
+
+| Field | Value |
+|---|---|
+| Vaccine ID | `{{ sample }}_neoantigen_vaccine` |
+| Encoded epitopes | {{ peptides | join(' + ') }} |
+| Source genes | {{ genes | join(', ') }} |
+| Total construct length | {{ total_len }} nt |
+| CDS length | {{ cds_len }} nt |
+| GC content (CDS) | {{ "%.1f"|format(gc_cds * 100) }}% {% if 0.50 <= gc_cds <= 0.70 %}✓ within 50–70% target{% else %}⚠ outside 50–70% target{% endif %} |
+| GC content (full mRNA) | {{ "%.1f"|format(gc_full * 100) }}% (UTRs + poly-A lower this — expected) |
+| MHC class | I (CD8⁺ CTL response) |
+| Linker | {% if linker_count > 0 %}AAY ×{{ linker_count }} (CTL epitope junction){% else %}— (single-epitope construct){% endif %} |
+
+## 3. IVT Template Specification
+
+| Parameter | Specification |
+|---|---|
+| Template format | Linearized plasmid OR PCR amplicon, ≥ 2 µg supplied |
+| Promoter | T7 RNA polymerase · `TAATACGACTCACTATAGGG` upstream of construct |
+| Template length | {{ total_len }} bp (matches construct + T7 promoter region) |
+| Linearization | Type IIS restriction enzyme downstream of poly-A; no run-off bases |
+| Sequence verification | Sanger or NGS confirmation **required** prior to IVT |
+| Reference sequence | See accompanying `.fasta` file (vaccine construct, 5′ → 3′) |
+
+## 4. Capping Strategy
+
+| Parameter | Specification | Rationale |
+|---|---|---|
+| Cap analog | CleanCap® AG (cap1, co-transcriptional) | Cap1 evades innate immune recognition (IFIT1/IFIT3); superior to ARCA |
+| Vendor / catalog | TriLink Biotechnologies, Cat# N-7413 | Industry standard for therapeutic-grade mRNA |
+| Capping efficiency | ≥ 95% (LC-MS) | Release-criterion |
+
+## 5. Nucleotide Modifications
+
+| Parameter | Specification | Rationale |
+|---|---|---|
+| Modified base | N1-methylpseudouridine (m1Ψ) | Abolishes TLR7/TLR8 activation; increases protein yield 10–100× |
+| Substitution rate | 100% (full replacement of UTP) | Standard for therapeutic-grade mRNA |
+| Purification | HPLC (oligo-dT or RNase III–based) | Removes immunostimulatory dsRNA byproducts — non-negotiable |
+
+## 6. LNP Formulation
+
+| Parameter | Specification |
+|---|---|
+| Lipid system | SM-102 (ionizable) + DSPC + cholesterol + PEG2000-DMG |
+| Molar ratios | 50 : 10 : 38.5 : 1.5 |
+| N/P ratio | 6 |
+| Particle size (Z-average) | 80–120 nm |
+| Polydispersity index (PDI) | < 0.2 |
+| Encapsulation efficiency | ≥ 85% (Ribogreen assay) |
+| Buffer (post-formulation) | PBS pH 7.4 |
+| Buffer (pre-formulation dilution) | 25 mM sodium acetate pH 4.0 |
+
+## 7. Quality Control — Release Criteria
+
+| Test | Method | Acceptance criterion |
+|---|---|---|
+| RNA integrity | Bioanalyzer / Fragment Analyzer | RIN ≥ 8.0 |
+| Identity | RT-PCR + Sanger | Sequence confirmed against reference |
+| Concentration | UV A260 | Within ± 10% of nominal |
+| dsRNA content | J2 dsRNA ELISA | < 0.1% w/w |
+| Endotoxin | LAL | < 0.1 EU / µg RNA |
+| Residual DNA | qPCR | < 10 ng / mg RNA |
+| Mycoplasma | PCR | Not detected |
+| Encapsulation efficiency (LNP) | Ribogreen | ≥ 85% |
+| Particle size (LNP) | DLS | 80–120 nm; PDI < 0.2 |
+
+## 8. Scale, Storage, Shipping
+
+| Parameter | Specification |
+|---|---|
+| Requested scale | 100–200 µg encapsulated mRNA (research / investigational grade) |
+| Naked mRNA storage | −80 °C, single-use aliquots, avoid freeze–thaw |
+| LNP storage | −20 °C, protected from light |
+| Stability target | 12 months at −80 °C (naked) · 6 months at −20 °C (LNP) |
+| Shipping | Dry ice, overnight courier, temperature logger included |
+
+## 9. Encoded Epitopes — Antigenic Payload
+
+| Rank | Peptide | Source gene | Mutation | MHC allele | Predicted IC50 (nM) | Binding category |
+|---|---|---|---|---|---|---|
+{% for ep in epitope_table -%}
+| {{ ep.rank }} | `{{ ep.peptide }}` | {{ ep.gene }} | {{ ep.mutation }} | {{ ep.allele }} | {{ ep.ic50 }} | {{ ep.category }} |
+{% endfor %}
+
+> **Binding category thresholds:** < 50 nM = Strong · 50–500 nM = Weak · ≥ 500 nM = Non-binder.
+
+## 10. Construct Region Map
+
+```
+5'UTR ({{ five_utr_len }} nt)
+  → Kozak + ATG ({{ kozak_seq | length }} nt)
+  → CDS ({{ cds_len }} nt — encodes {{ peptides | join('–AAY–') }})
+  → 3'UTR ({{ three_utr_len }} nt)
+  → poly-A ({{ polya_len }} nt)
+```
+
+**Total construct: {{ total_len }} nt.**
+
+## 11. Dosing Guidance
+
+Suggested starting dose range for canine subjects: **1–10 µg / kg body weight**, intramuscular, prime + 2 boosts at 3-week intervals (based on published canine neoantigen vaccine literature). Final dose, route, and schedule **require veterinary oncologist sign-off prior to administration.**
+
+---
+
+**Document control**
+
+- Generated by: Project Rosie pipeline · {{ pipeline_version }}
+- All synthesis parameters require verification by a qualified formulation scientist before submission to a CMO.
+- This is a research prototype output. Manufacturing decisions are the responsibility of the ordering veterinary oncologist and the contract manufacturing partner.

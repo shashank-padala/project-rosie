@@ -3,6 +3,7 @@ matplotlib
 biopython
 requests
 pandas
+jinja2
 google-cloud-aiplatform
 google-cloud-storage
 google-genai
