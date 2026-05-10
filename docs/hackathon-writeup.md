@@ -35,7 +35,6 @@ Live at **rosie.kiraklabs.com** · public demo at **rosie.kiraklabs.com/demo**.
 | mRNA design | Biopython + canine codon table |
 | Synthesis spec | Jinja template (deliberately *not* LLM-generated; see below) |
 | LLM layer | **Gemma 4 (`gemma-4-26b-a4b-it-maas`) via Vertex AI** |
-| GCP auth | Workload Identity Federation; zero static keys in Vercel |
 
 The pipeline is a deterministic Python script that emits HTTP callbacks at each stage. The Next.js frontend subscribes to the case row via Supabase Realtime. The UI's vertical timeline animates live with no polling.
 
@@ -75,15 +74,12 @@ This division (**AI for interpretation, deterministic code for compliance**) is 
 | Clonality | VAF as proxy | PyClone-VI is Phase 2; VAF is a reasonable hackathon proxy. |
 | AlphaFold | Excluded from Phase 1 | ~5–10% ranking precision improvement at the cost of GPU hours per case. Wrong ROI yet. |
 | Sensitivity re-ranking | Client-side filter | Instant slider feedback at zero Gemma cost. Gemma narrates only on explicit user request. |
-| Auth | Workload Identity Federation | Vercel OIDC → STS → service account impersonation. Zero static GCP keys shipped. |
 
 ## Challenges we overcame
 
 **Species-aware multimodal grounding.** Off-the-shelf Gemma defaults to human oncology framing. A species switch in the system prompt template swaps DLA/HLA/FLA terminology, adjusts IC50 interpretation thresholds, and grounds the report in vet rather than human idioms.
 
 **Real-time pipeline status without polling.** Cloud Run Jobs emit `pending → running → scoring → reporting → designing → completed` callbacks; Supabase Realtime pushes them straight into the React tree.
-
-**Production GCP auth from Vercel.** Workload Identity Federation lets the deployment call Vertex AI without ever shipping a service account key.
 
 **Demo data quality.** Initial canine pipeline runs returned a single high-confidence candidate, producing visually trivial charts (one solid bar, one solid circle). We synthesized an enriched demo dataset across the same five oncogenic drivers the synthetic VCF targets (PIK3CA, TP53, BRCA2, KIT, PTEN) and re-rendered visualizations for a more compelling demo without compromising on the canine narrative.
 

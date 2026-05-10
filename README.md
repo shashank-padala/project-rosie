@@ -33,7 +33,7 @@ The entire design process — previously requiring months of expert manual work 
 | mRNA Design | Python + Biopython + canine codon table | Codon-optimized mRNA with 5'UTR, 3'UTR, poly-A(60) tail |
 | Scoring | Python threshold pipeline | IC50 < 500 nM filter + weighted ranking. Transparent, auditable, ~50 lines |
 | Gemma 4 | Gemma 4 27B IT via Vertex AI | Clinical report generation, multimodal chart interpretation, conversational assistant |
-| Auth (GCP) | Workload Identity Federation | Vercel → GCP OIDC — no service account keys |
+| Auth (GCP) | Service-account credentials in Vercel env | WIF integration also wired (see `src/lib/gcp-auth.ts`); production currently uses the static-key fallback for reliability |
 
 ### Gemma 4 — Four Active Roles
 
@@ -101,7 +101,7 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 **Cloud Deployment (M5)**
 - Browser → GCS resumable upload → Cloud Run Job → stage callbacks → Supabase Realtime → report
 - Cloud Run Job: 8Gi RAM, 4 CPU, 3h timeout, `us-central1`
-- Workload Identity Federation: Vercel OIDC → GCP (no service account keys)
+- GCP auth from Vercel: service-account credentials env var (WIF code path also wired in `src/lib/gcp-auth.ts` and validated locally; not the active production path)
 - Pipeline trigger awaited at submission; failures mark case `failed` immediately
 
 **Canine Data — End-to-End (M6)**
@@ -145,7 +145,7 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 | M3 — mRNA Design | Biopython + canine codon table, synthesis-ready FASTA | ✅ Done |
 | M4 — Frontend | Case submission, live status timeline, report viewer, chat | ✅ Done |
 | M4b — Gemma Advisor | Pre-flight VCF check + sensitivity panel + templated synthesis spec | ✅ Done |
-| M5 — Cloud | GCS upload, Cloud Run Job, WIF auth, Realtime callbacks | ✅ Done |
+| M5 — Cloud | GCS upload, Cloud Run Job, GCP auth, Realtime callbacks | ✅ Done |
 | M6 — Canine Data | VEP + DLA alleles + end-to-end cloud run on canine VCF + enriched public demo | ✅ Done |
 | M7 — Validation | Outreach to OVC Guelph / OICR / UofT Donnelly Centre | 🔄 In Progress |
 | M8 — Submission | Writeup ✅ · Video, cover image, final submit | 🔄 In Progress |
@@ -215,7 +215,7 @@ Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and ch
 - [From DNA to Vaccine Candidates](docs/explainers/01-from-dna-to-vaccine-candidates.md) — Every step of the pipeline explained in plain English, plus a biology glossary
 - [Key Architecture Decisions](docs/explainers/02-key-decisions.md) — Why VCF not FASTQ, why NetMHCpan, why no AlphaFold in Phase 1
 - [Frontend Architecture](docs/explainers/03-frontend-architecture.md) — Next.js structure, Supabase data model, report viewer, chat widget
-- [Cloud Deployment Architecture](docs/explainers/04-cloud-deployment.md) — GCS, Cloud Run Jobs, WIF, callback pattern for live status
+- [Cloud Deployment Architecture](docs/explainers/04-cloud-deployment.md) — GCS, Cloud Run Jobs, GCP auth, callback pattern for live status
 
 ---
 

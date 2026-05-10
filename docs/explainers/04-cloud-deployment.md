@@ -88,6 +88,8 @@ Stage → status mapping:
 
 ### Workload Identity Federation (WIF)
 
+> **Status note:** WIF is wired and the code path below is correct, but **production currently uses the static-key fallback** in `src/lib/gcp-auth.ts` (the `GOOGLE_APPLICATION_CREDENTIALS_JSON` env var is set on Vercel and short-circuits the WIF path). The WIF path was hitting reliability issues during the hackathon timeline so the deployment fell back to a service-account key. The text below describes the WIF design as implemented in code; treat it as the intended production posture, not the active one.
+
 The Next.js API on Vercel needs to call GCP APIs (Cloud Run Jobs, GCS). Normally you'd use a service account JSON key. But the GCP project has an org policy blocking key creation (`constraints/iam.disableServiceAccountKeyCreation`).
 
 WIF solves this without keys:
