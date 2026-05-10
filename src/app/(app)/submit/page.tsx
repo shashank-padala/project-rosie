@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { VcfAdvisor } from "@/components/VcfAdvisor"
 import { createClient } from "@/lib/supabase/client"
 
 const PRESET_ALLELES: Record<string, string> = {
@@ -296,6 +297,9 @@ export default function SubmitPage() {
                 </>
               )}
             </div>
+
+            {/* VCF Pre-flight — Gemma reviews the file before the pipeline runs */}
+            <VcfAdvisor file={file} />
 
             {/* Review */}
             <div className="rounded-xl border border-border/40 bg-secondary/30 p-4 space-y-2 text-sm">

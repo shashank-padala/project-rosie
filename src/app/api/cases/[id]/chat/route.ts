@@ -30,7 +30,7 @@ export async function POST(
     return NextResponse.json({ error: "message required" }, { status: 400 })
   }
 
-  const candidates = caseData.candidates_json?.candidates ?? []
+  const candidates = caseData.candidates_json?.top_candidates ?? []
   const topCandidates = candidates.slice(0, 5).map((c: { rank: number; peptide: string; gene: string; ic50_nm: number; composite_score: number }) =>
     `Rank ${c.rank}: ${c.peptide} (${c.gene}) IC50=${c.ic50_nm.toFixed(1)}nM score=${c.composite_score.toFixed(3)}`
   ).join("\n")

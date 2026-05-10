@@ -6,6 +6,7 @@ import Image from "next/image"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CandidatesTable } from "@/components/CandidatesTable"
+import { SensitivityPanel } from "@/components/SensitivityPanel"
 import type { Case, CaseStatus } from "@/types/case"
 
 const PIPELINE_STAGES: CaseStatus[] = [
@@ -440,7 +441,15 @@ function MRNAArtifact({ fasta, summary, sampleName, caseId }: { fasta: string; s
 
 function ArtifactSection({ stepStatus, caseData }: { stepStatus: CaseStatus; caseData: Case }) {
   if (stepStatus === "scoring" && caseData.candidates_json) {
-    return <CandidatesArtifact data={caseData.candidates_json} />
+    return (
+      <div className="space-y-4">
+        <CandidatesArtifact data={caseData.candidates_json} />
+        <SensitivityPanel
+          candidates={caseData.candidates_json.top_candidates}
+          caseId={caseData.id}
+        />
+      </div>
+    )
   }
   if (stepStatus === "reporting") {
     return (
