@@ -28,6 +28,13 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
 
   return (
     <div className="flex items-center justify-end gap-3">
+      <Link
+        href={`/cases/${caseId}`}
+        className="h-7 px-2.5 rounded-md flex items-center text-[11px] font-semibold bg-hero-gradient text-primary-foreground hover:opacity-90 transition-opacity shadow-sm shadow-primary/20"
+      >
+        View Case
+      </Link>
+
       {completed && (
         <div ref={ref} className="relative">
           <button
@@ -61,13 +68,6 @@ export function CaseDashboardActions({ caseId, completed }: Props) {
           )}
         </div>
       )}
-
-      <Link
-        href={`/cases/${caseId}`}
-        className="h-7 px-2.5 rounded-md flex items-center text-[11px] font-semibold bg-hero-gradient text-primary-foreground hover:opacity-90 transition-opacity shadow-sm shadow-primary/20"
-      >
-        View Case
-      </Link>
     </div>
   )
 }
