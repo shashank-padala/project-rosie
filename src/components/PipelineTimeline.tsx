@@ -549,11 +549,12 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     title="Download Clinical Report (PDF)"
-                    className="shrink-0 h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
+                    className="shrink-0 h-7 px-2 rounded-lg flex items-center gap-1 text-[11px] font-medium text-muted-foreground/50 hover:text-foreground hover:bg-secondary border border-border/30 hover:border-border/60 transition-all"
                   >
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                      <path d="M6.5 1.5v7M3.5 6l3 3 3-3M1.5 11.5h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                      <path d="M5.5 1v7M3 6l2.5 2.5L8 6M1 10h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
+                    Download Report
                   </a>
                 )}
                 {state === "done" && step.status === "designing" && caseData.mrna_fasta && (
