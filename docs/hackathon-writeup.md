@@ -79,7 +79,7 @@ This division (**AI for interpretation, deterministic code for compliance**) is 
 
 **Species-aware multimodal grounding.** Off-the-shelf Gemma defaults to human oncology framing. A species switch in the system prompt template swaps DLA/HLA/FLA terminology, adjusts IC50 interpretation thresholds, and grounds the report in vet rather than human idioms.
 
-**Real-time pipeline status without polling.** Cloud Run Jobs emit `pending → running → scoring → reporting → designing → completed` callbacks; Supabase Realtime pushes them straight into the React tree.
+**Real-time pipeline status without polling.** Cloud Run Jobs emit a stage callback after each step (Case Queued → Neoantigen Prediction → Candidate Ranking → Report Generation → mRNA Vaccine Design → Results Ready); Supabase Realtime pushes them straight into the React tree, animating the vertical timeline live.
 
 **Demo data quality.** Initial canine pipeline runs returned a single high-confidence candidate, producing visually trivial charts (one solid bar, one solid circle). We synthesized an enriched demo dataset across the same five oncogenic drivers the synthetic VCF targets (PIK3CA, TP53, BRCA2, KIT, PTEN) and re-rendered visualizations for a more compelling demo without compromising on the canine narrative.
 
