@@ -86,6 +86,19 @@ export async function POST(req: NextRequest) {
     })
   }
 
+  // Hard-coded check: pVACseq requires VEP annotation (CSQ INFO field).
+  // Detect this deterministically rather than relying on Gemma to notice.
+  if (!stats.infoKeys.includes("CSQ")) {
+    return NextResponse.json({
+      notes: [{
+        severity: "critical",
+        title: "VCF is not VEP-annotated",
+        detail: "pVACseq requires Ensembl VEP annotation (CSQ INFO field) to identify candidate peptides. This VCF will fail at the Neoantigen Prediction stage.",
+        recommendation: "Annotate with VEP before uploading: vep --format vcf --vcf --species canis_lupus_familiaris --cache_version 115 --plugin Wildtype --plugin Frameshift. The downloadable sample file is pre-annotated.",
+      }] as AdvisoryNote[],
+    })
+  }
+
   const factsBlock = JSON.stringify({
     variantCount: stats.variantCount,
     formatColumns: stats.formatColumns,

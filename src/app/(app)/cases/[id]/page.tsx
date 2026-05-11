@@ -56,6 +56,28 @@ export default function CasePage() {
     return () => { supabase.removeChannel(channel) }
   }, [id, router])
 
+  // Polling fallback — re-fetch every 10 s while the pipeline is active.
+  // Realtime is primary; this catches any events missed by a dropped WS connection.
+  useEffect(() => {
+    if (!caseData) return
+    if (caseData.status === "completed" || caseData.status === "failed") return
+
+    const supabase = createClient()
+    const iv = setInterval(async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase
+        .from("cases")
+        .select("*")
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .single()
+      if (data) setCaseData(data as Case)
+    }, 10_000)
+
+    return () => clearInterval(iv)
+  }, [id, caseData?.status])
+
   if (notFound) {
     return (
       <div className="flex items-center justify-center h-64">

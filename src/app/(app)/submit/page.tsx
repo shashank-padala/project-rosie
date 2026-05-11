@@ -128,11 +128,15 @@ export default function SubmitPage() {
             </li>
             <li className="flex gap-2.5">
               <span className="h-4 w-4 shrink-0 mt-px rounded-full bg-secondary text-foreground text-[10px] font-bold flex items-center justify-center">4</span>
-              <span><span className="font-semibold text-foreground">Call somatic variants.</span> Run Mutect2, Strelka2, or VarScan2 (tumor vs. normal) → produces the <code className="font-mono text-[10.5px] bg-secondary/70 px-1 py-px rounded">.vcf</code> you upload here.</span>
+              <span><span className="font-semibold text-foreground">Call somatic variants.</span> Run Mutect2, Strelka2, or VarScan2 (tumor vs. normal) → raw <code className="font-mono text-[10.5px] bg-secondary/70 px-1 py-px rounded">.vcf</code></span>
+            </li>
+            <li className="flex gap-2.5">
+              <span className="h-4 w-4 shrink-0 mt-px rounded-full bg-secondary text-foreground text-[10px] font-bold flex items-center justify-center">5</span>
+              <span><span className="font-semibold text-foreground">Annotate with VEP.</span> Run Ensembl VEP with <code className="font-mono text-[10.5px] bg-secondary/70 px-1 py-px rounded">--plugin Wildtype --plugin Frameshift</code> → adds the CSQ field pVACseq requires. The sample file is pre-annotated.</span>
             </li>
           </ol>
           <p className="pt-1 text-[11px] text-muted-foreground/70">
-            Project Rosie picks up from the VCF and handles annotation, neoantigen prediction, ranking, clinical reporting, and mRNA design.
+            Project Rosie picks up from the VEP-annotated VCF and handles neoantigen prediction, ranking, clinical reporting, and mRNA design.
           </p>
         </div>
       </details>
