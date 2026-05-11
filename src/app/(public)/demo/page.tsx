@@ -23,7 +23,7 @@ export default async function DemoPage() {
         <div>
           <p className="text-sm font-semibold text-primary mb-0.5">Sample Case</p>
           <p className="text-xs text-muted-foreground">
-            Canine mammary tumor — PIK3CA V125M — real pipeline output, no edits.
+            Canine mammary tumor · 18 somatic variants · 4 neoantigen candidates (TP53, PIK3CA) · real pipeline output, no edits.
           </p>
         </div>
         <Link
