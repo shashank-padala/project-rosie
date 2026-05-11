@@ -21,46 +21,53 @@ interface StepDef {
   gemma4?: true
 }
 
-const STEPS: StepDef[] = [
-  {
-    status: "pending",
-    tag: "Job Initialization",
-    title: "Case Queued",
-    desc: "Your VCF file has been received and queued on our compute cluster. The job will start momentarily.",
-  },
-  {
-    status: "running",
-    tag: "pVACseq · MHC Binding Prediction",
-    title: "Neoantigen Prediction",
-    desc: "pVACseq is scanning every tumor mutation against your MHC alleles to identify peptides that could train the immune system to recognize and attack cancer cells.",
-  },
-  {
-    status: "scoring",
-    tag: "Composite Scoring & Filtering",
-    title: "Candidate Ranking",
-    desc: "Candidates are filtered by binding affinity (IC50 < 500 nM) and tumor allele frequency, then ranked by a composite immunogenicity score.",
-  },
-  {
-    status: "reporting",
-    tag: "Charts · AI Clinical Report",
-    title: "Report Generation",
-    desc: "Binding affinity and mutation-landscape charts are generated, then Gemma 4 interprets the data into a clinician-ready narrative highlighting the most actionable candidates.",
-    gemma4: true,
-  },
-  {
-    status: "designing",
-    tag: "mRNA Assembly · Gemma 4 Synthesis Spec",
-    title: "mRNA Vaccine Design",
-    desc: "Top epitopes are back-translated using canine codon tables and assembled into a synthesis-ready construct with UTRs, Kozak sequence, and poly-A tail. Gemma 4 generates the CMO-ready synthesis specification.",
-    gemma4: true,
-  },
-  {
-    status: "completed",
-    tag: "Pipeline Complete",
-    title: "Results Ready",
-    desc: "Your personalized vaccine design is complete. All artifacts are ready for review with your oncologist.",
-  },
-]
+function alleleSystem(species: string): string {
+  return species === "canis_lupus_familiaris" ? "DLA" : "MHC"
+}
+
+function getSteps(species: string): StepDef[] {
+  const sys = alleleSystem(species)
+  return [
+    {
+      status: "pending",
+      tag: "Job Initialization",
+      title: "Case Queued",
+      desc: "Your VCF file has been received and queued on our compute cluster. The job will start momentarily.",
+    },
+    {
+      status: "running",
+      tag: `pVACseq · ${sys} Binding Prediction`,
+      title: "Neoantigen Prediction",
+      desc: `pVACseq is scanning every tumor mutation against your ${sys} alleles to identify peptides that could train the immune system to recognize and attack cancer cells.`,
+    },
+    {
+      status: "scoring",
+      tag: "Composite Scoring & Filtering",
+      title: "Candidate Ranking",
+      desc: "Candidates are filtered by binding affinity (IC50 < 500 nM) and tumor allele frequency, then ranked by a composite immunogenicity score.",
+    },
+    {
+      status: "reporting",
+      tag: "Charts · AI Clinical Report",
+      title: "Report Generation",
+      desc: "Binding affinity and mutation-landscape charts are generated, then Gemma 4 interprets the data into a clinician-ready narrative highlighting the most actionable candidates.",
+      gemma4: true,
+    },
+    {
+      status: "designing",
+      tag: "mRNA Assembly · Gemma 4 Synthesis Spec",
+      title: "mRNA Vaccine Design",
+      desc: "Top epitopes are back-translated using canine codon tables and assembled into a synthesis-ready construct with UTRs, Kozak sequence, and poly-A tail. Gemma 4 generates the CMO-ready synthesis specification.",
+      gemma4: true,
+    },
+    {
+      status: "completed",
+      tag: "Pipeline Complete",
+      title: "Results Ready",
+      desc: "Your personalized vaccine design is complete. All artifacts are ready for review with your oncologist.",
+    },
+  ]
+}
 
 const STEP_EST: Partial<Record<CaseStatus, { label: string; maxSec: number }>> = {
   pending:   { label: "< 1 min",   maxSec: 60 },
@@ -538,9 +545,9 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
 
   return (
     <div>
-      {STEPS.map((step, idx) => {
+      {getSteps(caseData.species).map((step, idx) => {
         const state = getStepState(step.status, caseData, stale)
-        const isLast = idx === STEPS.length - 1
+        const isLast = idx === PIPELINE_STAGES.length - 1
         const showArtifacts = state === "done" && stepHasArtifacts(step.status, caseData)
         const artifactKey = `artifact-${step.status}`
         const artifactsOpen = !collapsedArtifacts.has(artifactKey)
