@@ -363,7 +363,7 @@ export default function SubmitPage() {
             </span>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground leading-tight">Sample VCF — Canine mammary tumor</p>
-              <p className="text-[11px] text-muted-foreground/70 mt-0.5 leading-tight">10 somatic SNVs · ready to upload above</p>
+              <p className="text-[11px] text-muted-foreground/70 mt-0.5 leading-tight">18 somatic SNVs · 8 genes · ready to upload above</p>
             </div>
             <span className="text-muted-foreground/40 group-hover:text-foreground shrink-0 transition-colors">
               <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
