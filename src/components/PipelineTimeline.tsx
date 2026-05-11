@@ -479,15 +479,51 @@ function ArtifactSection({ stepStatus, caseData }: { stepStatus: CaseStatus; cas
 
 /* ─── Main export ─── */
 
+const STATUS_ORDER: CaseStatus[] = ["pending", "running", "scoring", "reporting", "designing", "completed"]
+
+type StageTiming = { startedAt: number; endedAt?: number }
+
 export function PipelineTimeline({ caseData }: { caseData: Case }) {
   const [collapsedArtifacts, setCollapsedArtifacts] = useState<Set<string>>(new Set())
   const [now, setNow] = useState(() => Date.now())
+
+  // Stage timing: keyed by status, persisted to localStorage so page reloads don't lose it.
+  // startedAt is recorded once when we first observe a status — retries that re-send the same
+  // status value do NOT reset it, which prevents the elapsed timer from jumping back to zero.
+  const [stageTimings, setStageTimings] = useState<Partial<Record<CaseStatus, StageTiming>>>(() => {
+    if (typeof window === "undefined") return {}
+    try {
+      const stored = localStorage.getItem(`rosie-stage-times-${caseData.id}`)
+      return stored ? JSON.parse(stored) : {}
+    } catch { return {} }
+  })
 
   useEffect(() => {
     if (caseData.status === "completed" || caseData.status === "failed") return
     const id = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(id)
   }, [caseData.status])
+
+  useEffect(() => {
+    const status = caseData.status
+    if (status === "failed") return
+    const currentIdx = STATUS_ORDER.indexOf(status)
+
+    setStageTimings(prev => {
+      if (prev[status]?.startedAt) return prev  // already recorded, don't overwrite
+      const nowMs = Date.now()
+      const updated: Partial<Record<CaseStatus, StageTiming>> = { ...prev, [status]: { startedAt: nowMs } }
+      // Mark the preceding stage as ended
+      if (currentIdx > 0) {
+        const prevStatus = STATUS_ORDER[currentIdx - 1]
+        if (updated[prevStatus] && !updated[prevStatus]!.endedAt) {
+          updated[prevStatus] = { ...updated[prevStatus]!, endedAt: nowMs }
+        }
+      }
+      try { localStorage.setItem(`rosie-stage-times-${caseData.id}`, JSON.stringify(updated)) } catch {}
+      return updated
+    })
+  }, [caseData.status, caseData.id])
 
   function toggleArtifact(key: string) {
     setCollapsedArtifacts((prev) => {
@@ -601,7 +637,9 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
               {/* Active: elapsed + estimated remaining */}
               {state === "active" && (() => {
                 const est = STEP_EST[step.status]
-                const elapsedSec = Math.max(0, Math.floor((now - new Date(caseData.updated_at).getTime()) / 1000))
+                const stageTiming = stageTimings[step.status]
+                const stageStartedAt = stageTiming?.startedAt ?? new Date(caseData.updated_at).getTime()
+                const elapsedSec = Math.max(0, Math.floor((now - stageStartedAt) / 1000))
                 return (
                   <div className="mt-3 flex items-center gap-3 flex-wrap">
                     <div className="flex items-center gap-1.5">
@@ -623,6 +661,19 @@ export function PipelineTimeline({ caseData }: { caseData: Case }) {
                   est. {STEP_EST[step.status]!.label}
                 </p>
               )}
+
+              {/* Done: actual time taken */}
+              {state === "done" && (() => {
+                const timing = stageTimings[step.status]
+                if (!timing?.startedAt || !timing?.endedAt) return null
+                const durationSec = Math.floor((timing.endedAt - timing.startedAt) / 1000)
+                if (durationSec <= 0) return null
+                return (
+                  <p className="mt-2 text-xs text-emerald-500/60 tabular-nums">
+                    Completed in {fmtElapsed(durationSec)}
+                  </p>
+                )
+              })()}
 
               {/* Error state */}
               {state === "error" && (
