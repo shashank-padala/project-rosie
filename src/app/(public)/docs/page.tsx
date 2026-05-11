@@ -2,6 +2,15 @@ import { Badge } from "@/components/ui/badge"
 
 const DOCS = [
   {
+    category: "Interactive",
+    categoryStyle: "border-amber-500/30 text-amber-600 bg-amber-500/5",
+    title: "System architecture diagram",
+    description:
+      "Interactive architecture diagram with animated data-flow simulation. Shows all four pipeline stages, Gemma 4's roles, the Supabase Realtime callback loop, and each output artifact.",
+    href: "/docs/architecture",
+    external: false,
+  },
+  {
     category: "Blog",
     categoryStyle: "border-primary/30 text-primary bg-primary/5",
     title: "The cancer vaccine story",
