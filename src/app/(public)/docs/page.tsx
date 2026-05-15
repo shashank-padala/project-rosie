@@ -22,11 +22,11 @@ const DOCS = [
   {
     category: "Hackathon Entry",
     categoryStyle: "border-amber-500/30 text-amber-600 bg-amber-500/5",
-    title: "Project Rosie: Open Source AI Pipeline",
+    title: "Rosie: AI Clinical Assistant for Oncologists",
     description:
-      "Gemma4Good hackathon writeup. How Gemma 4's native function calling, multimodal vision, and 256K context make it the intelligence layer — not a report formatter bolted on at the end.",
-    href: "https://padala.ai/blogs/project-rosie-open-source-ai-pipeline",
-    external: true,
+      "Gemma4Good hackathon writeup. The full technical case: architecture, how Gemma 4 is used before and around the pipeline, key decisions, honest limitations, and why veterinary oncology is the right place to start.",
+    href: "/writeup",
+    external: false,
   },
   {
     category: "Explainer",
