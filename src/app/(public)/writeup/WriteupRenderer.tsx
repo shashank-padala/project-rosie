@@ -3,6 +3,7 @@
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import Link from "next/link"
+import Image from "next/image"
 import type { Components } from "react-markdown"
 
 const mdComponents: Components = {
@@ -164,6 +165,18 @@ export function WriteupRenderer({ content }: { content: string }) {
             </a>
           </div>
         </div>
+      </div>
+
+      {/* Hero image */}
+      <div className="rounded-2xl overflow-hidden mb-10 border border-border/30">
+        <Image
+          src="/project-rosie-cover.png"
+          alt="Project Rosie — AI Clinical Assistant for Oncologists"
+          width={1804}
+          height={1194}
+          className="w-full object-cover"
+          priority
+        />
       </div>
 
       {/* Markdown body */}

@@ -13,13 +13,14 @@ export const metadata: Metadata = {
       "The AI Clinical Assistant for Oncologists — starting with veterinary medicine. From tumor DNA to a synthesis-ready mRNA vaccine in under an hour.",
     type: "article",
     url: "https://rosie.kiraklabs.com/writeup",
-    images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "Project Rosie" }],
+    images: [{ url: "/project-rosie-cover.png", width: 1804, height: 1194, alt: "Project Rosie — AI Clinical Assistant for Oncologists" }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Rosie: AI Clinical Assistant for Oncologists",
     description:
       "From tumor DNA to a synthesis-ready mRNA vaccine in under an hour. Gemma4Good Health & Sciences hackathon writeup.",
+    images: ["/project-rosie-cover.png"],
   },
 }
 
