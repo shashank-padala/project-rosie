@@ -107,8 +107,12 @@ const mdComponents: Components = {
 }
 
 export function WriteupRenderer({ content }: { content: string }) {
-  // Strip the h1 title from markdown — we render our own styled header
-  const withoutTitle = content.replace(/^#\s+.+\n/, "")
+  // Strip the h1, italic track line, bold subtitle, and leading hr — rendered in styled header above
+  const withoutTitle = content
+    .replace(/^#\s+.+\n/, "")
+    .replace(/^\n\*.+\*\n/, "")
+    .replace(/^\n\*\*.+\*\*\n/, "")
+    .replace(/^\n---\n/, "")
 
   return (
     <div className="max-w-3xl mx-auto w-full px-5 sm:px-6 pt-10 pb-20">
