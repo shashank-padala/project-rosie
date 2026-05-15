@@ -175,9 +175,9 @@ export function WriteupRenderer({ content }: { content: string }) {
       <div className="rounded-2xl overflow-hidden mb-10 border border-border/30">
         <Image
           src="/project-rosie-cover.png"
-          alt="Project Rosie — AI Clinical Assistant for Oncologists"
-          width={1804}
-          height={1194}
+          alt="Project Rosie — Personalized Cancer Vaccines for Dogs"
+          width={1536}
+          height={1024}
           className="w-full object-cover"
           priority
         />
