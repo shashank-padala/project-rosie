@@ -42,7 +42,7 @@ The pipeline is a deterministic Python script that emits HTTP callbacks at each 
 
 Rosie is not a pipeline with an LLM bolted on at the end. The four Gemma roles below are the architecture of a clinical assistant: intelligence that operates *before* a run (advising the clinician), *after* a run (interpreting results), *interactively* (responding to clinical judgment), and *on-demand* (answering questions in plain language). Together they give a vet oncologist something they have never had: specialist-level AI reasoning across the full case.
 
-Every Health & Sciences entry will use an LLM as a report-writer. That's table stakes. We pushed Gemma 4 into roles that **a deterministic pipeline genuinely cannot perform**: reasoning *before* and *around* the pipeline, not just *after*.
+We pushed Gemma 4 into roles that **a deterministic pipeline genuinely cannot perform**: reasoning *before* and *around* the pipeline, not just *after*.
 
 **Role 1 · Pre-flight VCF advisor (proactive).** When the vet uploads a VCF, the browser parses structural facts (variant count, INFO keys, sample columns, somatic-flag presence, chromosomes, FILTER values) and sends them to Gemma. Gemma identifies 0–3 issues that would degrade prediction quality, *before* the user burns an hour of compute. Strict JSON output with safe-parse fallback. Never blocks submission.
 
