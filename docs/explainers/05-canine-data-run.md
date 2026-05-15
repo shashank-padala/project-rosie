@@ -118,3 +118,7 @@ The local pipeline run is done. Still pending:
 - Submit the annotated canine VCF through the web app → verify cloud pipeline runs end-to-end
 - Review clinical report quality with SME (Case Comprehensive Cancer Center researcher)
 - Record video for hackathon submission
+
+### Update: enriched demo dataset
+
+After completing this single-VCF run, the public `/demo` case was enriched to produce more visually informative charts. The enriched dataset uses 18 variants across canine mammary tumor driver genes, yielding 4 strong neoantigen candidates spanning TP53 and PIK3CA. Biology is faithful to canine mammary tumor mutation profiles — same genes as the synthetic VCF targets above. The synthesis spec and clinical report shown in the demo are real pipeline outputs, not synthetic content.

@@ -65,7 +65,7 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 | mRNA design | Python + Biopython + canine codon table | LinearDesign has complex setup and licensing. Codon optimization is straightforward Python. |
 | Clonality | VAF as proxy | PyClone-VI adds complexity. Variant allele frequency is a reasonable proxy for hackathon. |
 | HLA alleles | DLA-8850101, DLA-8850801 | Most common documented DLA alleles in canine research literature. |
-| Demo dataset | Enriched canine mammary tumor case | 7 plausible neoantigens across PIK3CA, TP53, BRCA2, KIT, PTEN — same genes the synthetic VCF targets. Sufficient candidate variety for visually rich charts. |
+| Demo dataset | Enriched canine mammary tumor case (18 variants) | 4 strong neoantigen candidates across TP53 and PIK3CA — biologically plausible driver genes for canine mammary tumors. Visually rich charts; synthesis spec and clinical report are real pipeline outputs. |
 
 ---
 
@@ -109,7 +109,7 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 - Synthetic canine somatic VCF with real coordinates in TP53, BRCA2, PTEN, PIK3CA, KIT
 - pVACseq + scoring + Gemma 4 report + mRNA design validated end-to-end (local + cloud)
 - Strong neoantigen identified on the seed VCF: PIK3CA V125M → MPMCEFDMVK, IC50 128 nM on DLA-8850801
-- Public demo case (`/demo`) seeded from an enriched 7-candidate canine dataset spanning PIK3CA, TP53, BRCA2, KIT, PTEN — visually rich charts, real templated synthesis spec
+- Public demo case (`/demo`) seeded from an enriched 18-variant canine dataset with 4 strong neoantigen candidates (TP53, PIK3CA) — visually rich charts, real templated synthesis spec
 - Re-submit UI for failed cases; pipeline errors surface immediately on failure
 - One-shot scripts (`pipeline/scripts/build_demo.py`, `pipeline/scripts/wipe_and_seed_demo.py`) to regenerate the demo from local pipeline outputs
 
@@ -122,8 +122,8 @@ The mRNA **synthesis specification** is rendered from a **Jinja template**, not 
 ### 🔄 In Progress
 
 **Validation Outreach (M7)**
-- Targets identified: OVC Guelph comparative oncology, OICR, UofT Donnelly Centre
-- 1-page validation guide drafting next: what to evaluate, what's deliberately missing for clinical use, what we want feedback on
+- Initial validation feedback received from Senior Research Associate at Case Comprehensive Cancer Center (Cleveland) — bioinformatics + statistical genetics background. Assessment: credible MVP with meaningful potential.
+- Outreach ongoing to OVC Guelph, OICR, UofT Donnelly Centre for comparative oncology perspective.
 
 ---
 

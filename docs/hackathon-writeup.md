@@ -85,7 +85,7 @@ This division (**AI for interpretation, deterministic code for compliance**) is 
 
 ## What's still missing (honest section)
 
-- **No clinician validation yet.** Outreach to OVC Guelph, OICR, and UofT Donnelly Centre comparative oncology groups is in progress.
+- **Early SME validation.** A Senior Research Associate at Case Comprehensive Cancer Center (bioinformatics + statistical genetics background) reviewed the pipeline — assessment: credible MVP with meaningful potential. Deeper clinical validation from OVC Guelph / OICR comparative oncology groups is in progress.
 - **Phase 1 starts from VCF.** Most vet clinics receive FASTQ from their sequencing partner. FASTQ → VCF (BWA-MEM2 + Mutect2) is the single largest adoption lever for Phase 2: ~5% → ~80% addressable vet-clinic market, at ~16× compute cost and ~100× storage. Documented in the README.
 - **Tumor-only handling.** Matched-normal calling is preferred; tumor-only flow needs an explicit confidence-discount in ranking. The pre-flight advisor already flags this; Phase 2 acts on it.
 
