@@ -546,7 +546,7 @@ export default function ArchitecturePage() {
         <div className="mt-6 pt-4 border-t border-border/60 flex flex-wrap items-center justify-between gap-3">
           <p className="text-[10px] text-muted-foreground">
             <span className="font-semibold text-foreground" style={{ fontFamily: "var(--font-dm-sans)" }}>rosie.kiraklabs.com</span>
-            {" · "} ~6 hours end-to-end
+            {" · "} ~1 hour end-to-end
             {" · "} ~$15/case
             {" · "} <span className="text-muted-foreground/60">191,645 epitopes → 1,648 after IC50 filter → top 20 ranked</span>
           </p>

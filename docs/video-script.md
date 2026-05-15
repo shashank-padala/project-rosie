@@ -79,7 +79,7 @@ Above the chyron: a real photograph of the ML engineer and Rosie, displayed insi
 **[1:14–1:25]** VcfAdvisor fires — advisory note appears inline
 
 **VO:**
-> "Before anything runs, Gemma 4 reads the file's structure and flags issues that could waste six hours of compute. Here: tumor-only sample, no matched normal. Flagged upfront. Submit still works — nothing is blocked."
+> "Before anything runs, Gemma 4 reads the file's structure and flags issues that could waste an hour of compute. Here: tumor-only sample, no matched normal. Flagged upfront. Submit still works — nothing is blocked."
 
 ---
 
@@ -130,7 +130,7 @@ Above the chyron: a real photograph of the ML engineer and Rosie, displayed insi
 *Final frame: a sunny park. The dog — visibly healthy, tail wagging — bounds across the grass. The dog owner is laughing, chasing after it. She scoops the dog up. Both of them lit by afternoon sun.*
 
 **VO:**
-> "It took one ML veteran three months to save one dog. Now any vet oncologist can do it in six hours."
+> "It took one ML veteran three months to save one dog. Now any vet oncologist can do it in under an hour."
 
 *Beat of silence.*
 

@@ -133,7 +133,7 @@ All weights are visible in `pipeline/modules/scoring.py`. Changing them requires
 
 2. **Sensitivity narrator** — runs on the report page *after* the pipeline completes. The user moves IC50 and tumor VAF threshold sliders; the kept/dropped candidates re-rank instantly client-side (no Gemma cost per slider tick). On explicit request ("Ask Gemma to interpret"), Gemma writes a one-paragraph plain-English read on the tradeoff.
 
-**Why:** A pure "report-writer at the end of the pipeline" is what every Health & Sciences track entry will use Gemma for — table stakes. The advisor framing puts Gemma into roles a deterministic pipeline genuinely cannot perform: reasoning *before* the run (catching VCF issues that would otherwise cost the user 6 hours of compute) and reasoning *across* what-if scenarios (interactive interpretation rather than static output).
+**Why:** A pure "report-writer at the end of the pipeline" is what every Health & Sciences track entry will use Gemma for — table stakes. The advisor framing puts Gemma into roles a deterministic pipeline genuinely cannot perform: reasoning *before* the run (catching VCF issues that would otherwise cost the user an hour of compute) and reasoning *across* what-if scenarios (interactive interpretation rather than static output).
 
 **Why this division is also defensible to a clinician/regulator:** The pipeline science remains deterministic and auditable. Gemma is purely an interpretation layer on top — it does not change which candidates survive, which thresholds apply, or which FASTA gets shipped. That separation is the framing that makes the tool acceptable in a clinical setting once it eventually moves there.
 

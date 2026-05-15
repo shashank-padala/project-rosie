@@ -12,7 +12,7 @@ In late 2025, an AI entrepreneur from Australia, a 17-year machine learning vete
 
 Personalized neoantigen vaccines are one of the most promising emerging cancer treatments. But the design pipeline, from a sequenced tumor to a synthesizable mRNA construct, requires fluency in pVACtools, NetMHCpan, codon optimization, IVT chemistry, and a half-dozen other specialized tools. Vet clinics don't have those people. So dogs that could benefit today don't get vaccines.
 
-**Project Rosie removes that wall.** It is an AI Clinical Assistant for Oncologists — built for veterinary medicine first, with a direct translational path to human oncology. A vet uploads a tumor variant call file (VCF), the pipeline runs in under six hours on cloud compute (~$15 per case), and four artifacts appear in the dashboard:
+**Project Rosie removes that wall.** It is an AI Clinical Assistant for Oncologists — built for veterinary medicine first, with a direct translational path to human oncology. A vet uploads a tumor variant call file (VCF), the pipeline runs in under an hour on cloud compute (~$15 per case), and four artifacts appear in the dashboard:
 
 1. A ranked list of personalized neoantigen targets
 2. A synthesis-ready multi-epitope mRNA construct (FASTA)
@@ -44,7 +44,7 @@ Rosie is not a pipeline with an LLM bolted on at the end. The four Gemma roles b
 
 Every Health & Sciences entry will use an LLM as a report-writer. That's table stakes. We pushed Gemma 4 into roles that **a deterministic pipeline genuinely cannot perform**: reasoning *before* and *around* the pipeline, not just *after*.
 
-**Role 1 · Pre-flight VCF advisor (proactive).** When the vet uploads a VCF, the browser parses structural facts (variant count, INFO keys, sample columns, somatic-flag presence, chromosomes, FILTER values) and sends them to Gemma. Gemma identifies 0–3 issues that would degrade prediction quality, *before* the user burns 6 hours of compute. Strict JSON output with safe-parse fallback. Never blocks submission.
+**Role 1 · Pre-flight VCF advisor (proactive).** When the vet uploads a VCF, the browser parses structural facts (variant count, INFO keys, sample columns, somatic-flag presence, chromosomes, FILTER values) and sends them to Gemma. Gemma identifies 0–3 issues that would degrade prediction quality, *before* the user burns an hour of compute. Strict JSON output with safe-parse fallback. Never blocks submission.
 
 > *"This VCF has no SOMATIC flag and no NORMAL column. It looks like germline + somatic mixed together. That will inflate your candidate count with non-tumor mutations. Recommend re-running with a matched-normal somatic caller before submitting."*
 

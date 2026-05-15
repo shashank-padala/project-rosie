@@ -10,7 +10,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   title: "Rosie | Personalized Cancer Vaccines for Dogs",
   description:
-    "Upload a tumor VCF. Get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and a personalized mRNA vaccine sequence — in under 6 hours.",
+    "Upload a tumor VCF. Get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and a personalized mRNA vaccine sequence — in under an hour.",
   metadataBase: new URL("https://rosie.kiraklabs.com"),
   openGraph: {
     title: "Rosie | Personalized Cancer Vaccines for Dogs",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Rosie | Personalized Cancer Vaccines for Dogs",
-    description: "Upload a tumor VCF. Get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and synthesis-ready mRNA — in under 6 hours.",
+    description: "Upload a tumor VCF. Get ranked neoantigen candidates with binding scores, a prioritization report your oncologist can act on, and synthesis-ready mRNA — in under an hour.",
     images: ["/icon-512.png"],
   },
   icons: {

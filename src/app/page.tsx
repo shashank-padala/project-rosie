@@ -32,7 +32,7 @@ export default async function HomePage() {
 
         <p className="animate-fade-up-2 text-lg sm:text-xl text-muted-foreground max-w-lg mb-10 leading-relaxed">
           Upload a tumor biopsy file. Get ranked vaccine targets, an AI clinical
-          report, and a synthesis-ready mRNA sequence. In &lt;6 hours, not months.
+          report, and a synthesis-ready mRNA sequence. In under an hour, not months.
         </p>
 
         <div className="animate-fade-up-3 flex flex-col sm:flex-row gap-3">
@@ -120,7 +120,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { before: "3 months", after: "<6 hours", label: "Design time", icon: "⏱️" },
+              { before: "3 months", after: "<1 hour", label: "Design time", icon: "⏱️" },
               { before: "Research lab required", after: "Any oncologist with sequencing data", label: "Accessibility", icon: "🏥" },
               { before: "$10,000+", after: "~$15", label: "Compute cost", icon: "💰" },
             ].map((stat) => (

@@ -17,7 +17,7 @@ Takes a tumor VCF (somatic variant call file from sequencing) and produces:
 3. A plain-language clinical report for the veterinary oncologist
 4. A formal mRNA synthesis specification for the RNA manufacturing partner
 
-The entire design process — previously requiring months of expert manual work — runs in <6 hours, costing approximately $15 in compute.
+The entire design process — previously requiring months of expert manual work — runs in under 1 hour, costing approximately $15 in compute.
 
 ---
 
@@ -39,7 +39,7 @@ The entire design process — previously requiring months of expert manual work 
 
 We push Gemma into roles a deterministic pipeline genuinely cannot perform — reasoning *before* and *around* the pipeline, not just *after*.
 
-**Role 1 — Pre-flight VCF advisor (proactive)**: When the vet uploads a VCF, the browser parses structural facts (variant count, INFO keys, sample columns, somatic-flag presence, chromosomes, FILTER values) and sends them to Gemma. Gemma identifies 0–3 issues that would degrade prediction quality — *before* the user burns 6 hours of compute. Strict JSON output with safe-parse fallback. Never blocks submission.
+**Role 1 — Pre-flight VCF advisor (proactive)**: When the vet uploads a VCF, the browser parses structural facts (variant count, INFO keys, sample columns, somatic-flag presence, chromosomes, FILTER values) and sends them to Gemma. Gemma identifies 0–3 issues that would degrade prediction quality — *before* the user burns an hour of compute. Strict JSON output with safe-parse fallback. Never blocks submission.
 
 **Role 2 — Multimodal clinical report writer (reactive)**: After the pipeline completes, Gemma reads the candidate JSON, the binding-affinity bar chart (PNG), and the mutation-landscape pie chart (PNG) — multimodally — and writes a 400–600 word plain-language clinical report. A species-aware system prompt swaps DLA / HLA / FLA terminology and adjusts IC50 interpretation by species.
 
@@ -173,7 +173,7 @@ Phase 1 starts from a VCF, which assumes the user has already done somatic varia
 | Dimension | Phase 1 (VCF in) | Phase 2 (FASTQ in) |
 |---|---|---|
 | Compute cost / case | ~$15 | ~$80–200 (alignment + Mutect2) |
-| Runtime / case | < 6 h | ~10–14 h |
+| Runtime / case | < 1 h | ~10–14 h |
 | Storage / case | ~10 KB (VCF) | ~30–60 GB (FASTQ + BAM) |
 | Reference assets baked into image | minimal | ~20 GB (canine reference + indexes) |
 | **Vet clinic addressable market** | **~5%** (those with bioinformatics support) | **~80%** (anyone with a sequencing partner) |
@@ -195,7 +195,7 @@ The 16× compute cost increase and 100× storage increase are the real reasons t
 
 Project Rosie is an **AI Clinical Assistant for Oncologists — starting with veterinary medicine.** The deterministic bioinformatics pipeline (VEP, pVACtools, NetMHCpan, Biopython) handles the biology: reproducibly, auditably, with published thresholds. Gemma 4 is the intelligence layer that wraps around it — advising before the run, interpreting after it, responding to clinical judgment interactively, and answering questions on demand.
 
-> "An AI engineer from Australia spent three months in a university research lab to design one vaccine for one dog. Project Rosie does it in six hours, for any vet with a sequencing file — with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
+> "An AI engineer from Australia spent three months in a university research lab to design one vaccine for one dog. Project Rosie does it in under an hour, for any vet with a sequencing file — with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
 
 Dogs and humans share TP53, PIK3CA, BRCA2, and many other oncogenic drivers. Canine trials are faster and cheaper than human trials. Every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data. The playbook for dogs becomes the playbook for humans.
 
