@@ -8,7 +8,7 @@
 
 ## The problem
 
-In late 2025, AI entrepreneur Paul Conyngham, a 17-year machine learning veteran, spent three months in a university research lab designing a personalized neoantigen cancer vaccine for his dog Rosie, by hand. **If that's what it takes for someone with his background, the question of accessibility for a veterinary oncologist with no ML training isn't a question. It's a wall.**
+In late 2025, an AI entrepreneur from Australia, a 17-year machine learning veteran, spent three months in a university research lab designing a personalized neoantigen cancer vaccine for his dog Rosie, by hand. **If that's what it takes for someone with his background, the question of accessibility for a veterinary oncologist with no ML training isn't a question. It's a wall.**
 
 Personalized neoantigen vaccines are one of the most promising emerging cancer treatments. But the design pipeline, from a sequenced tumor to a synthesizable mRNA construct, requires fluency in pVACtools, NetMHCpan, codon optimization, IVT chemistry, and a half-dozen other specialized tools. Vet clinics don't have those people. So dogs that could benefit today don't get vaccines.
 

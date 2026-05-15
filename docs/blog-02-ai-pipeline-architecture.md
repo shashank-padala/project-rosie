@@ -10,11 +10,11 @@
 
 ## The Problem
 
-In late 2025, Paul Conyngham's rescue dog Rosie was diagnosed with terminal mast cell cancer. Working nights and weekends, he used free AI tools, a $3,000 DNA sequencing run, and researchers at the University of New South Wales to design a personalized mRNA cancer vaccine. The tumor on Rosie's leg shrank by 75% within a month. Researchers called it the first personalized cancer vaccine ever designed for a dog.
+In late 2025, an Australian ML engineer's rescue dog Rosie was diagnosed with terminal mast cell cancer. Working nights and weekends, he used free AI tools, a $3,000 DNA sequencing run, and researchers at the University of New South Wales to design a personalized mRNA cancer vaccine. The tumor on Rosie's leg shrank by 75% within a month. Researchers called it the first personalized cancer vaccine ever designed for a dog.
 
-> **Conyngham is a 17-year machine learning veteran. He still needed three months and an active university research lab to do this once, for one dog. If that is what it takes for someone with his background, the question of accessibility for a veterinary oncologist with no ML training is not even a question — it is a wall. That is the problem Project Rosie exists to remove.**
+> **A 17-year machine learning veteran still needed three months and an active university research lab to do this once, for one dog. If that is what it takes for someone with his background, the question of accessibility for a veterinary oncologist with no ML training is not even a question — it is a wall. That is the problem Project Rosie exists to remove.**
 
-What Conyngham demonstrated by hand over several months is exactly what Moderna and Merck are spending billions to industrialize for human patients. Their Phase 3 personalized melanoma vaccine showed a 49% reduction in cancer recurrence at five-year follow-up. The biology is the same. The open source tools exist. What does not exist is software that connects them into a pipeline repeatable by anyone, anywhere, without a PhD team.
+What he demonstrated by hand over several months is exactly what Moderna and Merck are spending billions to industrialize for human patients. Their Phase 3 personalized melanoma vaccine showed a 49% reduction in cancer recurrence at five-year follow-up. The biology is the same. The open source tools exist. What does not exist is software that connects them into a pipeline repeatable by anyone, anywhere, without a PhD team.
 
 > 6 million dogs are diagnosed with cancer annually in the US alone. No personalized cancer vaccine product exists in veterinary oncology today. And every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data that directly informs the human pathway.
 

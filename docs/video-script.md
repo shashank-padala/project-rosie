@@ -29,7 +29,7 @@
 
 > **"ML Engineer Saves Dying Dog with Personalized Cancer Vaccine"**
 
-Above the chyron: a real photograph of Paul Conyngham and Rosie, displayed inside the cartoon TV frame. The photo is not animated — it sits as a real image in a cartoon world. This contrast is intentional.
+Above the chyron: a real photograph of the ML engineer and Rosie, displayed inside the cartoon TV frame. The photo is not animated — it sits as a real image in a cartoon world. This contrast is intentional.
 
 **VO:**
 > "In late 2025, an AI engineer in Australia spent three months in a university research lab designing a personalized cancer vaccine for his dog. By hand. The tumor shrank 75%. It worked."

@@ -16,9 +16,9 @@ That question has been living rent-free in my head ever since.
 
 ---
 
-## What Paul Conyngham actually did
+## What one Australian ML engineer actually did
 
-Paul Conyngham is a Sydney-based machine learning engineer with 17 years of experience and zero background in biology. When his rescue dog Rosie was diagnosed with terminal mast cell cancer, he refused to accept the prognosis.
+He is a Sydney-based machine learning engineer with 17 years of experience and zero background in biology. When his rescue dog Rosie was diagnosed with terminal mast cell cancer, he refused to accept the prognosis.
 
 He spent $3,000 to have Rosie's tumor DNA and healthy DNA sequenced at the University of New South Wales. He used ChatGPT to navigate unfamiliar biomedical literature. He used Google DeepMind's AlphaFold to model the 3D structure of the mutated protein driving Rosie's cancer. He used Grok to design an mRNA sequence that would teach Rosie's immune system to recognize and attack that protein. He handed a half-page formula to Professor Pall Thordarson at UNSW's RNA Institute, who manufactured the physical vaccine in under two months.
 
@@ -30,11 +30,11 @@ It was the first personalized cancer vaccine ever designed for a dog.
 
 ## Why this is bigger than one dog
 
-What Conyngham demonstrated in a few months, working nights and weekends, is a compressed version of exactly what Moderna and Merck are spending billions to industrialize for human cancer patients. Their Phase 3 personalized melanoma vaccine trial showed a 49% reduction in cancer recurrence or death at five-year follow-up. First commercial approvals are expected around 2026 to 2028.
+What he demonstrated in a few months, working nights and weekends, is a compressed version of exactly what Moderna and Merck are spending billions to industrialize for human cancer patients. Their Phase 3 personalized melanoma vaccine trial showed a 49% reduction in cancer recurrence or death at five-year follow-up. First commercial approvals are expected around 2026 to 2028.
 
 The biology is the same. The tools are the same. The difference is scale, rigor, and the regulatory pathway that turns a research experiment into a treatment that can be prescribed to any patient.
 
-But here is what struck me. Every tool Conyngham used is open source and free. GATK from the Broad Institute. NetMHCpan from the Technical University of Denmark. AlphaFold from Google DeepMind. LinearDesign from Baidu Research. pVACtools from Washington University School of Medicine. The science is not locked away. What does not exist is the software infrastructure that connects these tools into a pipeline that anyone with a sequencing file can run.
+But here is what struck me. Every tool he used is open source and free. GATK from the Broad Institute. NetMHCpan from the Technical University of Denmark. AlphaFold from Google DeepMind. LinearDesign from Baidu Research. pVACtools from Washington University School of Medicine. The science is not locked away. What does not exist is the software infrastructure that connects these tools into a pipeline that anyone with a sequencing file can run.
 
 ---
 
@@ -63,7 +63,7 @@ Using LinearDesign and canine codon optimization tables, it writes the mRNA sequ
 
 Cancer is the leading cause of death in dogs over age 10. Roughly 6 million dogs are diagnosed annually in the US alone. Pet owners are already spending $10,000 to $30,000 on conventional cancer treatment. No personalized cancer vaccine exists anywhere in the veterinary market today.
 
-More importantly, the regulatory environment for experimental veterinary treatments is dramatically lighter than for human medicine. Conyngham spent three months on ethics paperwork in Australia, which is genuinely painful, but it is nothing compared to the decade-long FDA approval pathway for a human drug. In Canada, the path for veterinary compassionate use cases is navigable.
+More importantly, the regulatory environment for experimental veterinary treatments is dramatically lighter than for human medicine. He spent three months on ethics paperwork in Australia, which is genuinely painful, but it is nothing compared to the decade-long FDA approval pathway for a human drug. In Canada, the path for veterinary compassionate use cases is navigable.
 
 Dogs also get the same cancers humans do. Mast cell tumors, lymphoma, osteosarcoma, melanoma. Their immune systems work on the same principles. The comparative oncology literature already shows that canine clinical trials predict human responses better than mouse models. Every dog case that runs through this pipeline is, in a meaningful scientific sense, pre-clinical human data collected in a real patient with a real cancer, without needing FDA authorization to run it.
 
@@ -73,7 +73,7 @@ The playbook for dogs becomes the playbook for humans. The data you accumulate m
 
 ## What I am building
 
-I am the founder of Kirak Labs, an AI product studio in Toronto. I have no biotech background. I am building this for the same reason Conyngham built his version: because the tools exist, the need is obvious, and no one has packaged them yet.
+I am the founder of Kirak Labs, an AI product studio in Toronto. I have no biotech background. I am building this for the same reason he built his version: because the tools exist, the need is obvious, and no one has packaged them yet.
 
 The project is called Rosie. The core software pipeline will be open source on GitHub. It includes: a Nextflow bioinformatics pipeline that takes two FASTQ files in and produces a synthesis-ready mRNA sequence file out. Modules for alignment (BWA-MEM2), mutation calling (GATK Mutect2 + VarScan2), neoantigen prediction (pVACtools, NetMHCpan, DeepImmuno, PyClone), AlphaFold validation, and mRNA design (LinearDesign with canine codon tables). Docker containers for every tool. A case management API. A clinician-facing report generator. And a complete technical playbook.
 
