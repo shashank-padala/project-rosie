@@ -1,6 +1,6 @@
 # Project Rosie
 
-**An open-source AI pipeline for personalized cancer vaccine design — starting with veterinary oncology.**
+**An AI Clinical Assistant for Oncologists — starting with veterinary medicine. Personalized cancer vaccine design from tumor DNA to synthesis-ready mRNA, in hours.**
 
 > Paul Conyngham is a 17-year machine learning veteran. He still needed three months and a university research lab to design one personalized cancer vaccine for his dog Rosie by hand. If that is what it takes for someone with his background, the question of accessibility for a veterinary oncologist with no ML training is not a question — it is a wall. Project Rosie exists to remove that wall.
 
@@ -193,9 +193,11 @@ The 16× compute cost increase and 100× storage increase are the real reasons t
 
 ## The Narrative
 
-> "Paul Conyngham, an AI entrepreneur from Australia, spent months in late 2025 building a personalized cancer vaccine for his dog by hand with a university research lab. We built the tool that lets any veterinary oncologist do it in under 6 hours, with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
+Project Rosie is an **AI Clinical Assistant for Oncologists — starting with veterinary medicine.** The deterministic bioinformatics pipeline (VEP, pVACtools, NetMHCpan, Biopython) handles the biology: reproducibly, auditably, with published thresholds. Gemma 4 is the intelligence layer that wraps around it — advising before the run, interpreting after it, responding to clinical judgment interactively, and answering questions on demand.
 
-Dogs and humans share TP53 and PIK3CA mutations. Canine trials are faster and cheaper than human trials. Every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data. The playbook for dogs becomes the playbook for humans.
+> "Paul Conyngham spent three months in a university research lab to design one vaccine for one dog. Project Rosie does it in six hours, for any vet with a sequencing file — with an open-weights model that clinics can run locally and keep patient sequencing data on-premise."
+
+Dogs and humans share TP53, PIK3CA, BRCA2, and many other oncogenic drivers. Canine trials are faster and cheaper than human trials. Every dog case that runs through this pipeline is, scientifically, pre-clinical comparative oncology data. The playbook for dogs becomes the playbook for humans.
 
 ---
 

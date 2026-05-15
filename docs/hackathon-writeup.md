@@ -2,7 +2,7 @@
 
 *Gemma4Good · Health & Sciences track · Kaggle hackathon writeup*
 
-**From tumor VCF to a synthesis-ready mRNA vaccine in hours. Gemma 4 is the on-call bioinformatics advisor a vet clinic can't otherwise hire.**
+**The AI Clinical Assistant for Oncologists — starting with veterinary medicine. From tumor DNA to a synthesis-ready mRNA vaccine in hours, with Gemma 4 as the intelligence layer no vet clinic can otherwise hire.**
 
 ---
 
@@ -12,7 +12,7 @@ In late 2025, AI entrepreneur Paul Conyngham, a 17-year machine learning veteran
 
 Personalized neoantigen vaccines are one of the most promising emerging cancer treatments. But the design pipeline, from a sequenced tumor to a synthesizable mRNA construct, requires fluency in pVACtools, NetMHCpan, codon optimization, IVT chemistry, and a half-dozen other specialized tools. Vet clinics don't have those people. So dogs that could benefit today don't get vaccines.
 
-**Project Rosie removes that wall.** A vet uploads a tumor variant call file (VCF), the pipeline runs in under six hours on cloud compute (~$15 per case), and four artifacts appear in the dashboard:
+**Project Rosie removes that wall.** It is an AI Clinical Assistant for Oncologists — built for veterinary medicine first, with a direct translational path to human oncology. A vet uploads a tumor variant call file (VCF), the pipeline runs in under six hours on cloud compute (~$15 per case), and four artifacts appear in the dashboard:
 
 1. A ranked list of personalized neoantigen targets
 2. A synthesis-ready multi-epitope mRNA construct (FASTA)
@@ -39,6 +39,8 @@ Live at **rosie.kiraklabs.com** · public demo at **rosie.kiraklabs.com/demo**.
 The pipeline is a deterministic Python script that emits HTTP callbacks at each stage. The Next.js frontend subscribes to the case row via Supabase Realtime. The UI's vertical timeline animates live with no polling.
 
 ## How we used Gemma 4
+
+Rosie is not a pipeline with an LLM bolted on at the end. The four Gemma roles below are the architecture of a clinical assistant: intelligence that operates *before* a run (advising the clinician), *after* a run (interpreting results), *interactively* (responding to clinical judgment), and *on-demand* (answering questions in plain language). Together they give a vet oncologist something they have never had: specialist-level AI reasoning across the full case.
 
 Every Health & Sciences entry will use an LLM as a report-writer. That's table stakes. We pushed Gemma 4 into roles that **a deterministic pipeline genuinely cannot perform**: reasoning *before* and *around* the pipeline, not just *after*.
 
@@ -96,6 +98,8 @@ Dogs and humans share TP53, PIK3CA, BRCA2, and many other oncogenic drivers. **C
 An open-weights model (Gemma 4) means clinics can run the LLM layer on-premise. **Patient sequencing data never has to leave the building.** That's what makes this an open-source product, not a SaaS.
 
 This is what Gemma4Good looks like in practice: a real medical workflow, real patients (the four-legged kind first), open code, defensible engineering, calibrated honesty about its limits. Gemma 4 is used as a thinking partner around a deterministic pipeline, not just a wordsmith at the end of one.
+
+The framing that best captures what this is: **an AI Clinical Assistant for Oncologists, starting with the patients who can't speak for themselves.** The deterministic pipeline handles the biology — reproducibly, auditably, with published thresholds. Gemma handles the interpretation. That division is also what makes this defensible to a regulator when the time comes.
 
 ---
 
