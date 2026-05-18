@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  // Enforce 3-submission cap
+  // Enforce 10-submission cap
   const { count, error: countError } = await supabase
     .from("cases")
     .select("id", { count: "exact", head: true })
@@ -33,11 +33,11 @@ export async function POST(req: NextRequest) {
 
   if (countError) return NextResponse.json({ error: countError.message }, { status: 500 })
 
-  if ((count ?? 0) >= 3) {
+  if ((count ?? 0) >= 10) {
     return NextResponse.json(
       {
         error:
-          "Submission limit reached. You've used all 3 of your free submissions. Email shashank.padala@gmail.com with a short intro to request more.",
+          "Submission limit reached. You've used all 10 of your free submissions. Email shashank.padala@gmail.com with a short intro to request more.",
       },
       { status: 429 }
     )
