@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+const AUTH_CHECK_TIMEOUT_MS = 3000
+
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -25,13 +27,24 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  try {
+    await Promise.race([
+      supabase.auth.getUser(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("auth check timed out")), AUTH_CHECK_TIMEOUT_MS)
+      ),
+    ])
+  } catch (err) {
+    // Supabase unreachable or slow (e.g. project paused) — fail open so the
+    // request still renders instead of every page hanging on a dead backend.
+    console.error("[proxy] supabase auth check failed, continuing unauthenticated", err)
+  }
 
   return supabaseResponse
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|privacy|terms|auth/signup|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }
