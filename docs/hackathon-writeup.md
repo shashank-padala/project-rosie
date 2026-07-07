@@ -19,7 +19,7 @@ Personalized neoantigen vaccines are one of the most promising emerging cancer t
 3. A plain-language clinical report for the veterinary oncologist
 4. A formal mRNA synthesis specification ready to email a contract manufacturer
 
-Live at **rosie.kiraklabs.com** · public demo at **rosie.kiraklabs.com/demo**.
+Live at **rosie.kiraklabs.com** · public demo at **rosie.kiraklabs.com/demo** · [Kaggle writeup](https://kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1777596440505).
 
 ## Architecture
 

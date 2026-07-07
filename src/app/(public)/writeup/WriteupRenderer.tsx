@@ -160,6 +160,14 @@ export function WriteupRenderer({ content }: { content: string }) {
               Try the demo →
             </a>
             <a
+              href="https://kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1777596440505"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-3 py-1.5 rounded-lg border border-border/60 text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+            >
+              Kaggle Writeup
+            </a>
+            <a
               href="https://github.com/shashank-padala/project-rosie"
               target="_blank"
               rel="noopener noreferrer"
